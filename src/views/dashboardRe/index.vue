@@ -166,9 +166,9 @@
             </el-col>
             <el-col :lg="24" style="margin-top: 2vh">
               <el-row class="inner-row">
-<!--                第一列-->
+                <!--                第一列-->
                 <el-col :lg="10">
-<!--                  todo 分成两行，每行用 template 生成两列-->
+                  <!--                  todo 分成两行，每行用 template 生成两列-->
                   <el-row>
                     <el-col :lg="12">
                       <div class="module-title">规则总数</div>
@@ -192,7 +192,7 @@
                     </el-col>
                   </el-row>
                 </el-col>
-<!--                第二列-->
+                <!--                第二列-->
                 <el-col :lg="7">
                   <el-col :lg="24">
                     <div class="module-title">规则总数</div>
@@ -244,9 +244,9 @@
                     </el-row>
                   </el-col>
                 </el-col>
-<!--                第三列-->
+                <!--                第三列-->
                 <el-col :lg="7" style="display: flex; align-items: center;justify-content: center; flex: 1; height: 30vh">
-                  <img src="./components/static/decorate.png" style="width:27vh;height:auto;" alt="" />
+                  <img src="./components/static/decorate.png" style="width:27vh;height:auto;" alt="">
                 </el-col>
               </el-row>
             </el-col>
@@ -422,7 +422,23 @@ import ImportantDataPieChart from './components/ImportantDataPieChart.vue'
 import CompliancePieChart from './components/CompliancePieChart.vue'
 import ThirtyDaysComplianceDataLineChart from './components/ThirtyDaysComplianceDataLineChart.vue'
 import myDashboard from '@/views/myDashboard/index.vue'
-const { format } = require('date-fns')
+// 定义格式化封装函数
+function format(timer) {
+  const year = timer.getFullYear()
+  const month = timer.getMonth() + 1 // 由于月份从0开始，因此需加1
+  const day = timer.getDate()
+  const hour = timer.getHours()
+  const minute = timer.getMinutes()
+  const second = timer.getSeconds()
+  return `${pad(year, 4)}-${pad(month)}-${pad(day)} ${pad(hour)}:${pad(minute)}:${pad(second)}`
+}
+// 定义具体处理标准
+// timeEl 传递过来具体的数值：年月日时分秒
+// total 字符串总长度 默认值为2
+// str 补充元素 默认值为"0"
+function pad(timeEl, total = 2, str = '0') {
+  return timeEl.toString().padStart(total, str)
+}
 const lineChartData = {
   newVisitis: {
     expectedData: [100, 120, 161, 134, 105, 160, 165],
@@ -447,14 +463,14 @@ for (let i = 0; i < 5; i++) {
   importantEvents[i] = {
     type: '数据传输异常',
     info: '车速传感器数据上传中断',
-    time: format(new Date(Date.now()), 'YYYY-MM-DD HH:mm:ss')
+    time: format(new Date(Date.now()))
   }
 }
 const ruleInfo = {
   counts: 2842,
   standardCounts: 23,
   activatedCounts: 1324,
-  updatedTime: format(new Date(Date.now()), 'YYYY-MM-DD HH:mm:ss')
+  updatedTime: format(new Date(Date.now()))
 }
 const ruleEngineInfo = {
   engine1: {
