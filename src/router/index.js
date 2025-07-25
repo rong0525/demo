@@ -83,7 +83,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'home',
-        component: () => import('@/views/home/index'),
+        component: () => import('@/views/dashboardRe/index'),
         name: 'Home',
         meta: { title: '主页', icon: 'el-icon-s-home', affix: true, top: '态势感知大屏' }
       }
@@ -164,6 +164,18 @@ export const constantRoutes = [
         component: () => import('@/views/data-sum/index'),
         name: 'DataSum',
         meta: { title: '数据概览', icon: 'icon', affix: true, top: '数据概览' }
+      }
+    ]
+  },
+  {
+    path: '/hegui',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/hegui/index'),
+        name: 'hegui',
+        meta: { title: '合规性检查', icon: 'el-icon-s-flag', affix: true }
       }
     ]
   }

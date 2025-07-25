@@ -1,0 +1,33 @@
+diff a/src/router/index.js b/src/router/index.js	(rejected hunks)
+@@ -115 +115 @@ export const constantRoutes = [
+-      },
++      }
+@@ -128 +128 @@ export const constantRoutes = [
+-      },
++      }
+@@ -155 +155 @@ export const constantRoutes = [
+-      },
++      }
+@@ -159,11 +159,11 @@ export const constantRoutes = [
+-        path: '/data_sum',
+-        component: Layout,
+-        children: [
+-          {
+-            path: 'index',
+-            component: () => import('@/views/data-sum/index'),
+-            name: 'DataSum',
+-            meta: { title: '数据汇总', icon: 'icon', affix: true }
+-          }
+-        ]
+-      },
++    path: '/data_sum',
++    component: Layout,
++    children: [
++      {
++        path: 'index',
++        component: () => import('@/views/data-sum/index'),
++        name: 'DataSum',
++        meta: { title: '数据汇总', icon: 'icon', affix: true }
++      }
++    ]
++  }
