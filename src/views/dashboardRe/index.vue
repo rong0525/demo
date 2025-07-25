@@ -421,7 +421,7 @@ import SevenDaysFlowLineChart from './components/SevenDaysFlowLineChart.vue'
 import ImportantDataPieChart from './components/ImportantDataPieChart.vue'
 import CompliancePieChart from './components/CompliancePieChart.vue'
 import ThirtyDaysComplianceDataLineChart from './components/ThirtyDaysComplianceDataLineChart.vue'
-import myDashboard from '@/views/myDashboard/index.vue'
+// import myDashboard from '@/views/myDashboard/index.vue'
 // 定义格式化封装函数
 function format(timer) {
   const year = timer.getFullYear()
@@ -512,9 +512,9 @@ export default {
     }
   },
   computed: {
-    myDashboard() {
-      return myDashboard
-    }
+    // myDashboard() {
+    //   return myDashboard
+    // }
   },
   methods: {
     moreData(type) {
