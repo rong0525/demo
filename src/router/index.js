@@ -85,76 +85,76 @@ export const constantRoutes = [
         path: 'home',
         component: () => import('@/views/home/index'),
         name: 'Home',
-        meta: { title: '主页', icon: 'el-icon-s-home', affix: true }
+        meta: { title: '主页', icon: 'el-icon-s-home', affix: true, top: '态势感知大屏' }
       }
     ]
   },
 
-  {
-    path: '/scan',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/scan/index'),
-        name: 'Scan',
-        meta: { title: '主动探测', icon: 'el-icon-s-flag', affix: true }
-      }
-    ]
-  },
+  // {
+  //   path: '/scan',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: () => import('@/views/scan/index'),
+  //       name: 'Scan',
+  //       meta: { title: '主动探测', icon: 'el-icon-s-flag', affix: true }
+  //     },
+  //   ]
+  // },
 
-  {
-    path: '/result',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/result/index'),
-        name: 'Result',
-        meta: { title: '知识库列表', icon: 'el-icon-s-opportunity', affix: true }
-      }
-    ]
-  },
+  // {
+  //   path: '/result',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: () => import('@/views/result/index'),
+  //       name: 'Result',
+  //       meta: { title: '知识库列表', icon: 'el-icon-s-opportunity', affix: true }
+  //     },
+  //   ]
+  // },
 
-  {
-    path: '/global',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/global/index'),
-        name: 'Global',
-        meta: { title: '全球扫描', icon: 'el-icon-s-flag', affix: true }
-      }
-    ]
-  },
+  // {
+  //   path: '/global',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: () => import('@/views/global/index'),
+  //       name: 'Global',
+  //       meta: { title: '全球扫描', icon: 'el-icon-s-flag', affix: true }
+  //     },
+  //   ]
+  // },
 
-  {
-    path: '/profile',
-    component: Layout,
-    redirect: '/profile/index',
-    hidden: true,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/profile/index'),
-        name: 'Profile',
-        meta: { title: 'Profile', icon: 'user', noCache: true }
-      }
-    ]
-  },
-  {
-    path: '/trend',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/trend/index'),
-        name: 'Trend',
-        meta: { title: '趋势分析', icon: 'el-icon-s-marketing', affix: true }
-      }
-    ]
-  },
+  // {
+  //   path: '/profile',
+  //   component: Layout,
+  //   redirect: '/profile/index',
+  //   hidden: true,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: () => import('@/views/profile/index'),
+  //       name: 'Profile',
+  //       meta: { title: 'Profile', icon: 'user', noCache: true }
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: '/trend',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: () => import('@/views/trend/index'),
+  //       name: 'Trend',
+  //       meta: { title: '趋势分析', icon: 'el-icon-s-marketing', affix: true }
+  //     },
+  //   ]
+  // },
   {
     path: '/data_sum',
     component: Layout,
@@ -163,7 +163,7 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/data-sum/index'),
         name: 'DataSum',
-        meta: { title: '数据汇总', icon: 'icon', affix: true }
+        meta: { title: '数据概览', icon: 'icon', affix: true, top: '数据概览' }
       }
     ]
   }
