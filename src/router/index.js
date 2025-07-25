@@ -99,7 +99,7 @@ export const constantRoutes = [
         component: () => import('@/views/scan/index'),
         name: 'Scan',
         meta: { title: '主动探测', icon: 'el-icon-s-flag', affix: true }
-      },
+      }
     ]
   },
 
@@ -112,10 +112,10 @@ export const constantRoutes = [
         component: () => import('@/views/result/index'),
         name: 'Result',
         meta: { title: '知识库列表', icon: 'el-icon-s-opportunity', affix: true }
-      },
+      }
     ]
   },
-  
+
   {
     path: '/global',
     component: Layout,
@@ -125,7 +125,20 @@ export const constantRoutes = [
         component: () => import('@/views/global/index'),
         name: 'Global',
         meta: { title: '全球扫描', icon: 'el-icon-s-flag', affix: true }
-      },
+      }
+    ]
+  },
+
+  {
+    path: '/hegui',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/hegui/index'),
+        name: 'hegui',
+        meta: { title: '合规性检查', icon: 'el-icon-s-flag', affix: true }
+      }
     ]
   },
 
@@ -152,21 +165,21 @@ export const constantRoutes = [
         component: () => import('@/views/trend/index'),
         name: 'Trend',
         meta: { title: '趋势分析', icon: 'el-icon-s-marketing', affix: true }
-      },
+      }
     ]
   },
   {
-        path: '/icon',
-        component: Layout,
-        children: [
-          {
-            path: 'index',
-            component: () => import('@/views/icons/index'),
-            name: 'Icons',
-            meta: { title: 'Icons', icon: 'icon', noCache: true }
-          }
-        ]
-      },
+    path: '/icon',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/icons/index'),
+        name: 'Icons',
+        meta: { title: 'Icons', icon: 'icon', noCache: true }
+      }
+    ]
+  }
 ]
 
 /**
