@@ -168,19 +168,18 @@ export const constantRoutes = [
     ]
   },
   {
-  path: '/hegui',
-  component: Layout,
-  children: [
-    {
-      path: 'index',
-      component: () => import('@/views/hegui/index'),
-      name: 'hegui',
-      meta: { title: '合规性检查', icon: 'el-icon-s-flag', affix: true }
-    }
-  ]
-  },
-],
-  
+    path: '/hegui',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/hegui/index'),
+        name: 'hegui',
+        meta: { title: '合规性检查', icon: 'el-icon-s-flag', affix: true }
+      }
+    ]
+  }
+]
 
 /**
  * asyncRoutes
