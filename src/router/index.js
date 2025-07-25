@@ -175,7 +175,19 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/hegui/index'),
         name: 'hegui',
-        meta: { title: '合规性检查', icon: 'el-icon-s-flag', affix: true }
+        meta: { title: '合规性检查', icon: 'el-icon-s-flag', affix: true, top: '合规概览' }
+      }
+    ]
+  },
+  {
+    path: '/event-report',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/event-report/index'),
+        name: 'eventReport',
+        meta: { title: '事件通报', icon: 'el-icon-s-flag', affix: true, top: '重点事件通报' }
       }
     ]
   }
