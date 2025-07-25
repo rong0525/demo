@@ -166,8 +166,21 @@ export const constantRoutes = [
         meta: { title: '数据概览', icon: 'icon', affix: true, top: '数据概览' }
       }
     ]
-  }
-]
+  },
+  {
+  path: '/hegui',
+  component: Layout,
+  children: [
+    {
+      path: 'index',
+      component: () => import('@/views/hegui/index'),
+      name: 'hegui',
+      meta: { title: '合规性检查', icon: 'el-icon-s-flag', affix: true }
+    }
+  ]
+  },
+],
+  
 
 /**
  * asyncRoutes
