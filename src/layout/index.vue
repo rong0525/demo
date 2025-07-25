@@ -1,15 +1,15 @@
 <template>
-  
+
   <div :class="classObj" class="app-wrapper">
     <navbar />
     <!-- <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" /> -->
-    
+
     <sidebar class="sidebar-container" />
     <div :class="{hasTagsView:needTagsView}" class="main-container">
       <div :class="{'fixed-header':fixedHeader}">
-        <div class="custom-title" v-if="needTagsView">
-          <span class="title-text">态势感知大屏</span>
-          <HeaderSearch />
+        <div v-if="needTagsView" class="custom-title">
+          <span class="title-text">{{ pageTitle }}</span>
+          <!-- <HeaderSearch /> -->
         </div>
       </div>
       <app-main />
@@ -22,10 +22,9 @@
 
 <script>
 import RightPanel from '@/components/RightPanel'
-import { AppMain, Navbar, Settings, Sidebar, TagsView } from './components'
+import { AppMain, Navbar, Settings, Sidebar } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 import { mapState } from 'vuex'
-import HeaderSearch from '@/components/HeaderSearch'
 
 export default {
   name: 'Layout',
@@ -34,11 +33,24 @@ export default {
     Navbar,
     RightPanel,
     Settings,
-    Sidebar,
-    TagsView,
-    HeaderSearch
+    Sidebar
+
   },
   mixins: [ResizeMixin],
+  data() {
+    return {
+      pageTitle: '态势感知大屏'
+    }
+  },
+  watch: {
+    // 监听路由变化
+    $route: {
+      immediate: true,
+      handler(to) {
+        this.updateTitle(to)
+      }
+    }
+  },
   computed: {
     ...mapState({
       sidebar: state => state.app.sidebar,
@@ -51,7 +63,7 @@ export default {
       return {
         hideSidebar: !this.sidebar.opened,
         openSidebar: this.sidebar.opened,
-        withoutAnimation: this.sidebar.withoutAnimation,
+        withoutAnimation: this.sidebar.withoutAnimation
         // mobile: this.device === 'mobile'
       }
     }
@@ -59,6 +71,9 @@ export default {
   methods: {
     handleClickOutside() {
       this.$store.dispatch('app/closeSideBar', { withoutAnimation: false })
+    },
+    updateTitle(route) {
+      this.pageTitle = route.meta.top || '默认标题'
     }
   }
 }
