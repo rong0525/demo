@@ -30,17 +30,6 @@ module.exports = {
   lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
   devServer: {
-      disableHostCheck: true,
-      proxy: {
-          '/api': {
-              target: 'http://v5.up2.cc:59292',
-              changeOrigin: true,
-              pathRewrite: {
-                  '^/api': ''
-              }
-          }
-      },
-  
     port: port,
     open: true,
     overlay: {
@@ -131,5 +120,5 @@ module.exports = {
           config.optimization.runtimeChunk('single')
         }
       )
-  },
+  }
 }
