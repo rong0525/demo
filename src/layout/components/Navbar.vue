@@ -1,23 +1,22 @@
 <template>
   <div class="navbar">
     <div class="left-info">
-        
 
-        <div class="logo" @click="toggleSideBar" style="cursor: pointer;">
-          <img
-            class="image-logo"
-            alt="Image logo"
-            src="https://c.animaapp.com/NexYLUTl/img/image-logo@2x.png"
-          />
-        </div>
-        <div class="title">
-          <div class="div">数据可信审计与安全合规平台（车企端）</div>
-        </div>
+      <div class="logo" style="cursor: pointer;" @click="toggleSideBar">
+        <img
+          class="image-logo"
+          alt="Image logo"
+          src="https://c.animaapp.com/NexYLUTl/img/image-logo@2x.png"
+        >
       </div>
+      <div class="title">
+        <div class="div">数据可信审计与安全合规平台（车企端）</div>
+      </div>
+    </div>
 
     <div class="current-time">
-          <div class="text-wrapper">{{ currentTime }}</div>
-        </div>
+      <div class="text-wrapper">{{ currentTime }}</div>
+    </div>
     <!-- <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" /> -->
 
     <!-- <breadcrumb id="breadcrumb-container" class="breadcrumb-container" /> -->
@@ -38,7 +37,7 @@
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <el-avatar shape="square" size="medium" src="https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png"></el-avatar>          <i class="el-icon-caret-bottom" />
+          <el-avatar shape="square" size="medium" src="https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png" />          <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
           <router-link to="/profile/index">
@@ -64,42 +63,42 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import Breadcrumb from '@/components/Breadcrumb'
-import Hamburger from '@/components/Hamburger'
+// import Breadcrumb from '@/components/Breadcrumb'
+// import Hamburger from '@/components/Hamburger'
 import ErrorLog from '@/components/ErrorLog'
 import Screenfull from '@/components/Screenfull'
-import SizeSelect from '@/components/SizeSelect'
+// import SizeSelect from '@/components/SizeSelect'
 import Search from '@/components/HeaderSearch'
 
 export default {
+
+  components: {
+    // Breadcrumb,
+    // Hamburger,
+    ErrorLog,
+    Screenfull,
+    // SizeSelect,
+    Search
+  },
   data() {
     return {
       currentTime: ''
     }
   },
   mounted() {
-  this.$store.commit('errorLog/ADD_ERROR_LOG', {
-    err: { message: 'Test error', stack: 'test stack' },
-    vm: { $vnode: { tag: '<App>' }},
-    info: 'render',
-    url: window.location.href
-  })
-},
+    this.$store.commit('errorLog/ADD_ERROR_LOG', {
+      err: { message: 'Test error', stack: 'test stack' },
+      vm: { $vnode: { tag: '<App>' }},
+      info: 'render',
+      url: window.location.href
+    })
+  },
   created() {
     this.updateTime()
     this.timer = setInterval(this.updateTime, 1000)
   },
   beforeDestroy() {
     clearInterval(this.timer)
-  },
-  
-  components: {
-    Breadcrumb,
-    Hamburger,
-    ErrorLog,
-    Screenfull,
-    SizeSelect,
-    Search
   },
   computed: {
     ...mapGetters([
@@ -124,8 +123,8 @@ export default {
       const dd = String(now.getDate()).padStart(2, '0')
       const hh = String(now.getHours()).padStart(2, '0')
       const min = String(now.getMinutes()).padStart(2, '0')
-      const ss = String(now.getSeconds()).padStart(2, '0')
-      let ampm = hh >= 12 ? 'PM' : 'AM'
+      // const ss = String(now.getSeconds()).padStart(2, '0')
+      const ampm = hh >= 12 ? 'PM' : 'AM'
       this.currentTime = `${yyyy}-${mm}-${dd} ${hh}:${min} ${ampm}`
       // this.currentTime = `${yyyy}-${mm}-${dd} ${hh}:${min}:${ss}`
     }
@@ -135,6 +134,11 @@ export default {
 
 <style lang="scss" scoped>
 .navbar {
+  position: fixed !important; /* 固定定位，脱离文档流 */
+  top: 0; /* 距离顶部 0px */
+  left: 0; /* 距离左侧 0px */
+  right: 0; /* 距离右侧 0px（自动占满全屏宽度） */
+  z-index: 9999; /* 层级设置（确保不被其他元素遮挡，值需大于其他内容） */
   height: 50px;
   overflow: hidden;
   position: relative;
@@ -238,9 +242,6 @@ export default {
         }
       }
     }
-
-
-
 
     .avatar-container {
       margin-right: 30px;

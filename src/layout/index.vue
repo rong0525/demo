@@ -140,6 +140,7 @@ export default {
     padding-left: 2rem;
 
     .title-text {
+      padding-top:50px ;
       flex: 1;
       /* 保证标题靠左，搜索框靠右 */
     }
