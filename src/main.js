@@ -22,12 +22,11 @@ import * as filters from './filters' // global filters
 import stepview from 'jiuwei-stepview'
 Vue.use(stepview)
 
-
 import Vuetify from 'vuetify'
 Vue.use(Vuetify)
 
-import YmapPlugin from "vue-yandex-maps";
-Vue.use(YmapPlugin);
+import YmapPlugin from 'vue-yandex-maps'
+Vue.use(YmapPlugin)
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -36,10 +35,12 @@ Vue.use(YmapPlugin);
  * Currently MockJs will be used in the production environment,
  * please remove it before going online ! ! !
  */
-if (process.env.NODE_ENV === 'production') {
-  const { mockXHR } = require('../mock')
-  mockXHR()
-}
+// if (process.env.NODE_ENV === 'production') {
+//   const { mockXHR } = require('../mock')
+//   mockXHR()
+// }
+const { mockXHR } = require('../mock')
+mockXHR()
 
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium', // set element-ui default size
