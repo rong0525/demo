@@ -178,6 +178,30 @@ export const constantRoutes = [
         meta: { title: '合规性检查', icon: 'el-icon-s-flag', affix: true, top: '合规性检查' }
       }
     ]
+  },
+  {
+    path: '/event-report',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/event-report/index'),
+        name: 'eventReport',
+        meta: { title: '事件通报', icon: 'el-icon-s-flag', affix: true, top: '重点事件通报' }
+      }
+    ]
+  },
+  {
+    path: '/rules',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/rules-overview/index'),
+        name: 'RulesOverview',
+        meta: { title: '规则概览', icon: 'el-icon-s-order', affix: true, top: '规则概览' }
+      }
+    ]
   }
 ]
 
