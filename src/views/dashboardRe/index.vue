@@ -103,10 +103,16 @@
                     </div>
                   </el-col>
                   <el-col :lg="24" style="margin-top: 0.7vh">
-                    <el-table :data="unComplianceTop10Data" :cell-style="{padding:'0.5vh'}" :show-header="false" style="font-size:1.8vh">
-                      <el-table-column prop="type" width="50">
-                        <template v-if="'person'">
+                    <el-table class="el-table-unComplianceTop10" :data="unComplianceTop10Data" :show-header="false" style="font-size:1.4vh">
+                      <el-table-column v-slot:default="scope" prop="type" width="52">
+                        <template v-if="scope.row.type === 'person'">
                           <img src="./components/static/uncompliance/person.png" style="width:100%;height:100%;" alt="">
+                        </template>
+                        <template v-if="scope.row.type === 'society'">
+                          <img src="./components/static/uncompliance/society.png" style="width:100%;height:100%;" alt="">
+                        </template>
+                        <template v-if="scope.row.type === 'location'">
+                          <img src="./components/static/uncompliance/location.png" style="width:100%;height:100%;" alt="">
                         </template>
                       </el-table-column>
                       <el-table-column prop="info" />
@@ -134,9 +140,21 @@
             <!--          内部行-->
             <el-col>
               <el-table :data="importantEvents" :cell-style="{padding:'1.2vh'}" :show-header="false">
-                <el-table-column prop="type" width="92vh">
-                  <template v-if="'数据传输异常'">
+                <el-table-column v-slot:default="scope" prop="type" width="92vh">
+                  <template v-if="scope.row.type === '数据传输异常预警'">
                     <img src="./components/static/important-event/transfer-warning.png" style="width:100%;height:100%;" alt="">
+                  </template>
+                  <template v-if="scope.row.type === '地理位置数据越界传输'">
+                    <img src="./components/static/important-event/location.png" style="width:100%;height:100%;" alt="">
+                  </template>
+                  <template v-if="scope.row.type === '人脸图像未脱敏存储'">
+                    <img src="./components/static/important-event/people-face.png" style="width:100%;height:100%;" alt="">
+                  </template>
+                  <template v-if="scope.row.type === '车机系统日志异常'">
+                    <img src="./components/static/important-event/car-and-machine.png" style="width:100%;height:100%;" alt="">
+                  </template>
+                  <template v-if="scope.row.type === '关键合规规则更新'">
+                    <img src="./components/static/important-event/rule-update.png" style="width:100%;height:100%;" alt="">
                   </template>
                 </el-table-column>
                 <el-table-column prop="type, info, time">
@@ -414,6 +432,10 @@
   letter-spacing: -0.01em;
   line-height: 140%;
 }
+.el-table-unComplianceTop10 /deep/ td{
+  padding:  0.1vh;
+}
+
 </style>
 
 <script>
@@ -421,7 +443,6 @@ import SevenDaysFlowLineChart from './components/SevenDaysFlowLineChart.vue'
 import ImportantDataPieChart from './components/ImportantDataPieChart.vue'
 import CompliancePieChart from './components/CompliancePieChart.vue'
 import ThirtyDaysComplianceDataLineChart from './components/ThirtyDaysComplianceDataLineChart.vue'
-// import myDashboard from '@/views/myDashboard/index.vue'
 // 定义格式化封装函数
 function format(timer) {
   const year = timer.getFullYear()
@@ -451,21 +472,75 @@ const thirtyDaysComplianceDataLineChartData = {
 for (let i = 0; i < 30; i++) {
   thirtyDaysComplianceDataLineChartData.actualData.push(Math.random() * 40 + 40)
 }
-const unComplianceTop10Data = []
-for (let i = 0; i < 10; i++) {
-  unComplianceTop10Data[i] = {
+const unComplianceTop10Data = [
+  {
+    type: 'location',
+    info: '未经匿名化传输敏感位置'
+  },
+  {
     type: 'person',
-    info: '这是一个测试数据' + i.toString()
+    info: '用户未授权采集人脸图像'
+  },
+  {
+    type: 'society',
+    info: '车牌图像明文存储'
+  },
+  {
+    type: 'location',
+    info: '构图数据超出边界传输'
+  },
+  {
+    type: 'person',
+    info: '闲置车辆踪迹数据未删除'
+  },
+  {
+    type: 'location',
+    info: '惯导数据精度超出规范'
+  },
+  {
+    type: 'society',
+    info: '充电网数据未加密传输'
+  },
+  {
+    type: 'location',
+    info: '点云数据未经授权分享'
+  },
+  {
+    type: 'society',
+    info: '敏感区域数据上传频率过高'
+  },
+  {
+    type: 'person',
+    info: '内部系统身份信息访问异常'
   }
-}
-const importantEvents = []
-for (let i = 0; i < 5; i++) {
-  importantEvents[i] = {
-    type: '数据传输异常',
+]
+const importantEvents = [
+  {
+    type: '数据传输异常预警',
     info: '车速传感器数据上传中断',
     time: format(new Date(Date.now()))
+  },
+  {
+    type: '地理位置数据越界传输',
+    info: '涉嫌数据出境',
+    time: format(new Date(Date.now()))
+  },
+  {
+    type: '人脸图像未脱敏存储',
+    info: '新一批违规数据',
+    time: format(new Date(Date.now()))
+  },
+  {
+    type: '车机系统日志异常',
+    info: '大量数据丢失告警',
+    time: format(new Date(Date.now()))
+  },
+  {
+    type: '关键合规规则更新',
+    info: 'GB/T XXX-202X 已发布',
+    time: format(new Date(Date.now()))
   }
-}
+]
 const ruleInfo = {
   counts: 2842,
   standardCounts: 23,
@@ -512,31 +587,8 @@ export default {
     }
   },
   computed: {
-    // myDashboard() {
-    //   return myDashboard
-    // }
   },
   methods: {
-    moreData(type) {
-      switch (type) {
-        case '数据概览':
-          console.log('查看更多数据')
-          alert('查看更多数据')
-          break
-        case '合规概览':
-          console.log('查看更多合规数据')
-          alert('查看更多合规数据')
-          break
-        case '重点事件通报':
-          console.log('查看更多重点事件')
-          alert('查看更多重点事件')
-          break
-        case '规则概览':
-          console.log('查看更多规则')
-          alert('查看更多规则')
-          break
-      }
-    }
   }
 }
 </script>
