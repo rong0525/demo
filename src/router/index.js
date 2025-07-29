@@ -175,7 +175,7 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/hegui/index'),
         name: 'hegui',
-        meta: { title: '合规性检查', icon: 'el-icon-s-flag', affix: true }
+        meta: { title: '合规性检查', icon: 'el-icon-s-flag', affix: true, top: '合规性检查' }
       }
     ]
   }
