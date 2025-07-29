@@ -49,21 +49,28 @@ export default {
     },
     cpuColor: {
       type: String,
-      default: '#409eff'
+      default: '#1659A5'
     },
     memoryColor: {
       type: String,
-      default: '#67c23a'
+      default: '#3298DC'
     },
     storageColor: {
       type: String,
-      default: '#e6a23c'
+      default: '#28B17E'
+    }
+  },
+  data() {
+    return {
+      cpuColor2: '#F2F4F7',
+      memoryColor2: '#E8F5E9',
+      storageColor2: '#E3F2FD'
     }
   },
   mounted() {
-    this.initMiniChart('cpuChart', this.cpuUsage, this.cpuColor)
-    this.initMiniChart('memChart', this.memoryUsage, this.memoryColor)
-    this.initMiniChart('storageChart', this.storageUsage, this.storageColor)
+    this.initMiniChart('cpuChart', this.cpuUsage, this.cpuColor, this.cpuColor2)
+    this.initMiniChart('memChart', this.memoryUsage, this.memoryColor, this.memoryColor2)
+    this.initMiniChart('storageChart', this.storageUsage, this.storageColor, this.storageColor2)
 
     this.$watch('cpuUsage', (newVal) => {
       this.updateChart('cpuChart', newVal)
@@ -76,14 +83,14 @@ export default {
     })
   },
   methods: {
-    initMiniChart(domId, value, color) {
+    initMiniChart(domId, value, color, color2) {
       const chartDom = document.getElementById(domId)
       if (!chartDom) return
 
       const myChart = echarts.init(chartDom)
       this[`${domId}Instance`] = myChart
 
-      const option = this.getChartOption(value, color)
+      const option = this.getChartOption(value, color, color2)
       myChart.setOption(option)
 
       const resizeHandler = () => myChart.resize()
@@ -107,7 +114,7 @@ export default {
         })
       }
     },
-    getChartOption(value, color) {
+    getChartOption(value, color, color2) {
       return {
         series: [
           {
@@ -115,8 +122,8 @@ export default {
             radius: ['45%', '75%'],
             center: ['50%', '50%'],
             data: [
-              { value: value, name: '' },
-              { value: 100 - value, name: '' }
+              { value: value, name: '', itemStyle: { color: color }},
+              { value: 100 - value, name: '', itemStyle: { color: color2 }}
             ],
             label: {
               show: false
@@ -125,7 +132,6 @@ export default {
               show: false
             },
             itemStyle: {
-              color: color,
               borderWidth: 0,
               borderRadius: 5
             },

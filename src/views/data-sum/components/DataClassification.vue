@@ -35,7 +35,11 @@
       <div class="right-list">
         <div class="category">
           <div class="category-header">
-            <i class="el-icon-location" />
+            <img
+              src="./image/location.png"
+              class="icon"
+              alt="地理位置图标"
+            >
             <span>地理信息</span>
           </div>
           <ul class="geo-info">
@@ -51,7 +55,11 @@
 
         <div class="category">
           <div class="category-header">
-            <i class="el-icon-user" />
+            <img
+              src="./image/person.png"
+              class="icon"
+              alt="个人信息图标"
+            >
             <span>个人信息</span>
           </div>
           <ul class="personal-info">
@@ -65,7 +73,11 @@
 
         <div class="category">
           <div class="category-header">
-            <i class="el-icon-s-data" />
+            <img
+              src="./image/social.png"
+              class="icon"
+              alt="社会信息图标"
+            >
             <span>社会信息</span>
           </div>
           <ul class="social-info">
@@ -115,97 +127,28 @@ export default {
             radius: ['40%', '70%'], // 环形图内外半径
             center: ['50%', '50%'],
             data: [
-              { value: 68, name: '重要数据' },
-              { value: 32, name: '一般数据' }
+              { value: 68, name: '重要数据', itemStyle: { color: '#1F78D1' }},
+              { value: 32, name: '一般数据', itemStyle: { color: '#D0E7FF' }}
             ],
             label: {
               show: true,
               position: 'outside',
-              formatter: '{b} : {c}%'
+              formatter: '{b}'
             },
             labelLine: {
               show: true
-            },
-            itemStyle: {
-              color: '#409eff' // 可根据需求调整颜色
             }
-          }
-        ]
-      }
-      ringChart.setOption(option)
-    },
-    // 初始化饼图（3 大类 12 子类）
-    initSunburstChart() {
-      const sunburstChartDom = document.getElementById('sunburstChart')
-      const sunburstChart = echarts.init(sunburstChartDom)
 
-      const option = {
-        series: {
-          type: 'sunburst',
-          radius: [0, '90%'],
-          center: ['50%', '50%'],
-          data: [
-            {
-              name: '地理信息',
-              children: [
-                { name: '构图数据', value: 1 },
-                { name: '点云数据', value: 1 },
-                { name: '惯导数据', value: 1 },
-                { name: '位置数据', value: 1 }
-              ]
-            },
-            {
-              name: '个人信息',
-              children: [
-                { name: '身份信息', value: 1 },
-                { name: '人脸图像', value: 1 },
-                { name: '生物特征', value: 1 },
-                { name: '踪迹数据', value: 1 }
-              ]
-            },
-            {
-              name: '社会信息',
-              children: [
-                { name: '车流数据', value: 1 },
-                { name: '充电网数据', value: 1 },
-                { name: '车牌图像', value: 1 },
-                { name: '敏感区域数据', value: 1 }
-              ]
-            }
-          ],
-          label: {
-            rotate: 'radial',
-            fontSize: 12
-          },
-          levels: [
-            {},
-            {
-              r0: '0%',
-              r: '30%',
-              label: {
-                rotate: 0,
-                fontSize: 14,
-                fontWeight: 'bold'
-              }
-            },
-            {
-              r0: '30%',
-              r: '90%',
-              label: {
-                rotate: 'tangential'
-              }
-            }
-          ],
-          itemStyle: {
-            borderColor: '#fff',
-            borderWidth: 1
           }
+        ],
+        legend: {
+          bottom: '5%',
+          left: 'center'
         }
       }
-
-      sunburstChart.setOption(option)
-      this.sunburstChartInstance = sunburstChart
+      ringChart.setOption(option)
     }
+    // 初始化饼图（3 大类 12 子类）
 
   }
 }
@@ -244,7 +187,7 @@ export default {
 .chart-item {
   display: flex;
   justify-content: center;
-  margin-bottom: -50px;
+  margin-bottom: -35px;
 }
 .chart-title {
   display: flex;
@@ -252,7 +195,7 @@ export default {
   align-items: baseline;
   gap: 6px;
   margin-top: 10px;
-  margin-bottom: -50px; /* 如果想靠近图表 */
+  margin-bottom: -53px; /* 如果想靠近图表 */
 }
 
 .chart-number {
@@ -311,10 +254,10 @@ export default {
   margin-bottom: -16px;
 }
 
-.category-header i {
+.category-header img {
   margin-right: 6px;
-  font-size: 38px;
-  color: #409EFF; /* Element UI 默认主题色 */
+  width: 38px;
+  height: 38px;
 }
 .category-header span {
   color: #828282;

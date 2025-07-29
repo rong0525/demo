@@ -4,7 +4,11 @@
       <!-- 总数据流入量 -->
       <div class="stat-item first">
         <div class="icon-title-row">
-          <i class="el-icon-data-line icon" />
+          <img
+            src="./image/data_in.png"
+            class="icon"
+            alt="总流入图标"
+          >
           <div class="stat-title">总数据流入量</div>
         </div>
         <div class="stat-value">1.534 PB</div>
@@ -14,7 +18,11 @@
       <!-- 活跃数据源 -->
       <div class="stat-item first">
         <div class="icon-title-row">
-          <i class="el-icon-data-line icon" />
+          <img
+            src="./image/car.png"
+            class="icon"
+            alt="活跃数据源图标"
+          >
           <div class="stat-title">活跃数据源</div>
         </div>
         <div class="stat-value" style="color: #67c23a;">12758 个</div>
@@ -24,7 +32,11 @@
       <!-- 重要数据存储量 -->
       <div class="stat-item first">
         <div class="icon-title-row">
-          <i class="el-icon-data-board icon" />
+          <img
+            src="./image/store.png"
+            class="icon"
+            alt="存储量图标"
+          >
           <div class="stat-title">重要数据存储量</div>
         </div>
         <div class="stat-value" style="color: #409eff;">350.89 TB</div>
@@ -34,7 +46,11 @@
       <!-- 系统资源使用率 -->
       <div class="stat-item two resource-usage">
         <div class="icon-title-row">
-          <i class="el-icon-setting icon" />
+          <img
+            src="./image/setting.png"
+            class="icon"
+            alt="资源使用率图标"
+          >
           <div class="stat-title">系统资源使用率</div>
         </div>
         <div class="usage-row">
@@ -165,6 +181,8 @@ export default {
 }
 
 .icon {
+  width: 45px;  /* 根据需要调整宽度 */
+  height: 45px;
   font-size: 45px; /* 增大图标尺寸 */
   margin-right: 12px; /* 增加图标与标题间距 */
   color: #409eff;

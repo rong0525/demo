@@ -169,6 +169,13 @@ export default {
   flex: 1;
   display: flex;
   flex-direction: column;
+  border-radius: 10px;
+  /* padding: 20px; */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  height: 100%;
+  min-width: 300px;
+  overflow: hidden;
+
 }
 
 /* 筛选栏样式 */

@@ -6,11 +6,11 @@
           <content-title style="font-size: 40px; margin-top: 20px;">重点事件通报</content-title>
         </content-header>
         <content-layout>
-            <card1-over-view :statistics="statistics" />
-            <!-- 修改这部分，添加一个容器来横向布局事件卡片 -->
-            <div class="events-container">
-              <card2-event v-for="(event, index) in eventList" :key="index" :event="event" /> 
-            </div>
+          <card1-over-view :statistics="statistics" />
+          <!-- 修改这部分，添加一个容器来横向布局事件卡片 -->
+          <div class="events-container">
+            <card2-event v-for="(event, index) in eventList" :key="index" :event="event" />
+          </div>
         </content-layout>
 
       </content-layout>
@@ -56,9 +56,9 @@ export default {
           title: '用户账号信息异常访问频率增高',
           time: '2025-07-17 08:30:15',
           description: '系统监测到多个IP地址频繁访问用户账号信息，疑似信息泄露',
-          // dataAmount: '58,000条用户账号数据',
-          // severity: '中',
-          // status: '处理中'
+          dataAmount: '58,000条用户账号数据',
+          severity: '中',
+          status: '处理中'
         },
         {
           type: '低危',
