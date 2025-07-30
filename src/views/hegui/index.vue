@@ -469,7 +469,7 @@ export default {
 .maincontent {
     width: 100%;
     min-height: 100vh;
-    background-color: #eee;
+    background-color: #eff1f4;
     display: flex;
     flex-direction: column;
     padding: 1.5rem;
