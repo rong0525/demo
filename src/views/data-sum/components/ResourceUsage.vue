@@ -58,13 +58,25 @@ export default {
     storageColor: {
       type: String,
       default: '#28B17E'
+    },
+    cpuColor2: {
+      type: String,
+      default: '#F2F4F7'
+    },
+    memoryColor2: {
+      type: String,
+      default: '#E8F5E9'
+    },
+    storageColor2: {
+      type: String,
+      default: '#E3F2FD'
     }
   },
   data() {
     return {
-      cpuColor2: '#F2F4F7',
-      memoryColor2: '#E8F5E9',
-      storageColor2: '#E3F2FD'
+      // cpuColor2: '#F2F4F7',
+      // memoryColor2: '#E8F5E9',
+      // storageColor2: '#E3F2FD'
     }
   },
   mounted() {
@@ -73,13 +85,13 @@ export default {
     this.initMiniChart('storageChart', this.storageUsage, this.storageColor, this.storageColor2)
 
     this.$watch('cpuUsage', (newVal) => {
-      this.updateChart('cpuChart', newVal)
+      this.updateChart('cpuChart', newVal, this.cpuColor, this.cpuColor2)
     })
     this.$watch('memoryUsage', (newVal) => {
-      this.updateChart('memChart', newVal)
+      this.updateChart('memChart', newVal, this.memoryColor, this.memoryColor2)
     })
     this.$watch('storageUsage', (newVal) => {
-      this.updateChart('storageChart', newVal)
+      this.updateChart('storageChart', newVal, this.storageColor, this.storageColor2)
     })
   },
   methods: {
@@ -101,14 +113,15 @@ export default {
         echarts.dispose(myChart)
       })
     },
-    updateChart(domId, value) {
+    updateChart(domId, value, color, color2) {
+      // console.log(`Updating chart ${domId} with value: ${value}`)
       const myChart = this[`${domId}Instance`]
       if (myChart) {
         myChart.setOption({
           series: [{
             data: [
-              { value: value },
-              { value: 100 - value }
+              { value: value, name: '', itemStyle: { color: color }},
+              { value: 100 - value, name: '', itemStyle: { color: color2 }}
             ]
           }]
         })

@@ -55,9 +55,9 @@
         </div>
         <div class="usage-row">
           <ResourceUsage
-            :cpu-usage="72"
-            :memory-usage="81"
-            :storage-usage="26"
+            :cpu-usage="systemStats.cpuUsage"
+            :memory-usage="systemStats.memoryUsage"
+            :storage-usage="systemStats.storageUsage"
           />
 
         </div>
@@ -67,70 +67,48 @@
 </template>
 
 <script>
-import * as echarts from 'echarts'
+// import * as echarts from 'echarts'
 import ResourceUsage from './ResourceUsage.vue'
 export default {
   name: 'TopStats',
   components: {
     ResourceUsage
   },
+  data() {
+    return {
+      // 初始化系统资源数据（默认值或空）
+      systemStats: {
+        cpuUsage: 0,
+        memoryUsage: 0,
+        storageUsage: 0
+      }
+    }
+  },
   mounted() {
-    this.initMiniChart('cpuChart', 72, '#409eff')
-    this.initMiniChart('memChart', 81, '#67c23a')
-    this.initMiniChart('storageChart', 26, '#e6a23c')
+    this.fetchSystemStats()
+
+    // 定时刷新数据（如每5秒更新一次）
+    this.interval = setInterval(() => {
+      this.fetchSystemStats()
+    }, 5000)
   },
   beforeDestroy() {
-    // 销毁图表实例
-    const chartDom = document.getElementById('resourceChart')
-    if (chartDom) {
-      echarts.dispose(chartDom)
+    // 清除定时器
+    if (this.interval) {
+      clearInterval(this.interval)
     }
   },
   methods: {
-    initMiniChart(domId, value, color) {
-      const chartDom = document.getElementById(domId)
-      if (!chartDom) return
+    async fetchSystemStats() {
+      // 模拟接口延迟
+      await new Promise(resolve => setTimeout(resolve, 500))
 
-      const myChart = echarts.init(chartDom)
-      const option = {
-        series: [
-          {
-            type: 'pie',
-            radius: ['45%', '75%'],
-            center: ['50%', '50%'],
-            data: [
-              { value: value, name: '' },
-              { value: 100 - value, name: '' }
-            ],
-            label: {
-              show: false
-            },
-            labelLine: {
-              show: false
-            },
-            itemStyle: {
-              color: color,
-              borderWidth: 0,
-              borderRadius: 5
-            },
-            emphasis: {
-              disabled: true
-            }
-          }
-        ]
+      // 生成随机的模拟数据（接近真实范围）
+      this.systemStats = {
+        cpuUsage: Math.floor(Math.random() * 50) + 20, // 50%-80%
+        memoryUsage: Math.floor(Math.random() * 40) + 40, // 60%-100%
+        storageUsage: 26 // 20%-40%
       }
-
-      myChart.setOption(option)
-
-      // 监听窗口变化
-      const resizeHandler = () => myChart.resize()
-      window.addEventListener('resize', resizeHandler)
-
-      // 组件销毁前清理
-      this.$once('hook:beforeDestroy', () => {
-        window.removeEventListener('resize', resizeHandler)
-        echarts.dispose(chartDom)
-      })
     }
   }
 }

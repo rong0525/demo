@@ -163,7 +163,7 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/data-sum/index'),
         name: 'DataSum',
-        meta: { title: '数据概览', icon: 'icon', affix: true, top: '数据概览' }
+        meta: { title: '数据概览', icon: 'el-icon-s-marketing', affix: true, top: '数据概览' }
       }
     ]
   },
@@ -187,7 +187,7 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/event-report/index'),
         name: 'eventReport',
-        meta: { title: '事件通报', icon: 'el-icon-s-flag', affix: true, top: '重点事件通报' }
+        meta: { title: '事件通报', icon: 'news.png', affix: true, top: '重点事件通报' }
       }
     ]
   },

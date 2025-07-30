@@ -111,8 +111,6 @@ export default {
   mounted() {
     // 初始化环形图
     this.initRingChart()
-    // 初始化饼图
-    this.initSunburstChart()
   },
   methods: {
     // 初始化环形图（重要数据占比）

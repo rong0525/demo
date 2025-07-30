@@ -34,16 +34,17 @@ export default {
   name: 'DataTrend',
   data() {
     return {
-      timeType: 'month',
+      timeType: 'day',
       dateRange: [],
       chartInstance: null,
       mockData: {
-        dates: ['7-1', '7-2', '7-3', '7-4', '7-5', '7-6', '7-7'],
+        dates: [],
         values: [3200, 2800, 3900, 4200, 3100, 3700, 4500]
       }
     }
   },
   mounted() {
+    this.mockData.dates = this.getRecent7Days()
     this.initChart()
     window.addEventListener('resize', this.resizeChart)
   },
@@ -102,6 +103,23 @@ export default {
         ]
       }
       this.chartInstance.setOption(option)
+    },
+    getRecent7Days() {
+      const days = []
+      const today = new Date()
+
+      for (let i = 6; i >= 0; i--) {
+        const date = new Date(today)
+        date.setDate(today.getDate() - i)
+
+        // 格式化：年-月-日（补0，如 2024-07-05）
+        const year = date.getFullYear()
+        const month = String(date.getMonth() + 1).padStart(2, '0') // 补0
+        const day = String(date.getDate()).padStart(2, '0') // 补0
+        days.push(`${year}-${month}-${day}`)
+      }
+
+      return days
     },
     resizeChart() {
       this.chartInstance && this.chartInstance.resize()

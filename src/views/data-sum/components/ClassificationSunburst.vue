@@ -17,28 +17,28 @@ export default {
         {
           name: '地理信息',
           children: [
-            { name: '构图数据', value: 1 },
-            { name: '点云数据', value: 1 },
-            { name: '惯导数据', value: 1 },
-            { name: '位置数据', value: 1 }
+            { name: '构图数据', value: 35 }, // 基础地图数据量大，占比最高
+            { name: '点云数据', value: 28 }, // 三维建模数据量较大
+            { name: '惯导数据', value: 15 }, // 设备传感器数据，中等规模
+            { name: '位置数据', value: 22 } // 轨迹类数据，持续产生
           ]
         },
         {
           name: '个人信息',
           children: [
-            { name: '身份信息', value: 1 },
-            { name: '人脸图像', value: 1 },
-            { name: '生物特征', value: 1 },
-            { name: '踪迹数据', value: 1 }
+            { name: '身份信息', value: 12 }, // 结构化数据，量少但敏感
+            { name: '人脸图像', value: 30 }, // 图像数据体积大
+            { name: '生物特征', value: 8 }, // 特征向量数据量较小
+            { name: '踪迹数据', value: 50 } // 持续产生的时序数据，总量最大
           ]
         },
         {
           name: '社会信息',
           children: [
-            { name: '车流数据', value: 1 },
-            { name: '充电网数据', value: 1 },
-            { name: '车牌图像', value: 1 },
-            { name: '敏感区域数据', value: 1 }
+            { name: '车流数据', value: 40 }, // 实时采集的大量时序数据
+            { name: '充电网数据', value: 25 }, // 充电桩记录，中等数据量
+            { name: '车牌图像', value: 20 }, // 图像数据，数量随车流量变化
+            { name: '敏感区域数据', value: 15 } // 受限区域采集，数据量较少
           ]
         }
       ]
