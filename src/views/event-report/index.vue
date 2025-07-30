@@ -2,17 +2,11 @@
   <div class="app-container">
     <main-content>
       <content-layout>
-        <content-header>
-          <content-title style="font-size: 40px; margin-top: 20px;">重点事件通报</content-title>
-        </content-header>
-        <content-layout>
-          <card1-over-view :statistics="statistics" />
-          <!-- 修改这部分，添加一个容器来横向布局事件卡片 -->
-          <div class="events-container">
-            <card2-event v-for="(event, index) in eventList" :key="index" :event="event" />
-          </div>
-        </content-layout>
-
+        <card1-over-view :statistics="statistics" />
+        <!-- 修改这部分，添加一个容器来横向布局事件卡片 -->
+        <div class="events-container">
+          <card2-event v-for="(event, index) in eventList" :key="index" :event="event" />
+        </div>
       </content-layout>
     </main-content>
   </div>
@@ -23,8 +17,8 @@ import MainContent from './components/MainContent'
 import ContentLayout from './components/ContentLayout'
 import Card2Event from './components/Card2-event'
 import Card1OverView from './components/Card1-overView'
-import ContentHeader from './components/ContentHeader'
-import ContentTitle from './components/ContentTitle'
+// import ContentHeader from './components/ContentHeader'
+// import ContentTitle from './components/ContentTitle'
 
 export default {
   name: 'EventReport',
@@ -32,9 +26,9 @@ export default {
     MainContent,
     ContentLayout,
     Card2Event,
-    Card1OverView,
-    ContentHeader,
-    ContentTitle
+    Card1OverView
+    // ContentHeader,
+    // ContentTitle
   },
   data() {
     return {
@@ -78,6 +72,8 @@ export default {
 <style scoped>
 .app-container {
   padding: 20px;
+  background-color: #EEE;
+  height: 100%;
 }
 
 /* 添加这个样式来实现卡片的横向布局 */

@@ -1,24 +1,30 @@
 <template>
   <div class="overview-card">
     <div class="statistics">
-      <i class="el-icon-message-solid"></i>
-      <span>共{{ statistics.total }}条重点事件</span>
+      <img
+        src="./123.png"
+        class="icon"
+        alt="图标"
+      >
+      <span class="text">共</span>
+      <span class="number">{{ statistics.total }}</span>
+      <span class="text">条重点事件</span>
     </div>
-    <el-button type="primary" size="small" class="custom-rule-btn" style="background-color: #4560f7;">自定义通报规则</el-button>
+    <el-button type="primary" size="small" class="custom-rule-btn" style="background-color: #4560f7;font-size: 20px;">自定义通报规则</el-button>
     <div class="filters">
-      <el-select v-model="eventType" placeholder="事件类型" size="large">
+      <el-select v-model="eventType" placeholder="事件类型" size="small">
         <el-option v-for="item in eventTypes" :key="item.value" :label="item.label" :value="item.value" />
       </el-select>
-      <el-select v-model="severity" placeholder="严重程度" size="large">
+      <el-select v-model="severity" placeholder="严重程度" size="small">
         <el-option v-for="item in severityOptions" :key="item.value" :label="item.label" :value="item.value" />
       </el-select>
-      <el-select v-model="status" placeholder="处理状态" size="large">
+      <el-select v-model="status" placeholder="处理状态" size="small">
         <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value" />
       </el-select>
-      <el-date-picker v-model="timeRange" type="daterange" size="large" start-placeholder="开始日期" end-placeholder="结束日期" />
-      <el-input v-model="searchKeyword" placeholder="请输入搜索关键词" prefix-icon="el-icon-search" size="large" />
+      <el-date-picker v-model="timeRange" type="daterange" size="small" start-placeholder="开始日期" end-placeholder="结束日期" />
+      <el-input v-model="searchKeyword" placeholder="请输入搜索关键词" prefix-icon="el-icon-search" size="small" />
     </div>
-    
+
   </div>
 </template>
 
@@ -68,43 +74,43 @@ export default {
   background-color: #fff;
   border-radius: 4px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-display: flex;
-width: calc(100% - 20px); /* 关键修改：宽度减少20px */
-padding-right: 0.25rem;
-height: 8.8125rem;
-padding: 1.25rem 1.625rem 1.25rem 1.25rem;
-align-items: center;
-height: 200px;
+  display: flex;
+  width: calc(100% - 20px); /* 关键修改：宽度减少20px */
+  padding-right: 0.25rem;
+  height: 8.8125rem;
+  padding: 1.25rem 1.625rem 1.25rem 1.25rem;
+  align-items: center;
+  height: 175px;
+  margin-top: -20px;
+  margin-bottom: -20px;
 
 }
 
 .statistics {
   display: flex;
   align-items: center;
-    padding-left: 30px; /* 增加左侧间距 */
-  margin-right: 20px; /* 与右侧元素保持间距 */
+  padding-left: 30px; /* 增加左侧间距 */
+   /* 与右侧元素保持间距 */
+  padding-right: 30px;
 
 }
 
-.statistics i {
-  font-size: 40px;
+.icon {
+  width: 40px;
+  height: 40px;
   color: #4560F7;
-  margin-right: 10px;
-  
+  margin-right: 12px;
+
 }
 
-.statistics span {
-width: 389px;
-position: relative;
-letter-spacing: -0.01em;
-line-height: 150%;
-text-align: left;
-display: flex;
-align-items: center;
-height: 50px;
-font-size: 32px;
-color: #828282;
-font-family: Inter;
+.text {
+  color: #828282;
+  font-family: Inter;
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 48px */
+  letter-spacing: -0.32px;
 }
 
 .filters {
@@ -114,16 +120,23 @@ font-family: Inter;
   gap: 10px;
 }
 
-.filters .el-select, .filters .el-date-picker, .filters .el-input {
-  width: 250px;
+.filters .el-select, .filters .el-date-picker, .filters {
+  width: 100px;
 
 }
-
-
-
-.custom-rule-btn {
-  margin-left: 15px;
-    padding: 12px 24px; /* 增大按钮内边距 */
-  font-size: 24px; /* 增大按钮字体 */
+.el-input{
+  width: 150px;
 }
+.number {
+  color: #4560F7;
+  font-family: Inter;
+  font-size: 48px;
+  font-style: normal;
+  font-weight: 900;
+  line-height: 150%;
+  letter-spacing: -0.48px;
+  margin-right: 7px;
+  margin-left: 7px;
+}
+
 </style>

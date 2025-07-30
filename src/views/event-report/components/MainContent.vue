@@ -1,6 +1,6 @@
 <template>
   <div class="main-content">
-    <slot></slot>
+    <slot />
   </div>
 </template>
 
@@ -13,9 +13,9 @@ export default {
 <style scoped>
 .main-content {
     display: inline-flex;
-    height: 1270px;
-    padding-right: 0.25rem;
-    padding-bottom: 0.25rem;
+    height: 100%;
+    padding-right: 0.20rem;
+    /* padding-bottom: 0.20rem; */
     flex-shrink: 0;
     background: #EEE;
     border-radius: 4px;
