@@ -12,8 +12,8 @@ export default {
 
 <style scoped>
 .main-content {
-    display: inline-flex;
-    height: 100%;
+
+    height: 950px;
     padding-right: 0.20rem;
     /* padding-bottom: 0.20rem; */
     flex-shrink: 0;

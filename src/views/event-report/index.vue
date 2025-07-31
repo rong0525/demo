@@ -47,18 +47,18 @@ export default {
         },
         {
           type: '中危',
-          title: '用户账号信息异常访问频率增高',
+          title: '人脸图像未脱敏存储',
           time: '2025-07-17 08:30:15',
-          description: '系统监测到多个IP地址频繁访问用户账号信息，疑似信息泄露',
+          description: '人脸图像数据在存储过程中未进行必要的脱敏处理，可能导致用户隐私泄露风险。涉及数据包括通过车载摄像头采集的用户面部图像，未采用模糊化、匿名化或其他脱敏技术，直接以明文形式存储于云端数据库，可能存在数据泄露或滥用风险。',
           dataAmount: '58,000条用户账号数据',
           severity: '中',
           status: '处理中'
         },
         {
           type: '低危',
-          title: '系统日志记录不完整风险',
+          title: '车辆系统日志出现大量数据丢失告警',
           time: '2025-07-16 15:45:22',
-          description: '部分系统日志记录不完整，可能影响安全审计和追溯能力',
+          description: '机系统日志记录出现异常，大量日志数据丢失，涉及车辆运行状态、传感器数据记录和用户交互日志。缺失的日志数据可能影响系统安全性审计、故障追溯以及合规性检查的能力，违反车联网数据完整性管理规范。初步分析可能由系统缓存溢出或日志存储模块故障引起。',
           dataAmount: '25,000条系统日志',
           severity: '低',
           status: '已处理'
@@ -81,12 +81,12 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  height: 90%;
+  height: 100%;
   gap: 15px;
- width: calc(100% - 20px); /* 关键修改：宽度减少20px */
+  width: calc(100% - 20px); /* 关键修改：宽度减少20px */
   background-color: rgb(255, 255, 255);
-    padding: 20px;
-    border-radius: 4px;
-    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  border-radius: 4px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
 }
 </style>
