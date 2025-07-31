@@ -326,7 +326,7 @@
   min-height: 100vh;
   padding: 2vh 2vw;
   box-sizing: border-box;
-  background-color: #f5f7fa;
+  background-color: #eff1f4;
 }
 .wrapper-row {
   display: flex;
