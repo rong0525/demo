@@ -193,7 +193,7 @@
                       <div class="blue-count">{{ ruleInfo.counts }}条</div>
                     </el-col>
                     <el-col :lg="12">
-                      <div class="module-title">以录入标准数</div>
+                      <div class="module-title">已录入标准数</div>
                       <div class="pink-count">{{ ruleInfo.standardCounts }}篇</div>
                     </el-col>
                     <el-col :lg="24" style="margin-top: 1.5vh">
@@ -351,7 +351,7 @@
   color: #828282;
 }
 .module-title {
-  font-size: 3.0vh;
+  font-size: 2.8vh;
   letter-spacing: 0.08em;
   line-height: 150%;
   display: flex;
@@ -378,7 +378,7 @@
 }
 .complianceTitle {
   font-weight: bold;
-  font-size: 3.6vh;
+  font-size: 3.2vh;
   letter-spacing: 0.03em;
   line-height: 150%;
   display: flex;
@@ -508,11 +508,11 @@ const unComplianceTop10Data = [
   },
   {
     type: 'society',
-    info: '敏感区域数据上传频率过高'
+    info: '敏感数据上传频率过高'
   },
   {
     type: 'person',
-    info: '内部系统身份信息访问异常'
+    info: '系统身份信息访问异常'
   }
 ]
 const importantEvents = [
