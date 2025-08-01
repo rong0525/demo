@@ -234,7 +234,7 @@
                           </el-col>
                           <el-col :lg="20" style="margin-top: 0.3vh">
                             <div class="module-title-smaller">人脸与生物特征识别引擎</div>
-                            <div class="rule-engine-info">已录入：{{ ruleEngineInfo.engine1.roledInCount }}<span style="margin-left: 2vh" />已启用：{{ ruleEngineInfo.engine1.activatedCount }}</div>
+                            <div class="rule-engine-info">已录入：{{ ruleEngineInfo.engine2.roledInCount }}<span style="margin-left: 2vh" />已启用：{{ ruleEngineInfo.engine2.activatedCount }}</div>
                           </el-col>
                           <el-col><div class="horizon-underline" /></el-col>
                         </el-row>
@@ -244,7 +244,7 @@
                           </el-col>
                           <el-col :lg="20" style="margin-top: 0.3vh">
                             <div class="module-title-smaller">敏感地理位置识别引擎</div>
-                            <div class="rule-engine-info">已录入：{{ ruleEngineInfo.engine1.roledInCount }}<span style="margin-left: 2vh" />已启用：{{ ruleEngineInfo.engine1.activatedCount }}</div>
+                            <div class="rule-engine-info">已录入：{{ ruleEngineInfo.engine3.roledInCount }}<span style="margin-left: 2vh" />已启用：{{ ruleEngineInfo.engine3.activatedCount }}</div>
                           </el-col>
                           <el-col><div class="horizon-underline" /></el-col>
                         </el-row>
@@ -254,7 +254,7 @@
                           </el-col>
                           <el-col :lg="20" style="margin-top: 0.3vh">
                             <div class="module-title-smaller">图像与点云识别引擎</div>
-                            <div class="rule-engine-info">已录入：{{ ruleEngineInfo.engine1.roledInCount }}<span style="margin-left: 2vh" />已启用：{{ ruleEngineInfo.engine1.activatedCount }}</div>
+                            <div class="rule-engine-info">已录入：{{ ruleEngineInfo.engine4.roledInCount }}<span style="margin-left: 2vh" />已启用：{{ ruleEngineInfo.engine4.activatedCount }}</div>
                           </el-col>
                           <el-col><div class="horizon-underline" /></el-col>
                         </el-row>
@@ -327,6 +327,7 @@
   padding: 2vh 2vw;
   box-sizing: border-box;
   background-color: #eff1f4;
+  margin-top: -20px;
 }
 .wrapper-row {
   display: flex;
@@ -542,27 +543,27 @@ const importantEvents = [
   }
 ]
 const ruleInfo = {
-  counts: 2842,
-  standardCounts: 23,
-  activatedCounts: 1324,
+  counts: 223,
+  standardCounts: 13,
+  activatedCounts: 124,
   updatedTime: format(new Date(Date.now()))
 }
 const ruleEngineInfo = {
   engine1: {
-    roledInCount: 256,
-    activatedCount: 211
+    roledInCount: 98,
+    activatedCount: 90
   },
   engine2: {
-    roledInCount: 256,
-    activatedCount: 211
+    roledInCount: 25,
+    activatedCount: 21
   },
   engine3: {
-    roledInCount: 256,
-    activatedCount: 211
+    roledInCount: 56,
+    activatedCount: 40
   },
   engine4: {
-    roledInCount: 256,
-    activatedCount: 211
+    roledInCount: 73,
+    activatedCount: 65
   }
 }
 

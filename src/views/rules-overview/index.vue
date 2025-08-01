@@ -1,6 +1,5 @@
 <template>
   <div class="app-container">
-    <!-- <p style="font-size: 23px;font-weight: 600;color:#4560f7;">规则概览</p> -->
     <el-row :gutter="30" type="flex" class="box-row">
       <el-col :span="15">
         <!-- 第一行 - 前两个方框 -->
@@ -622,7 +621,7 @@ export default {
 }
 
 .app-container {
-  background-color: #eff1f4;
+  background-color: #f5f5f5;
   padding: 10px 40px 10px;
 }
 .filter-container {
