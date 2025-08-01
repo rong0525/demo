@@ -523,22 +523,22 @@ const importantEvents = [
   {
     type: '地理位置数据越界传输',
     info: '涉嫌数据出境',
-    time: format(new Date(Date.now()))
+    time: format(new Date(Date.now() - 100000 * Math.random()))
   },
   {
     type: '人脸图像未脱敏存储',
     info: '新一批违规数据',
-    time: format(new Date(Date.now()))
+    time: format(new Date(Date.now() - 100000 * Math.random()))
   },
   {
     type: '车机系统日志异常',
     info: '大量数据丢失告警',
-    time: format(new Date(Date.now()))
+    time: format(new Date(Date.now() - 100000 * Math.random()))
   },
   {
     type: '关键合规规则更新',
     info: 'GB/T XXX-202X 已发布',
-    time: format(new Date(Date.now()))
+    time: format(new Date(Date.now() - 100000 * Math.random()))
   }
 ]
 const ruleInfo = {
@@ -576,7 +576,7 @@ export default {
   data() {
     return {
       todayTotalFlow: '1.5 TB',
-      oneDayBoost: '↑  15%',
+      oneDayBoost: '↑ 15%',
       complianceRate: '73.1%',
       lineChartData: lineChartData.newVisitis,
       thirtyDaysComplianceDataLineChartData: thirtyDaysComplianceDataLineChartData,
