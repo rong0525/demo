@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">恶意加密流量实时检测系统</h3>
+        <h3 class="title">数据可信审计与安全合规平台</h3>
       </div>
 
       <el-form-item prop="username">
@@ -52,12 +52,12 @@
           </div>
         </el-col>
         <el-col :span="12">
-            <div style="margin: 8px 15px">
-              <el-button :loading="loading" type="primary" plain style="width:100%;margin-bottom:30px;" @click.native.prevent="handleRegsiter" >注册</el-button>
-            </div>
+          <div style="margin: 8px 15px">
+            <el-button :loading="loading" type="primary" plain style="width:100%;margin-bottom:30px;" @click.native.prevent="handleRegsiter">注册</el-button>
+          </div>
         </el-col>
       </el-row>
-      
+
       <!-- <div style="position:relative">
         <div class="tips">
           <span>Username : admin</span>
@@ -68,7 +68,7 @@
           <span>Password : any</span>
         </div> -->
 
-        <!-- <el-button class="thirdparty-button" type="primary" @click="showDialog=true">
+      <!-- <el-button class="thirdparty-button" type="primary" @click="showDialog=true">
           Or connect with
         </el-button>
       </div> -->
@@ -190,7 +190,7 @@ export default {
       }, {})
     },
     handleRegsiter() {
-      console.log("register");
+      console.log('register')
     }
     // afterQRScan() {
     //   if (e.key === 'x-admin-oauth-code') {

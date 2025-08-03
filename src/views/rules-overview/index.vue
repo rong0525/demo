@@ -621,7 +621,7 @@ export default {
 }
 
 .app-container {
-  background-color: #eff1f4;
+  background-color: #f5f5f5;
   padding: 10px 40px 10px;
 }
 .filter-container {

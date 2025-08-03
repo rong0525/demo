@@ -11,7 +11,7 @@
           >
           <div class="stat-title">总数据流入量</div>
         </div>
-        <div class="stat-value">1.534 PB</div>
+        <div class="stat-value">{{ in_value }} PB</div>
         <div class="stat-change" style="color: #ff7875;">较上周同比 ↓2%</div>
       </div>
 
@@ -25,7 +25,7 @@
           >
           <div class="stat-title">活跃数据源</div>
         </div>
-        <div class="stat-value" style="color: #67c23a;">12758 个</div>
+        <div class="stat-value" style="color: #67c23a;">{{ active_sum }} 个</div>
         <div class="stat-change">新增15个 离线21个</div>
       </div>
 
@@ -39,7 +39,7 @@
           >
           <div class="stat-title">重要数据存储量</div>
         </div>
-        <div class="stat-value" style="color: #409eff;">350.89 TB</div>
+        <div class="stat-value" style="color: #409eff;">{{ store_value }} TB</div>
         <div class="stat-change" style="color: #67c23a;">当前存储空间充足</div>
       </div>
 
@@ -81,7 +81,10 @@ export default {
         cpuUsage: 0,
         memoryUsage: 0,
         storageUsage: 0
-      }
+      },
+      in_value: 1.534,
+      store_value: 350.89,
+      active_sum: 12758
     }
   },
   mounted() {
@@ -105,10 +108,14 @@ export default {
 
       // 生成随机的模拟数据（接近真实范围）
       this.systemStats = {
-        cpuUsage: Math.floor(Math.random() * 50) + 20, // 50%-80%
-        memoryUsage: Math.floor(Math.random() * 40) + 40, // 60%-100%
+        cpuUsage: Math.floor(Math.random() * 15) + 50, // 50%-80%
+        memoryUsage: Math.floor(Math.random() * 20) + 40, // 60%-100%
         storageUsage: 26 // 20%-40%
       }
+      this.in_value += 0.001 // 模拟数据流入量增长
+      this.in_value = Math.round(this.in_value * 1000) / 1000
+      this.store_value = Math.round((this.store_value + Math.random() * 0.2) * 100) / 100
+      this.active_sum = Math.floor(Math.random() * 6) + this.active_sum - 3 // 模拟活跃数据源数量
     }
   }
 }

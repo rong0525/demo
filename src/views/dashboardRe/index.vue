@@ -20,7 +20,7 @@
                       <div class="module-title">
                         今日数据流入总量
                       </div>
-                      <div class="todayTotalFlow">{{ todayTotalFlow }}</div>
+                      <div class="todayTotalFlow">{{ todayTotalFlow }}&nbsp;TB</div>
                     </el-col>
                     <el-col :lg="24" style="margin-top: 2.5vh">
                       <div class="module-title">
@@ -193,7 +193,7 @@
                       <div class="blue-count">{{ ruleInfo.counts }}条</div>
                     </el-col>
                     <el-col :lg="12">
-                      <div class="module-title">以录入标准数</div>
+                      <div class="module-title">已录入标准数</div>
                       <div class="pink-count">{{ ruleInfo.standardCounts }}篇</div>
                     </el-col>
                     <el-col :lg="24" style="margin-top: 1.5vh">
@@ -234,7 +234,7 @@
                           </el-col>
                           <el-col :lg="20" style="margin-top: 0.3vh">
                             <div class="module-title-smaller">人脸与生物特征识别引擎</div>
-                            <div class="rule-engine-info">已录入：{{ ruleEngineInfo.engine1.roledInCount }}<span style="margin-left: 2vh" />已启用：{{ ruleEngineInfo.engine1.activatedCount }}</div>
+                            <div class="rule-engine-info">已录入：{{ ruleEngineInfo.engine2.roledInCount }}<span style="margin-left: 2vh" />已启用：{{ ruleEngineInfo.engine2.activatedCount }}</div>
                           </el-col>
                           <el-col><div class="horizon-underline" /></el-col>
                         </el-row>
@@ -244,7 +244,7 @@
                           </el-col>
                           <el-col :lg="20" style="margin-top: 0.3vh">
                             <div class="module-title-smaller">敏感地理位置识别引擎</div>
-                            <div class="rule-engine-info">已录入：{{ ruleEngineInfo.engine1.roledInCount }}<span style="margin-left: 2vh" />已启用：{{ ruleEngineInfo.engine1.activatedCount }}</div>
+                            <div class="rule-engine-info">已录入：{{ ruleEngineInfo.engine3.roledInCount }}<span style="margin-left: 2vh" />已启用：{{ ruleEngineInfo.engine3.activatedCount }}</div>
                           </el-col>
                           <el-col><div class="horizon-underline" /></el-col>
                         </el-row>
@@ -254,7 +254,7 @@
                           </el-col>
                           <el-col :lg="20" style="margin-top: 0.3vh">
                             <div class="module-title-smaller">图像与点云识别引擎</div>
-                            <div class="rule-engine-info">已录入：{{ ruleEngineInfo.engine1.roledInCount }}<span style="margin-left: 2vh" />已启用：{{ ruleEngineInfo.engine1.activatedCount }}</div>
+                            <div class="rule-engine-info">已录入：{{ ruleEngineInfo.engine4.roledInCount }}<span style="margin-left: 2vh" />已启用：{{ ruleEngineInfo.engine4.activatedCount }}</div>
                           </el-col>
                           <el-col><div class="horizon-underline" /></el-col>
                         </el-row>
@@ -327,6 +327,7 @@
   padding: 2vh 2vw;
   box-sizing: border-box;
   background-color: #eff1f4;
+  margin-top: -20px;
 }
 .wrapper-row {
   display: flex;
@@ -350,7 +351,7 @@
   color: #828282;
 }
 .module-title {
-  font-size: 3.0vh;
+  font-size: 2.8vh;
   letter-spacing: 0.08em;
   line-height: 150%;
   display: flex;
@@ -377,7 +378,7 @@
 }
 .complianceTitle {
   font-weight: bold;
-  font-size: 3.6vh;
+  font-size: 3.2vh;
   letter-spacing: 0.03em;
   line-height: 150%;
   display: flex;
@@ -463,7 +464,7 @@ function pad(timeEl, total = 2, str = '0') {
 const lineChartData = {
   newVisitis: {
     expectedData: [100, 120, 161, 134, 105, 160, 165],
-    actualData: [8200, 9320, 9010, 9340, 12900, 13300, 23200]
+    actualData: [8200, 9320, 9010, 9340, 12900, 13300, 10056]
   }
 }
 const thirtyDaysComplianceDataLineChartData = {
@@ -507,11 +508,11 @@ const unComplianceTop10Data = [
   },
   {
     type: 'society',
-    info: '敏感区域数据上传频率过高'
+    info: '敏感数据上传频率过高'
   },
   {
     type: 'person',
-    info: '内部系统身份信息访问异常'
+    info: '系统身份信息访问异常'
   }
 ]
 const importantEvents = [
@@ -523,48 +524,49 @@ const importantEvents = [
   {
     type: '地理位置数据越界传输',
     info: '涉嫌数据出境',
-    time: format(new Date(Date.now()))
+    time: format(new Date(Date.now() - 100000 * Math.random()))
   },
   {
     type: '人脸图像未脱敏存储',
     info: '新一批违规数据',
-    time: format(new Date(Date.now()))
+    time: format(new Date(Date.now() - 100000 * Math.random()))
   },
   {
     type: '车机系统日志异常',
     info: '大量数据丢失告警',
-    time: format(new Date(Date.now()))
+    time: format(new Date(Date.now() - 100000 * Math.random()))
   },
   {
     type: '关键合规规则更新',
     info: 'GB/T XXX-202X 已发布',
-    time: format(new Date(Date.now()))
+    time: format(new Date(Date.now() - 100000 * Math.random()))
   }
 ]
 const ruleInfo = {
-  counts: 2842,
-  standardCounts: 23,
-  activatedCounts: 1324,
+  counts: 223,
+  standardCounts: 13,
+  activatedCounts: 124,
   updatedTime: format(new Date(Date.now()))
 }
 const ruleEngineInfo = {
   engine1: {
-    roledInCount: 256,
-    activatedCount: 211
+    roledInCount: 98,
+    activatedCount: 90
   },
   engine2: {
-    roledInCount: 256,
-    activatedCount: 211
+    roledInCount: 25,
+    activatedCount: 21
   },
   engine3: {
-    roledInCount: 256,
-    activatedCount: 211
+    roledInCount: 56,
+    activatedCount: 40
   },
   engine4: {
-    roledInCount: 256,
-    activatedCount: 211
+    roledInCount: 73,
+    activatedCount: 65
   }
 }
+// 定时器
 
 export default {
   components: {
@@ -575,20 +577,39 @@ export default {
   },
   data() {
     return {
-      todayTotalFlow: '1.5 TB',
-      oneDayBoost: '↑  15%',
+      todayTotalFlow: 1.5,
+      oneDayBoost: '↑ 15%',
       complianceRate: '73.1%',
       lineChartData: lineChartData.newVisitis,
       thirtyDaysComplianceDataLineChartData: thirtyDaysComplianceDataLineChartData,
       unComplianceTop10Data: unComplianceTop10Data,
       importantEvents: importantEvents,
       ruleInfo: ruleInfo,
-      ruleEngineInfo: ruleEngineInfo
+      ruleEngineInfo: ruleEngineInfo,
+      timer: null
     }
   },
   computed: {
   },
+  created() {
+    if (this.timer) {
+      clearInterval(this.timer)
+      this.timer = null
+    } else {
+      this.timer = setInterval(() => {
+        this.updateData()
+        console.log(this.lineChartData.actualData)
+      }, 10000)
+    }
+  },
+  destroyed() {
+    clearInterval(this.timer)
+  },
   methods: {
+    updateData() {
+      this.$set(this.lineChartData.actualData, 6, this.lineChartData.actualData[6] + Math.floor(Math.random() * 100))
+      this.todayTotalFlow = (parseFloat(this.todayTotalFlow) + Math.random() * 0.1).toFixed(1)
+    }
   }
 }
 </script>
