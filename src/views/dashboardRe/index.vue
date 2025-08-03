@@ -20,7 +20,7 @@
                       <div class="module-title">
                         今日数据流入总量
                       </div>
-                      <div class="todayTotalFlow">{{ todayTotalFlow }}</div>
+                      <div class="todayTotalFlow">{{ todayTotalFlow }}&nbsp;TB</div>
                     </el-col>
                     <el-col :lg="24" style="margin-top: 2.5vh">
                       <div class="module-title">
@@ -464,7 +464,7 @@ function pad(timeEl, total = 2, str = '0') {
 const lineChartData = {
   newVisitis: {
     expectedData: [100, 120, 161, 134, 105, 160, 165],
-    actualData: [8200, 9320, 9010, 9340, 12900, 13300, 23200]
+    actualData: [8200, 9320, 9010, 9340, 12900, 13300, 10056]
   }
 }
 const thirtyDaysComplianceDataLineChartData = {
@@ -566,6 +566,7 @@ const ruleEngineInfo = {
     activatedCount: 65
   }
 }
+// 定时器
 
 export default {
   components: {
@@ -576,7 +577,7 @@ export default {
   },
   data() {
     return {
-      todayTotalFlow: '1.5 TB',
+      todayTotalFlow: 1.5,
       oneDayBoost: '↑ 15%',
       complianceRate: '73.1%',
       lineChartData: lineChartData.newVisitis,
@@ -584,12 +585,31 @@ export default {
       unComplianceTop10Data: unComplianceTop10Data,
       importantEvents: importantEvents,
       ruleInfo: ruleInfo,
-      ruleEngineInfo: ruleEngineInfo
+      ruleEngineInfo: ruleEngineInfo,
+      timer: null
     }
   },
   computed: {
   },
+  created() {
+    if (this.timer) {
+      clearInterval(this.timer)
+      this.timer = null
+    } else {
+      this.timer = setInterval(() => {
+        this.updateData()
+        console.log(this.lineChartData.actualData)
+      }, 10000)
+    }
+  },
+  destroyed() {
+    clearInterval(this.timer)
+  },
   methods: {
+    updateData() {
+      this.$set(this.lineChartData.actualData, 6, this.lineChartData.actualData[6] + Math.floor(Math.random() * 100))
+      this.todayTotalFlow = (parseFloat(this.todayTotalFlow) + Math.random() * 0.1).toFixed(1)
+    }
   }
 }
 </script>
