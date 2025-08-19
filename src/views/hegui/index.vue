@@ -1,729 +1,625 @@
 <template>
-  <div :class="$style.maincontent">
-    <div :class="$style.contentlayout">
-      <div :class="$style.card1Complianceratioandtrend">
-        <b :class="$style.b9">整体合规情况</b>
-        <!-- 1. 环形图 -->
-        <div :class="$style.div68">
-          <!-- 修改: v-chart 替换为 div -->
-          <div ref="pieChart" :class="$style.pieChart" />
-          <div :class="$style.div69">
-            <p :class="$style.p">当前合规率</p>
-            <p :class="$style.p28">73.1%</p>
+  <div class="container-wrapper">
+    <el-row :gutter="20" class="cards-row">
+
+      <el-col :xs="24" :sm="24" :md="4" :lg="4" :xl="4">
+        <el-card class="box-card fixed-height-card" shadow="never">
+          <div slot="header" class="clearfix blue-background">
+            <span>法条标准目录</span>
           </div>
-        </div>
-        <!-- 2. 统计项列表 -->
-        <div :class="$style.statsList">
-          <div :class="$style.statItem">
-            <span>未合规项总数：</span>
-            <b :class="$style.b6">{{ statsData.totalUncompliant }} 条</b>
+          <div class="card-content">
+            <el-menu
+              :default-active="activeFilter"
+              class="custom-menu"
+              @select="handleSelectFilter"
+            >
+
+              <el-menu-item-group>
+                <template slot="title">
+                  <span class="group-title">法规条例</span>
+                </template>
+                <el-menu-item index="《汽车数据出境安全指引》" class="menu-item-style">
+                  <span slot="title">工信部等-《汽车数据出境安全指引》</span>
+                </el-menu-item>
+                <el-menu-item index="《汽车数据安全管理若干规定》" class="menu-item-style">
+                  <span slot="title">网信办等-《汽车数据安全管理若干规定》</span>
+                </el-menu-item>
+                <el-menu-item index="《智能网联汽车时空数据安全处理基本要求》" class="menu-item-style">
+                  <span slot="title">自然资源部-《智能网联汽车时空数据安全处理基本要求》</span>
+                </el-menu-item>
+                <el-menu-item index="《智能网联汽车时空数据传感器安全基本要求》" class="menu-item-style">
+                  <span slot="title">自然资源部-《智能网联汽车时空数据传感器安全基本要求》</span>
+                </el-menu-item>
+                <el-menu-item index="《个人信息保护法》" class="menu-item-style">
+                  <span slot="title">《中华人民共和国个人信息保护法》</span>
+                </el-menu-item>
+              </el-menu-item-group>
+
+              <el-menu-item-group>
+                <template slot="title">
+                  <span class="group-title">标准规范</span>
+                </template>
+                <el-menu-item index="《汽车数据通用要求》" class="menu-item-style">
+                  <span slot="title">《汽车数据通用要求》</span>
+                </el-menu-item>
+                <el-menu-item index="《汽车整车信息安全技术要求》" class="menu-item-style">
+                  <span slot="title">《汽车整车信息安全技术要求》</span>
+                </el-menu-item>
+              </el-menu-item-group>
+
+              <el-menu-item index="all" class="menu-item-style">
+                <span slot="title">全部数据</span>
+              </el-menu-item>
+
+            </el-menu>
           </div>
-          <div :class="$style.statItem">
-            <span>高风险不合规项：</span>
-            <b :class="$style.b6">{{ statsData.highRisk }} 条</b>
+        </el-card>
+      </el-col>
+
+      <el-col :xs="24" :sm="24" :md="20" :lg="20" :xl="20">
+        <el-card class="box-card fixed-height-card" shadow="never">
+          <div slot="header" class="clearfix blue-background">
+            <span>合规详情列表</span>
           </div>
-          <div :class="$style.statItem">
-            <span>待处理项：</span>
-            <b :class="$style.b7">{{ statsData.pending }} 条</b>
+          <div class="card-content table-container">
+            <el-table
+              :data="filteredTableData"
+              style="width: 100%"
+              height="100%"
+            >
+              <el-table-column type="expand">
+                <template slot-scope="props">
+                  <el-form label-position="left" inline class="demo-table-expand">
+                    <el-form-item label="时间">
+                      <span>{{ props.row.time }}</span>
+                    </el-form-item>
+                    <el-form-item label="源IP">
+                      <span>{{ props.row.sourceIp }}</span>
+                    </el-form-item>
+                    <el-form-item label="目的IP">
+                      <span>{{ props.row.destIp }}</span>
+                    </el-form-item>
+                    <el-form-item label="违规内容">
+                      <a href="https://n.sinaimg.cn/sinakd10121/744/w1500h844/20210218/17d1-kkciesr3434303.jpg" target="_blank">{{ props.row.violationContent }}</a>
+                    </el-form-item>
+                    <el-form-item label="原始流量">
+                      <el-button type="text">{{ props.row.originalTraffic }}</el-button>
+                    </el-form-item>
+                  </el-form>
+                </template>
+              </el-table-column>
+
+              <el-table-column prop="violationId" label="不合规项 ID" sortable />
+              <el-table-column prop="lawStandard" label="对应法规标准" sortable />
+              <el-table-column prop="violationTerm" label="违规条款/条目" sortable />
+              <el-table-column prop="violationDesc" label="违规行为描述" sortable />
+              <el-table-column prop="dataAsset" label="涉及数据资产" sortable />
+              <el-table-column prop="violatingEntity" label="违规主体（域名/IP）" sortable />
+            </el-table>
           </div>
-          <div :class="$style.statItem">
-            <span>今日新增不合规项：</span>
-            <b :class="$style.b5">{{ statsData.newToday }} 条</b>
-          </div>
-          <div :class="$style.statItem">
-            <span>已处理不合规项（今日）：</span>
-            <b :class="$style.b4">{{ statsData.processedToday }} 条</b>
-          </div>
-        </div>
-        <!-- 3. 时间选择器 -->
-        <div :class="$style.timeSelectorContainer">
-          <el-date-picker
-            v-model="dateRange"
-            type="daterange"
-            align="right"
-            unlink-panels
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            :picker-options="pickerOptions"
-            size="mini"
-          />
-          <el-select v-model="timeUnit" placeholder="请选择" size="mini" :class="$style.timeUnitSelect">
-            <el-option
-              v-for="item in timeUnitOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-        </div>
-        <!-- 4. 折线图 -->
-        <!-- 修改: v-chart 替换为 div -->
-        <div ref="lineChart" :class="$style.lineChart" />
-      </div>
-      <div :class="$style.card2">
-        <div :class="$style.cardHeader">
-          <b :class="$style.b2">不合规项类型分布</b>
-          <el-radio-group v-model="chartView" size="mini">
-            <el-radio-button label="month">本月</el-radio-button>
-            <el-radio-button label="week">本周</el-radio-button>
-            <el-radio-button label="day">今日</el-radio-button>
-          </el-radio-group>
-        </div>
-        <!-- 修改: v-chart 替换为 div -->
-        <div ref="barChart" :class="$style.barChart" />
-      </div>
-      <div :class="$style.card3">
-        <b :class="$style.b2">不合规项详情列表</b>
-        <div :class="$style.table">
-          <div :class="$style.tablefunction">
-            <div /> <!-- 占位符，将图标推到右边 -->
-            <div :class="$style.functionIcons">
-              <img :class="$style.icon10" alt="" src="./icon-打印.png">
-              <img :class="$style.icon9" alt="" src="./icon-导出.png">
-              <img :class="$style.icon8" alt="" src="./icon-选项.png">
-            </div>
-          </div>
-          <div :class="$style.tablecontent">
-            <div :class="[$style.tablegrid, $style.tableheader]">
-              <div :class="$style.headerCell"><span>排序</span><img :class="$style.icon7" alt="" src="./排名.png"></div>
-              <div :class="$style.headerCell"><span>不合规类型</span><img :class="$style.icon6" alt="" src="./排序.png"></div>
-              <div :class="$style.headerCell"><span>涉及数据</span><img :class="$style.icon5" alt="" src="./排序.png"></div>
-              <div :class="$style.headerCell"><span>发生时间</span><img :class="$style.icon4" alt="" src="./排序.png"></div>
-              <div :class="$style.headerCell"><span>严重程度</span><img :class="$style.icon2" alt="" src="./排序.png"></div>
-              <div :class="$style.headerCell"><span>处理状态</span><img :class="$style.icon2" alt="" src="./排序.png"></div>
-              <div :class="$style.headerCell"><span>匹配规则</span><img :class="$style.icon1" alt="" src="./排序.png"></div>
-              <div :class="$style.headerCell"><span>操作</span><img :class="$style.icon" alt="" src="./排序.png"></div>
-            </div>
-            <div :class="$style.rows">
-              <!-- 表格行 -->
-              <div v-for="item in tableData" :key="item.id" :class="[$style.tablegrid, $style.tableRow]">
-                <div>{{ item.id }}</div>
-                <div>{{ item.type }}</div>
-                <div>
-                  <p :class="$style.p">{{ item.data.name }}</p>
-                  <p :class="$style.p">{{ item.data.source }}</p>
-                </div>
-                <div>{{ item.time }}</div>
-                <div>
-                  <div :class="[$style.label, $style[item.severity.toLowerCase()]]">
-                    {{ item.severity }}
-                  </div>
-                </div>
-                <div>{{ item.status }}</div>
-                <div>
-                  <p :class="$style.p">{{ item.rule.name }}</p>
-                  <p :class="$style.p">{{ item.rule.detail }}</p>
-                </div>
-                <div :class="$style.actionLink">
-                  <span v-if="item.action === '详情'">{{ item.action }}</span>
-                  <span v-else v-html="item.action" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+        </el-card>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <script>
-// 1. 修改 ECharts 导入方式
-import echarts from 'echarts/lib/echarts' // 导入主模块
-import 'echarts/lib/chart/pie'
-import 'echarts/lib/chart/bar'
-import 'echarts/lib/chart/line'
-import 'echarts/lib/component/title'
-import 'echarts/lib/component/tooltip'
-import 'echarts/lib/component/grid'
-import 'echarts/lib/component/legend'
-// 2. 移除 vue-echarts 导入
-
 export default {
-  name: 'Documentation',
-  // 3. 移除 VChart 组件注册
-  components: {},
+  name: 'FilterableTablePage',
   data() {
-    const barChartData = {
-      month: {
-        categories: ['泄露个人信息', '泄露车辆信息', '泄露涉密地点', '传输未加密', '传输涉密数据', '存在漏洞'],
-        values: [620, 932, 901, 934, 1290, 1330]
-      },
-      week: {
-        categories: ['泄露个人信息', '泄露车辆信息', '泄露涉密地点', '传输未加密', '传输涉密数据', '存在漏洞'],
-        values: [120, 200, 150, 80, 70, 110]
-      },
-      day: {
-        categories: ['泄露个人信息', '泄露车辆信息', '泄露涉密地点', '传输未加密', '传输涉密数据', '存在漏洞'],
-        values: [30, 45, 35, 20, 15, 25]
-      }
-    }
     return {
-      // 4. 为 ECharts 实例添加占位符
-      pieChartInstance: null,
-      lineChartInstance: null,
-      barChartInstance: null,
-      statsInterval: null, // 用于存储定时器ID
-      statsData: { // 存储统计项的动态数据
-        totalUncompliant: 15,
-        highRisk: 3,
-        pending: 8,
-        newToday: 2,
-        processedToday: 5
-      },
-      chartView: 'month', // for bar chart
-      barChartData,
-      dateRange: [], // v-model for el-date-picker
-      timeUnit: 'month', // v-model for el-select, with a default value
-      pickerOptions: {
-        shortcuts: [{
-          text: '今天',
-          onClick(picker) {
-            const end = new Date()
-            const start = new Date()
-            start.setHours(0, 0, 0, 0)
-            picker.$emit('pick', [start, end])
-          }
-        }, {
-          text: '本周',
-          onClick(picker) {
-            const end = new Date()
-            const start = new Date()
-            const day = start.getDay() || 7 // Make Sunday (0) be 7
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * (day - 1))
-            start.setHours(0, 0, 0, 0)
-            picker.$emit('pick', [start, end])
-          }
-        }, {
-          text: '本月',
-          onClick(picker) {
-            const end = new Date()
-            const start = new Date()
-            start.setDate(1)
-            start.setHours(0, 0, 0, 0)
-            picker.$emit('pick', [start, end])
-          }
-        }]
-      },
-      timeUnitOptions: [
-        { value: 'hour', label: '按小时' },
-        { value: 'day', label: '按天' },
-        { value: 'month', label: '按月' }
+      originalTableData: [
+        {
+          'violationId': 'A001',
+          'lawStandard': '《汽车数据安全管理若干规定》',
+          'violationTerm': '第十一条：向境外提供重要数据需经安全评估。',
+          'violationDesc': '向境外传输高精度地图众包数据。',
+          'dataAsset': '高精度地图众包数据',
+          'violatingEntity': 'https://www.google.com/search?q=dev.car-e.com',
+          'time': '2025-08-18 10:30:15',
+          'sourceIp': '10.10.1.5',
+          'destIp': '15.2.3.4',
+          'violationContent': '[查看详情]',
+          'originalTraffic': '[查看原始流量]',
+          'title': '《汽车数据安全管理若干规定》',
+          'category': '法规条例'
+        },
+        {
+          'violationId': 'B002',
+          'lawStandard': '《汽车数据出境安全指引》',
+          'violationTerm': '第五条：数据出境安全。',
+          'violationDesc': '向境外五家服务商传输用户行程轨迹，未进行安全评估和备案。',
+          'dataAsset': '用户行程轨迹',
+          'violatingEntity': 'https://www.google.com/search?q=drive.car-e.com',
+          'time': '2025-08-18 11:25:40',
+          'sourceIp': '10.10.1.10',
+          'destIp': '123.45.67.89',
+          'violationContent': '[查看详情]',
+          'originalTraffic': '[查看原始流量]',
+          'title': '《汽车数据出境安全指引》',
+          'category': '法规条例'
+        },
+        {
+          'violationId': 'C003',
+          'lawStandard': '《汽车数据通用要求》',
+          'violationTerm': '3.2.1：数据分类分级。',
+          'violationDesc': '未对收集的个人生物识别特征数据进行分类分级。',
+          'dataAsset': '驾驶员面部数据',
+          'violatingEntity': 'https://www.google.com/search?q=secure.car-d.com',
+          'time': '2025-08-18 13:05:22',
+          'sourceIp': '10.10.1.15',
+          'destIp': '22.33.44.55',
+          'violationContent': '[查看详情]',
+          'originalTraffic': '[查看原始流量]',
+          'title': '《汽车数据通用要求》',
+          'category': '标准规范'
+        },
+        {
+          'violationId': 'E005',
+          'lawStandard': '《智能网联汽车时空数据传感器安全基本要求》',
+          'violationTerm': '4.1：数据采集。',
+          'violationDesc': '车辆传感器在非授权情况下，持续采集周边重要地理区域的高精度影像。',
+          'dataAsset': '重要机关周边测绘数据',
+          'violatingEntity': 'https://www.google.com/search?q=research.car-e.com',
+          'time': '2025-08-18 14:10:55',
+          'sourceIp': '10.10.1.20',
+          'destIp': '55.66.77.88',
+          'violationContent': '[查看详情]',
+          'originalTraffic': '[查看原始流量]',
+          'title': '《智能网联汽车时空数据传感器安全基本要求》',
+          'category': '法规条例'
+        },
+        {
+          'violationId': 'F006',
+          'lawStandard': '《汽车数据安全管理若干规定》',
+          'violationTerm': '第十条：个人信息处理。',
+          'violationDesc': '违规收集并向车外单独支付账户信息。',
+          'dataAsset': '车载支付账户信息',
+          'violatingEntity': 'https://www.google.com/search?q=payment.car-b.com',
+          'time': '2025-08-18 15:33:18',
+          'sourceIp': '10.10.1.25',
+          'destIp': '88.99.11.22',
+          'violationContent': '[查看详情]',
+          'originalTraffic': '[查看原始流量]',
+          'title': '《汽车数据安全管理若干规定》',
+          'category': '法规条例'
+        },
+        {
+          'violationId': 'H008',
+          'lawStandard': '《汽车数据出境安全指引》',
+          'violationTerm': '第七条：敏感个人信息处理。',
+          'violationDesc': '未取得单独同意，向境外提供包含驾驶员面部识别特征的数据。',
+          'dataAsset': '驾驶员面部数据',
+          'violatingEntity': 'https://www.google.com/search?q=secure.car-d.com',
+          'time': '2025-08-18 16:50:07',
+          'sourceIp': '10.10.1.30',
+          'destIp': '22.33.44.55',
+          'violationContent': '[查看详情]',
+          'originalTraffic': '[查看原始流量]',
+          'title': '《汽车数据出境安全指引》',
+          'category': '法规条例'
+        },
+        {
+          'violationId': 'B003',
+          'lawStandard': '《汽车数据出境安全指引》',
+          'violationTerm': '第五条：数据出境安全。',
+          'violationDesc': '将中国境内超过10万台车辆的充电运行数据传输至境外。',
+          'dataAsset': '充电运行状态数据',
+          'violatingEntity': 'https://www.google.com/search?q=charging-analytics.com',
+          'time': '2025-08-18 17:00:20',
+          'sourceIp': '10.10.1.35',
+          'destIp': '99.88.77.66',
+          'violationContent': '[查看详情]',
+          'originalTraffic': '[查看原始流量]',
+          'title': '《汽车数据出境安全指引》',
+          'category': '法规条例'
+        },
+        {
+          'violationId': 'A002',
+          'lawStandard': '《汽车数据安全管理若干规定》',
+          'violationTerm': '第十条：个人信息处理。',
+          'violationDesc': '未经脱敏的车牌信息和人脸信息被传输到云端。',
+          'dataAsset': '真实人脸数据, 真实汽车号牌数据',
+          'violatingEntity': 'https://www.google.com/search?q=stream.car-e.com',
+          'time': '2025-08-18 17:15:30',
+          'sourceIp': '10.10.1.40',
+          'destIp': '10.20.30.40',
+          'violationContent': '[查看详情]',
+          'originalTraffic': '[查看原始流量]',
+          'title': '《汽车数据安全管理若干规定》',
+          'category': '法规条例'
+        },
+        {
+          'violationId': 'F007',
+          'lawStandard': '《汽车数据通用要求》',
+          'violationTerm': '3.2.1：数据分类分级。',
+          'violationDesc': '未对车辆诊断数据进行分类分级，并传输至境外。',
+          'dataAsset': '车辆诊断数据',
+          'violatingEntity': 'https://www.google.com/search?q=diagnostics.us.com',
+          'time': '2025-08-18 18:01:05',
+          'sourceIp': '10.10.1.45',
+          'destIp': '11.22.33.44',
+          'violationContent': '[查看详情]',
+          'originalTraffic': '[查看原始流量]',
+          'title': '《汽车数据通用要求》',
+          'category': '标准规范'
+        },
+        {
+          'violationId': 'D004',
+          'lawStandard': '《汽车数据出境安全指引》',
+          'violationTerm': '第六条：数据安全保护措施。',
+          'violationDesc': 'OTA升级服务绕过安全审核，从非授权服务器下载更新文件。',
+          'dataAsset': 'OTA数据',
+          'violatingEntity': 'unauthorized-ota.cdn',
+          'time': '2025-08-18 18:30:45',
+          'sourceIp': '10.10.1.50',
+          'destIp': '77.88.99.00',
+          'violationContent': '[查看详情]',
+          'originalTraffic': '[查看原始流量]',
+          'title': '《汽车数据出境安全指引》',
+          'category': '法规条例'
+        },
+        {
+          'violationId': 'B004',
+          'lawStandard': '《个人信息保护法》',
+          'violationTerm': '第三十七条：向境外提供个人信息。',
+          'violationDesc': '未取得单独同意，向境外传输用户的指纹数据。',
+          'dataAsset': '驾驶员生物特征数据',
+          'violatingEntity': 'https://www.google.com/search?q=auth.car-f.com',
+          'time': '2025-08-18 19:10:20',
+          'sourceIp': '10.10.1.55',
+          'destIp': '14.25.36.47',
+          'violationContent': '[查看详情]',
+          'originalTraffic': '[查看原始流量]',
+          'title': '《中华人民共和国个人信息保护法》',
+          'category': '法规条例'
+        },
+        {
+          'violationId': 'E006',
+          'lawStandard': '《智能网联汽车时空数据传感器安全基本要求》',
+          'violationTerm': '4.2：数据存储。',
+          'violationDesc': '车辆点云数据在本地存储时未加密，存在泄露风险。',
+          'dataAsset': '车辆点云数据',
+          'violatingEntity': '10.10.1.60',
+          'time': 'N/A',
+          'sourceIp': 'N/A',
+          'destIp': 'N/A',
+          'violationContent': '[查看详情]',
+          'originalTraffic': '[查看原始流量]',
+          'title': '《智能网联汽车时空数据传感器安全基本要求》',
+          'category': '法规条例'
+        },
+        {
+          'violationId': 'F008',
+          'lawStandard': '《汽车数据通用要求》',
+          'violationTerm': '3.2.1：数据分类分级。',
+          'violationDesc': '研发团队在境外办公时，通过非安全渠道访问并下载包含国家重点研发项目的源代码。',
+          'dataAsset': '核心算法源代码',
+          'violatingEntity': 'https://www.google.com/search?q=dev-portal.corp-internal.com',
+          'time': '2025-08-19 09:00:30',
+          'sourceIp': '10.10.1.65',
+          'destIp': '98.76.54.32',
+          'violationContent': '[查看详情]',
+          'originalTraffic': '[查看原始流量]',
+          'title': '《汽车数据通用要求》',
+          'category': '标准规范'
+        },
+        {
+          'violationId': 'G009',
+          'lawStandard': '《汽车数据安全管理若干规定》',
+          'violationTerm': '第十三条：重要数据。',
+          'violationDesc': '车联网平台将包含内网IP地址和网络拓扑信息的文件传输至境外。',
+          'dataAsset': '车联网平台网络拓扑图',
+          'violatingEntity': 'https://www.google.com/search?q=network-ops.com',
+          'time': '2025-08-19 10:15:45',
+          'sourceIp': '10.10.1.70',
+          'destIp': '87.65.43.21',
+          'violationContent': '[查看详情]',
+          'originalTraffic': '[查看原始流量]',
+          'title': '《汽车数据安全管理若干规定》',
+          'category': '法规条例'
+        },
+        {
+          'violationId': 'A003',
+          'lawStandard': '《汽车数据出境安全指引》',
+          'violationTerm': '第十一条：向境外提供重要数据。',
+          'violationDesc': '将车辆OTA升级服务与境内运行车辆数量达50万台以上的信息传输至境外。',
+          'dataAsset': 'OTA数据、车辆识别码',
+          'violatingEntity': 'https://www.google.com/search?q=update.car-h.com',
+          'time': '2025-08-19 11:40:10',
+          'sourceIp': '10.10.1.75',
+          'destIp': '76.54.32.10',
+          'violationContent': '[查看详情]',
+          'originalTraffic': '[查看原始流量]',
+          'title': '《汽车数据出境安全指引》',
+          'category': '法规条例'
+        },
+        {
+          'violationId': 'PII-003',
+          'lawStandard': '《个人信息保护法》',
+          'violationTerm': '第二十四条：自动化决策。',
+          'violationDesc': '对驾驶员行为数据进行自动化分析，并在未告知的情况下用于推送广告。',
+          'dataAsset': '驾驶员行为数据',
+          'violatingEntity': 'https://www.google.com/search?q=ads.car-ad.com',
+          'time': '2025-08-19 13:00:00',
+          'sourceIp': '10.10.1.80',
+          'destIp': '11.22.33.44',
+          'violationContent': '[查看详情]',
+          'originalTraffic': '[查看原始流量]',
+          'title': '《中华人民共和国个人信息保护法》',
+          'category': '法规条例'
+        },
+        {
+          'violationId': 'CDR-002',
+          'lawStandard': '《汽车数据安全管理若干规定》',
+          'violationTerm': '第十条：个人信息处理。',
+          'violationDesc': '违规收集并向车外单独传输车辆钥匙数据。',
+          'dataAsset': '车辆钥匙',
+          'violatingEntity': 'https://www.google.com/search?q=key-sync.car-k.com',
+          'time': '2025-08-19 14:20:55',
+          'sourceIp': '10.10.1.85',
+          'destIp': '55.66.77.88',
+          'violationContent': '[查看详情]',
+          'originalTraffic': '[查看原始流量]',
+          'title': '《汽车数据安全管理若干规定》',
+          'category': '法规条例'
+        },
+        {
+          'violationId': 'SOUR-002',
+          'lawStandard': '《汽车数据出境安全指引》',
+          'violationTerm': '第五条：数据出境安全。',
+          'violationDesc': '研发文件（如BOM）中包含了受限制的物料清单。',
+          'dataAsset': '物料清单（BOM）',
+          'violatingEntity': 'https://www.google.com/search?q=bom-repo.car-l.com',
+          'time': '2025-08-19 15:10:30',
+          'sourceIp': '10.10.1.90',
+          'destIp': '99.88.77.66',
+          'violationContent': '[查看详情]',
+          'originalTraffic': '[查看原始流量]',
+          'title': '《汽车数据出境安全指引》',
+          'category': '法规条例'
+        },
+        {
+          'violationId': 'GEO-002',
+          'lawStandard': '《智能网联汽车时空数据安全处理基本要求》',
+          'violationTerm': '4.1：数据采集。',
+          'violationDesc': '车辆持续采集的影像数据包含了敏感地区的影像。',
+          'dataAsset': '敏感地区影像数据',
+          'violatingEntity': 'https://www.google.com/search?q=sensor-data.car-m.com',
+          'time': '2025-08-19 16:05:00',
+          'sourceIp': '10.10.1.95',
+          'destIp': '123.45.67.89',
+          'violationContent': '[查看详情]',
+          'originalTraffic': '[查看原始流量]',
+          'title': '《智能网联汽车时空数据安全处理基本要求》',
+          'category': '法规条例'
+        },
+        {
+          'violationId': 'NET-002',
+          'lawStandard': '《汽车整车信息安全技术要求》',
+          'violationTerm': '6.2：通信安全。',
+          'violationDesc': '车辆通信模块使用弱加密算法，导致数据传输过程中存在被窃听的风险。',
+          'dataAsset': '网联通信数据',
+          'violatingEntity': '192.168.10.100',
+          'time': 'N/A',
+          'sourceIp': 'N/A',
+          'destIp': 'N/A',
+          'violationContent': '[查看详情]',
+          'originalTraffic': '[查看原始流量]',
+          'title': '《汽车整车信息安全技术要求》',
+          'category': '标准规范'
+        },
+        {
+          'violationId': 'SOUR-003',
+          'lawStandard': '《汽车数据出境安全指引》',
+          'violationTerm': '第五条：数据出境安全。',
+          'violationDesc': '研发团队在境外通过非安全渠道下载了设计方案和图纸。',
+          'dataAsset': '研发设计文档',
+          'violatingEntity': 'https://www.google.com/search?q=design-portal.car-n.com',
+          'time': '2025-08-19 17:30:15',
+          'sourceIp': '10.10.1.105',
+          'destIp': '15.2.3.4',
+          'violationContent': '[查看详情]',
+          'originalTraffic': '[查看原始流量]',
+          'title': '《汽车数据出境安全指引》',
+          'category': '法规条例'
+        },
+        {
+          'violationId': 'CDR-003',
+          'lawStandard': '《汽车数据安全管理若干规定》',
+          'violationTerm': '第十条：个人信息处理。',
+          'violationDesc': '未经脱敏的虹膜编码被传输至云端。',
+          'dataAsset': '驾驶员生物特征数据',
+          'violatingEntity': 'https://www.google.com/search?q=stream.car-e.com',
+          'time': '2025-08-19 18:00:00',
+          'sourceIp': '10.10.1.110',
+          'destIp': '10.20.30.40',
+          'violationContent': '[查看详情]',
+          'originalTraffic': '[查看原始流量]',
+          'title': '《汽车数据安全管理若干规定》',
+          'category': '法规条例'
+        },
+        {
+          'violationId': 'TRAF-002',
+          'lawStandard': '《智能网联汽车时空数据安全处理基本要求》',
+          'violationTerm': '4.1：数据采集。',
+          'violationDesc': '车辆在特定区域持续采集人员流量数据并传输至公网。',
+          'dataAsset': '人员流量数据',
+          'violatingEntity': 'data-collector.cn',
+          'time': '2025-08-19 18:30:45',
+          'sourceIp': '10.10.1.115',
+          'destIp': '55.66.77.88',
+          'violationContent': '[查看详情]',
+          'originalTraffic': '[查看原始流量]',
+          'title': '《智能网联汽车时空数据安全处理基本要求》',
+          'category': '法规条例'
+        },
+        {
+          'violationId': 'OTA-002',
+          'lawStandard': '《汽车数据出境安全指引》',
+          'violationTerm': '第五条：数据出境安全。',
+          'violationDesc': 'OTA服务将车辆的动力系统固件传输到境外的非授权服务器。',
+          'dataAsset': 'OTA数据',
+          'violatingEntity': 'unauthorized-ota.cdn',
+          'time': '2025-08-19 19:15:20',
+          'sourceIp': '10.10.1.120',
+          'destIp': '77.88.99.00',
+          'violationContent': '[查看详情]',
+          'originalTraffic': '[查看原始流量]',
+          'title': '《汽车数据出境安全指引》',
+          'category': '法规条例'
+        },
+        {
+          'violationId': 'PII-004',
+          'lawStandard': '《个人信息保护法》',
+          'violationTerm': '第三十七条：向境外提供个人信息。',
+          'violationDesc': '向境外传输用户生物特征数据，但未告知用户其境外接收方身份。',
+          'dataAsset': '驾驶员生物特征数据',
+          'violatingEntity': 'https://www.google.com/search?q=auth.car-f.com',
+          'time': '2025-08-19 20:05:55',
+          'sourceIp': '10.10.1.125',
+          'destIp': '14.25.36.47',
+          'violationContent': '[查看详情]',
+          'originalTraffic': '[查看原始流量]',
+          'title': '《中华人民共和国个人信息保护法》',
+          'category': '法规条例'
+        }
       ],
-      pieChartOption: {
-        title: {
-          text: '73.1%',
-          left: 'center',
-          top: 'center',
-          textStyle: { fontSize: 24, fontWeight: 'bold', color: '#333' }
-        },
-        tooltip: { trigger: 'item', formatter: '{b}: {d}%' },
-        series: [{
-          name: '合规率',
-          type: 'pie',
-          radius: ['70%', '90%'],
-          avoidLabelOverlap: false,
-          label: { show: false },
-          labelLine: { show: false },
-          data: [
-            { value: 73.1, name: '合规' },
-            { value: 26.9, name: '不合规' }
-          ],
-          color: ['#1f78d1', '#f7b6a6']
-        }]
-      },
-      lineChartOption: {
-        tooltip: { trigger: 'axis' },
-        xAxis: {
-          type: 'category',
-          boundaryGap: false,
-          data: ['Day 1', 'Day 6', 'Day 11', 'Day 16', 'Day 21', 'Day 26']
-        },
-        yAxis: {
-          type: 'value',
-          axisLabel: { formatter: '{value} %' }
-        },
-        grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
-        series: [{
-          name: '合规率',
-          type: 'line',
-          stack: 'Total',
-          data: [40, 58, 62, 68, 70, 73],
-          smooth: true,
-          // 修改: 设置线条、数据点和区域的颜色为蓝色
-          itemStyle: {
-            color: '#1f78d1'
-          },
-          lineStyle: {
-            color: '#1f78d1'
-          },
-          areaStyle: {
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-              offset: 0,
-              color: 'rgba(31, 120, 209, 0.5)'
-            }, {
-              offset: 1,
-              color: 'rgba(31, 120, 209, 0)'
-            }])
-          }
-        }]
-      },
-      tableData: [
-        { id: 1, type: '未经匿名化传输', data: { name: '位置数据' }, time: '2025-07-15 09:30', severity: '高', status: '待处理', rule: { name: 'GBT XXX-202X', detail: '脱敏规定' }, action: '<span style="color: #0050b3;">处理</span> / <span style="color: #0050b3;">详情</span>' },
-        { id: 2, type: '用户未授权采集', data: { name: '人脸图像' }, time: '2025-07-15 08:45', severity: '高', status: '进行中', rule: { name: 'GDPR-CN', detail: '同意条款' }, action: '查看 / 详情' },
-        { id: 3, type: '车牌图像明文存储', data: { name: '车牌图像' }, time: '2025-07-14 23:10', severity: '中', status: '待复核', rule: { name: '国家网络安全法', detail: '数据加密' }, action: '详情' },
-        { id: 4, type: '车流数据采集频率异常', data: { name: '车流数据' }, time: '2025-07-11 14:00', severity: '低', status: '已处理', rule: { name: '数据采集', detail: '最小必要原则' }, action: '查看报告' },
-        { id: 5, type: '内部系统访问权限越界', data: { name: '身份信息' }, time: '2025-07-13 10:05', severity: '高', status: '待处理', rule: { name: '内部权限管理策略', detail: '' }, action: '<span style="color: #0050b3;">处理</span> / <span style="color: #0050b3;">详情</span>' },
-        { id: 6, type: 'API接口未授权访问', data: { name: '车辆控制指令' }, time: '2025-07-12 18:20', severity: '中', status: '已处理', rule: { name: 'API安全规范', detail: '访问控制' }, action: '查看报告' },
-        { id: 7, type: '驾驶行为数据超期存储', data: { name: '驾驶行为日志' }, time: '2025-07-10 00:00', severity: '低', status: '待复核', rule: { name: '数据保留策略', detail: '存储期限' }, action: '详情' }
-      ]
+      activeFilter: 'all'
     }
   },
   computed: {
-    activeBarChartOption() {
-      const viewData = this.barChartData[this.chartView]
-      return {
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'shadow'
-          },
-          backgroundColor: 'rgba(50,50,50,0.7)',
-          borderColor: '#333',
-          borderWidth: 0,
-          textStyle: {
-            color: '#fff'
-          }
-        },
-        grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '3%',
-          containLabel: true
-        },
-        xAxis: [{
-          type: 'category',
-          data: viewData.categories,
-          axisLine: {
-            lineStyle: {
-              color: '#ccc'
-            }
-          },
-          axisLabel: {
-            color: '#666'
-          },
-          axisTick: {
-            alignWithLabel: true
-          }
-        }],
-        yAxis: [{
-          type: 'value',
-          axisLine: {
-            show: true,
-            lineStyle: {
-              color: '#ccc'
-            }
-          },
-          splitLine: {
-            lineStyle: {
-              type: 'dashed'
-            }
-          },
-          axisLabel: {
-            color: '#666'
-          }
-        }],
-        series: [{
-          name: '不合规次数',
-          type: 'bar',
-          barWidth: '40%',
-          showBackground: true,
-          backgroundStyle: {
-            color: 'rgba(180, 180, 180, 0.2)'
-            // 4. 移除 borderRadius，因为它在 ECharts 4.x 中不受支持
-          },
-          itemStyle: {
-            // 4. 移除 borderRadius
-            color: {
-              type: 'linear',
-              x: 0,
-              y: 0,
-              x2: 0,
-              y2: 1,
-              colorStops: [{
-                offset: 0, color: '#83bff6' // 0% 处的颜色
-              }, {
-                offset: 1, color: '#188df0' // 100% 处的颜色
-              }]
-            }
-          },
-          emphasis: {
-            itemStyle: {
-              color: {
-                type: 'linear',
-                x: 0,
-                y: 0,
-                x2: 0,
-                y2: 1,
-                colorStops: [{
-                  offset: 0, color: '#2378f7'
-                }, {
-                  offset: 1, color: '#83bff6'
-                }]
-              }
-            }
-          },
-          data: viewData.values
-        }]
+    filteredTableData() {
+      if (this.activeFilter === 'all') {
+        return this.originalTableData
       }
+      return this.originalTableData.filter(item => item.title === this.activeFilter)
     }
-  },
-  watch: {
-    // 监听数据变化，更新图表
-    activeBarChartOption(newOption) {
-      if (this.barChartInstance) {
-        this.barChartInstance.setOption(newOption)
-      }
-    }
-  },
-  mounted() {
-    this.initCharts()
-    // 监听窗口大小变化，实现图表自适应
-    window.addEventListener('resize', this.resizeCharts)
-    // 设置定时器，每3秒更新一次统计数据
-    this.statsInterval = setInterval(this.updateStats, 3000)
-  },
-  beforeDestroy() {
-    // 销毁实例并移除监听，防止内存泄漏
-    window.removeEventListener('resize', this.resizeCharts)
-    if (this.pieChartInstance) this.pieChartInstance.dispose()
-    if (this.lineChartInstance) this.lineChartInstance.dispose()
-    if (this.barChartInstance) this.barChartInstance.dispose()
-    // 在组件销毁前清除定时器
-    clearInterval(this.statsInterval)
   },
   methods: {
-    // 新增：模拟从后端获取数据并更新统计项的方法
-    updateStats() {
-      // 模拟当前间隔内发生的变化
-      const newItems = Math.floor(Math.random() * 3) // 本次新增0-2个
-      const processedItems = Math.random() > 0.6 ? 1 : 0 // 40%的几率处理掉1个
-      const newHighRiskItems = (newItems > 0 && Math.random() > 0.7) ? 1 : 0 // 新增项里有30%几率是高风险
-
-      // 获取当前数据作为基数
-      const currentStats = this.statsData
-
-      // 计算新值，确保逻辑合理
-      const newTotalUncompliant = currentStats.totalUncompliant + newItems
-      const newHighRisk = currentStats.highRisk + newHighRiskItems
-      // 待处理项 = 原有待处理 + 新增 - 已处理 (确保不为负数)
-      const newPending = Math.max(0, currentStats.pending + newItems - processedItems)
-      const newToday = currentStats.newToday + newItems
-      const newProcessedToday = currentStats.processedToday + processedItems
-
-      // 更新数据
-      this.statsData = {
-        totalUncompliant: newTotalUncompliant,
-        highRisk: newHighRisk,
-        pending: newPending,
-        newToday: newToday,
-        processedToday: newProcessedToday
-      }
-    },
-    // 6. 添加图表初始化和自适应方法
-    initCharts() {
-      // 初始化饼图
-      this.pieChartInstance = echarts.init(this.$refs.pieChart)
-      this.pieChartInstance.setOption(this.pieChartOption)
-
-      // 初始化折线图
-      this.lineChartInstance = echarts.init(this.$refs.lineChart)
-      this.lineChartInstance.setOption(this.lineChartOption)
-
-      // 初始化柱状图
-      this.barChartInstance = echarts.init(this.$refs.barChart)
-      this.barChartInstance.setOption(this.activeBarChartOption)
-    },
-    resizeCharts() {
-      // 调整所有图表的尺寸
-      this.pieChartInstance && this.pieChartInstance.resize()
-      this.lineChartInstance && this.lineChartInstance.resize()
-      this.barChartInstance && this.barChartInstance.resize()
+    handleSelectFilter(key) {
+      this.activeFilter = key
     }
   }
 }
 </script>
 
-<style module>
-/* --- 全局和基础 --- */
-:root {
-    font-size: calc(0.5vw + 5px);
+<style scoped>
+/* 整个卡片区域的容器 */
+.container-wrapper {
+  padding: 20px;
+}
+.cards-row {
+  display: flex;
+  flex-wrap: wrap;
+}
+.box-card {
+  height: 100%;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2) !important;
 }
 
-.p {
-      margin: 0;
+/* 左右卡片固定高度 */
+.fixed-height-card {
+  height: calc(100vh - 40px); /* 视口高度减去上下各20px的边距 */
+  display: flex; /* 使用flexbox布局 */
+  flex-direction: column; /* 垂直排列 */
 }
 
-/* --- 主布局 --- */
-.maincontent {
-    width: 100%;
-    min-height: 100vh;
-    background-color: #eff1f4;
-    display: flex;
-    flex-direction: column;
-    padding: 1.5rem;
-    box-sizing: border-box;
-    font-family: Inter, sans-serif;
-    color: #828282;
+/* 卡片内容区域自动填充剩余空间并显示滚动条 */
+.fixed-height-card .el-card__body {
+  flex: 1; /* 自动填充剩余空间 */
+  padding: 20px;
+  display: flex; /* 再次使用flexbox布局 */
+  flex-direction: column;
 }
 
-.contentheader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    margin-bottom: 1.5rem;
+.blue-background {
+  background-color: #4560F7; /* 蓝色背景 */
+  color: #fff; /* 白色文字 */
+  padding: 15px; /* 内边距 */
+  font-weight: bold; /* 加粗文字 */
 }
 
-.contenttitle .div71 {
-    font-size: 2rem;
-    font-weight: 900;
-    color: #4560f7;
+/* 导航栏样式 */
+.custom-menu {
+  border-right: none;
+  flex: 1; /* 导航菜单占据剩余空间 */
+  overflow-y: auto; /* 菜单项过多时显示滚动条 */
+}
+.custom-menu .el-menu-item.is-active,
+.custom-menu .el-submenu.is-active .el-submenu__title {
+  color: #409EFF;
 }
 
-.searchcol {
-    width: 20rem;
-    max-width: 300px;
+/* 一级菜单（分组标题）样式 */
+.custom-menu .el-menu-item-group__title {
+  background-color: #4560F7 !important;
+  color: #fff !important;
+  font-weight: bold;
+  padding: 10px 20px !important;
+  height: auto !important;
+  line-height: 1.5;
+  white-space: normal;
+  word-wrap: break-word;
 }
 
-.contentlayout {
-    flex-grow: 1;
-    display: grid;
-    grid-template-columns: 1fr 1.5fr;
-    grid-template-rows: auto 1fr;
-    gap: 1.5rem;
-    width: 100%;
+/* 二级菜单项和“全部数据”项的通用样式 */
+.custom-menu .menu-item-style {
+  background-color: #fff !important;
+  color: #333 !important;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 10px 20px 10px 30px !important;
+  height: auto !important;
+  line-height: 1.5;
+  white-space: normal;
+  word-wrap: break-word;
+  transition: background-color 0.3s;
 }
 
-/* --- 卡片布局 --- */
-.card1Complianceratioandtrend {
-    grid-row: 1 / 3;
-    grid-column: 1 / 2;
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 8px;
-    background-color: #fff;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+/* 移除 el-menu-item 默认的左侧 padding，让 padding 保持一致 */
+.custom-menu .el-menu-item {
+  padding-left: 20px !important;
+}
+/* 调整分组内的菜单项的左侧 padding，以增加缩进 */
+.custom-menu .el-menu-item-group .menu-item-style {
+  padding-left: 30px !important;
 }
 
-.card2 {
-    grid-row: 1 / 2;
-    grid-column: 2 / 3;
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 8px;
-    background-color: #fff;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+/* 美化 - 二级菜单项悬停和激活状态 */
+.custom-menu .menu-item-style:hover {
+  background-color: #E0E0E0 !important;
+}
+.custom-menu .menu-item-style.is-active {
+  background-color: #E0E0E0 !important;
+  color: #4560F7 !important;
+  font-weight: bold;
 }
 
-.card3 {
-    grid-row: 2 / 3;
-    grid-column: 2 / 3;
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 8px;
-    background-color: #fff;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
+/* 表格容器样式 */
+.table-container {
+  flex: 1; /* 表格容器自动填充剩余空间 */
+  overflow-y: auto; /* 表格容器本身显示滚动条 */
 }
 
-.b9, .b2 {
-    font-size: 1.8rem;
-    color: #4560f7;
+/* 展开行样式 */
+.demo-table-expand {
+  font-size: 0;
+  padding: 20px;
+  background-color: #f5f7fa;
+  border-radius: 4px;
 }
-
-/* --- Card1 内部布局 --- */
-.div68 {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1.5rem;
+.demo-table-expand label {
+  width: 90px;
+  color: #99a9bf;
 }
-
-.div69 {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+.demo-table-expand .el-form-item {
+  margin-right: 0;
+  margin-bottom: 0;
+  width: 50%;
 }
-
-.div68 .p {
-    font-size: 2rem;
-    color: #000;
-}
-
-.div68 .p28 {
-    font-size: 4rem;
-    font-weight: 900;
-    color: #1f78d1;
-}
-
-.statsList {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    font-size: 1.3rem; /* 增大字体 */
-    align-items: center; /* 居中对齐 */
-}
-
-.statItem {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.pieChart {
-    width: 12rem;
-    height: 12rem;
-}
-
-.lineChart {
-    width: 100%;
-    height: 100%;
-    min-height: 200px;
-    align-self: center;
-}
-
-.timeSelectorContainer {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    justify-content: center;
-}
-
-.timeUnitSelect {
-    width: 120px;
-}
-
-.b4 { color: #1f78d1; }
-.b5 { color: #ff4d4f; }
-.b6 { color: #faad14; }
-.b7 { color: #ff4d4f; }
-
-/* --- Card2 样式 --- */
-.cardHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.barChart {
-    height: 100%;
-    min-height: 250px;
-}
-
-/* --- Card3 表格 --- */
-.table {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
-
-.tablefunction {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid #e0e0e0;
-    margin-bottom: 0.5rem;
-}
-
-.functionIcons img {
-    width: 2rem;
-    height: 2rem;
-    border-radius: 8px;
-    margin-left: 0.5rem;
-    cursor: pointer;
-}
-
-.tablecontent {
-    flex-grow: 1;
-    overflow-y: auto;
-}
-
-.tablegrid {
-    display: grid;
-    grid-template-columns: 0.5fr 1.5fr 1.5fr 1.5fr 1fr 1fr 1.5fr 1fr;
-    gap: 1rem;
-    align-items: center;
-    text-align: center;
-    padding: 0.8rem 0.5rem;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-.tableheader {
-    font-weight: 900;
-    color: #333;
-    position: sticky;
-    top: 0;
-    background: #fff;
-    z-index: 1;
-}
-
-.headerCell {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    white-space: nowrap;
-}
-
-.headerCell img {
-    width: 1rem;
-    height: 1rem;
-    margin-left: 0.3rem;
-}
-
-.tableRow {
-    font-size: 0.9rem;
-}
-
-.tableRow:last-child {
-    border-bottom: none;
-}
-
-.actionLink {
-    color: #0050b3;
-    cursor: pointer;
-}
-
-/* 严重程度标签 */
-.label {
-    border-radius: 8px;
-    border: 1px solid;
-    box-sizing: border-box;
-    padding: 0.2rem 0.6rem;
-    font-size: 0.8rem;
-    display: inline-block;
-}
-.label.高, .label.high {
-    background-color: #f7b6a6;
-    border-color: #af4328;
-    color: #af4328;
-}
-.label.中, .label.medium {
-    background-color: #ffd98c;
-    border-color: #ad7300;
-    color: #ad7300;
-}
-.label.低, .label.low {
-    background-color: #addecc;
-    border-color: #358d86;
-    color: #358d86;
+/deep/ .el-card__header {
+  padding: 0px;
+  background-color: #4560F7;
+  border-bottom: 1px solid #eee;
 }
 </style>
