@@ -3,374 +3,135 @@ const Mock = require('mockjs')
 // 生成初始数据
 const List = []
 const count = 200
-const projectMap = {
-  A: '项目A',
-  B: '项目B',
-  C: '项目C'
-}
 
-const engines = ['个人信息识别引擎', '人脸与生物特征识别引擎', '敏感地理位置识别引擎', '图像与点云识别引擎']
-const regulations = ['汽车数据出境安全指引', '汽车数据安全管理若干规定（试行）']
+const ruleSources = ['汽车数据出境安全指引', '汽车数据安全管理若干规定']
+const ruleTypes = ['文本关键词', '文本关键词/数据特征分析', '文本关键词/图像特征/点云数据分析', '图像特征识别']
 const statuses = ['启用', '未发布']
 
 const startTime = new Date('2024-01-01 00:00:00').getTime()
 const endTime = new Date('2025-07-31 23:59:59').getTime()
 
-for (let i = 0; i < count; i++) {
-  const projectKey = Mock.mock({ 'array|1': ['A', 'B', 'C'] }).array
-  const randomTimestamp = Mock.Random.integer(startTime, endTime)
-  List.push(Mock.mock({
-    id: Mock.Random.guid(),
-    name: '规则名称' + (i + 1),
-    project: projectMap[projectKey],
-    projectKey,
-    engine: Mock.Random.pick(engines),
-    regulation: Mock.Random.pick(regulations, Mock.Random.integer(1, 3)),
-    status: Mock.Random.pick(statuses),
-    creator: Mock.Random.cname(),
-    createTime: new Date(randomTimestamp).toISOString().slice(0, 19).replace('T', ' '),
-    content: Mock.Random.csentence(10, 20),
-    desc: Mock.Random.csentence(8, 16)
-  }))
-}
-
-// 增加网络安全、漏洞检测相关的典型规则
+// 增加图片中的典型规则数据
 List.unshift(
   {
     id: 'sec-001',
-    name: '向第三方保险公司传输驾驶行为数据前，必须获得用户单独同意',
-    project: '项目A',
-    projectKey: 'A',
-    content: '检测输入参数中是否包含SQL注入特征关键字，如select、union、--等',
-    desc: '防止黑客通过SQL注入获取数据库敏感信息',
-    createTime: '2025-07-09 10:00:00',
-    engine: '个人信息识别引擎',
-    regulation: ['汽车数据出境安全指引'],
+    sequence: 1,
+    ruleId: '1-1-00-1',
+    ruleSource: '汽车数据出境安全指引',
+    ruleDescription: '是否包含国家重大专项,重点研发相关内容',
+    ruleType: '文本关键词',
+    dataAssetName: '研发测试数据',
     status: '启用',
-    creator: '王铭传'
+    createTime: '2025-07-09 10:00:00'
   },
   {
     id: 'sec-002',
-    name: '涉及V2X通信的群体匿名化统计数据方可用于城市交通分析',
-    project: '项目B',
-    projectKey: 'B',
-    content: '检测用户输入中是否包含<script>、onerror、javascript:等可疑内容',
-    desc: '防止恶意脚本注入页面，危害用户安全',
-    createTime: '2025-07-09 10:05:00',
-    engine: '个人信息识别引擎',
-    regulation: ['汽车数据安全管理若干规定（试行）'],
+    sequence: 2,
+    ruleId: '1-1-00-3',
+    ruleSource: '汽车数据出境安全指引',
+    ruleDescription: '是否军事管理区、国防科工单位以及县级以上党政机关,涉密、敏感地理信息数据,真实车辆流量、人员流量、物流等反映地级及以上行政区经济运行情况,公共安全行政执法活动相关内容',
+    ruleType: '文本关键词/数据特征分析',
+    dataAssetName: '高精度地图数据/城市车辆流量',
     status: '启用',
-    creator: '张华晨'
+    createTime: '2025-07-09 10:05:00'
   },
   {
     id: 'sec-003',
-    name: '禁止在军事管理区及周边500米范围内记录并上传街景影像',
-    project: '项目C',
-    projectKey: 'C',
-    content: '检测系统中是否存在弱口令账户，如admin/123456、root/root等',
-    desc: '防止弱口令被暴力破解，提升系统安全性',
-    createTime: '2025-07-09 10:10:00',
-    engine: '敏感地理位置识别引擎',
-    regulation: ['汽车数据安全管理若干规定（试行）'],
-    status: '未启用',
-    creator: '王民林'
+    sequence: 3,
+    ruleId: '1-1-5-21',
+    ruleSource: '汽车数据出境安全指引',
+    ruleDescription: '针对车联网平台的网络拓扑图文件(包含网络边界出口设备信息、网络区域划分以及内网IP地址),判断其是否符合以下任意一项条件:该平台涉及的服务境内车辆数量达到100万台以上;同时满足提供在线升级服务,境内运行车辆数量达50万台以上,升级内容涉及汽车动力系统、底盘系统、安全驾驶功能中的一种或多种',
+    ruleType: '文本关键词/数据特征分析',
+    dataAssetName: '车联网平台网络拓扑图/OTA升级数据',
+    status: '启用',
+    createTime: '2025-07-09 10:10:00'
   },
   {
     "id": "sec-004",
-    "name": "收集车外行人的生物识别特征数据前，需在车辆明显位置张贴告知标识并获取行人同意",
-    "createTime": "2025-07-09 10:15:00",
-    "engine": "人脸与生物特征识别引擎",
-    "regulation": ["汽车数据出境安全指引"],
+    "sequence": 4,
+    "ruleId": "1-1-1-5",
+    "ruleSource": "汽车数据出境安全指引",
+    "ruleDescription": "对军事管理区、国防科工单位以及县级以上党政机关,涉密、敏感地理信息数据,真实车辆流量、人员流量、物流等反映地级及以上行政区经济运行情况,公共安全行政执法活动,真实人脸,真实汽车号牌,车辆收集的相关点云数据进行检测和统计。",
+    "ruleType": "文本关键词/图像特征/点云数据分析",
+    "dataAssetName": "涉密地理数据/车辆流量数据/真实人脸数据/真实汽车号牌数据/车辆点云数据",
     "status": "启用",
-    "creator": "李阳"
-    },
-    {
+    "createTime": "2025-07-09 10:15:00"
+  },
+  {
     "id": "sec-005",
-    "name": "车联网服务提供商需每季度对数据存储系统进行漏洞扫描，并提交安全报告",
-    "createTime": "2025-07-09 10:20:00",
-    "engine": "个人信息识别引擎",
-    "regulation": ["汽车数据安全管理若干规定（试行）"],
+    "sequence": 5,
+    "ruleId": "1-1-5-23",
+    "ruleSource": "汽车数据出境安全指引",
+    "ruleDescription": "针对车辆充电状态监测数据(包括车辆充电功率、充电电流、充电电压、当前电池温度、电池健康状态),判断境内数据数量是否超过10万台",
+    "ruleType": "文本关键词/数据特征分析",
+    "dataAssetName": "充电运行状态数据",
     "status": "启用",
-    "creator": "周宁"
-    },
-    {
+    "createTime": "2025-07-09 10:20:00"
+  },
+  {
     "id": "sec-006",
-    "name": "针对车辆故障诊断数据，仅在故障发生后 72 小时内可进行本地存储，之后需自动删除",
-    "createTime": "2025-07-09 10:25:00",
-    "engine": "个人信息识别引擎",
-    "regulation": ["汽车数据安全管理若干规定（试行）"],
+    "sequence": 6,
+    "ruleId": "2-1-1-5",
+    "ruleSource": "汽车数据安全管理若干规定",
+    "ruleDescription": "检测是否包含未脱敏的指纹或虹膜编码",
+    "ruleType": "文本关键词",
+    "dataAssetName": "驾驶员生物特征数据",
     "status": "启用",
-    "creator": "吴悦"
-    },
-    {
+    "createTime": "2025-07-09 10:25:00"
+  },
+  {
     "id": "sec-007",
-    "name": "利用车联网数据进行广告推送时，需向用户明确说明数据来源及广告推送机制",
-    "createTime": "2025-07-09 10:30:00",
-    "engine": "个人信息识别引擎",
-    "regulation": ["汽车数据出境安全指引"],
-    "status": "未启用",
-    "creator": "郑凯"
-    },
-    {
+    "sequence": 7,
+    "ruleId": "2-1-1-1",
+    "ruleSource": "汽车数据安全管理若干规定",
+    "ruleDescription": "检测是否包含未脱敏的GPS坐标或时间戳且位置数据精度是否超过允许范围(如10米)",
+    "ruleType": "数据特征分析",
+    "dataAssetName": "用户行程轨迹数据",
+    "status": "启用",
+    "createTime": "2025-07-09 10:30:00"
+  },
+  {
     "id": "sec-008",
-    "name": "在跨境自驾游场景下，出境前需清除车内存储的涉及国内敏感区域的地理信息数据",
-    "createTime": "2025-07-09 10:35:00",
-    "engine": "敏感地理位置识别引擎",
-    "regulation": ["汽车数据安全管理若干规定（试行）"],
+    "sequence": 8,
+    "ruleId": "2-1-1-4",
+    "ruleSource": "汽车数据安全管理若干规定",
+    "ruleDescription": "检测是否保留车牌信息",
+    "ruleType": "图像特征识别",
+    "dataAssetName": "车牌信息",
     "status": "启用",
-    "creator": "陈嘉"
-    },
-    {
-    "id": "sec-009",
-    "name": "车联网平台在进行系统升级时，若涉及数据处理规则变更，需提前 15 天向用户推送通知",
-    "createTime": "2025-07-09 10:40:00",
-    "engine": "个人信息识别引擎",
-    "regulation": ["汽车数据出境安全指引"],
-    "status": "未启用",
-    "creator": "刘敏"
-    },
-    {
-    "id": "sec-010",
-    "name": "禁止将包含未成年人身份识别信息的车联网数据用于商业营销活动",
-    "createTime": "2025-07-09 10:45:00",
-    "engine": "个人信息识别引擎",
-    "regulation": ["汽车数据出境安全指引"],
-    "status": "启用",
-    "creator": "王强"
-    },
-    {
-    "id": "sec-011",
-    "name": "车辆行驶过程中，若传感器采集到异常的大规模人群聚集数据，需立即停止上传并进行本地加密存储",
-    "createTime": "2025-07-09 10:50:00",
-    "engine": "敏感地理位置识别引擎",
-    "regulation": ["汽车数据安全管理若干规定（试行）"],
-    "status": "未发布",
-    "creator": "张辉"
-    },
-    {
-    "id": "sec-012",
-    "name": "车联网数据在进行跨平台共享时，需对共享数据进行去标识化处理，并建立数据共享审计日志",
-    "createTime": "2025-07-09 10:55:00",
-    "engine": "个人信息识别引擎",
-    "regulation": ["汽车数据安全管理若干规定（试行）"],
-    "status": "启用",
-    "creator": "孙悦"
-    },
-    {
-    "id": "sec-013",
-    "name": "针对用户主动上传至车联网平台的多媒体文件（如行车记录仪视频），平台需在用户删除后 24 小时内完成彻底删除，且无法恢复",
-    "createTime": "2025-07-09 11:00:00",
-    "engine": "个人信息识别引擎",
-    "regulation": ["汽车数据出境安全指引"],
-    "status": "启用",
-    "creator": "赵琳"
-    },
-    {
-      "id": "sec-014",
-      "name": "车联网数据处理者需每半年对重要数据进行脱敏评估，确保敏感信息隐匿",
-      "createTime": "2025-08-01 09:00:00",
-      "engine": "个人信息识别引擎",
-      "regulation": ["汽车数据安全管理若干规定（试行）"],
-      "status": "启用",
-      "creator": "林芳"
-      },
-      {
-      "id": "sec-015",
-      "name": "涉及车辆金融贷款数据，仅在贷款存续期内可留存，结清后 15 个工作日内删除",
-      "createTime": "2025-08-01 09:10:00",
-      "engine": "个人信息识别引擎",
-      "regulation": ["汽车数据安全管理若干规定（试行）"],
-      "status": "启用",
-      "creator": "何军"
-      },
-      {
-      "id": "sec-016",
-      "name": "车联网平台共享用户兴趣偏好数据时，必须对用户 ID 进行不可逆加密处理",
-      "createTime": "2025-08-01 09:20:00",
-      "engine": "个人信息识别引擎",
-      "regulation": ["汽车数据安全管理若干规定（试行）"],
-      "status": "启用",
-      "creator": "郭晓"
-      },
-      {
-      "id": "sec-017",
-      "name": "当车联网数据处理系统进行重大版本升级时，需在升级前 7 天向监管部门报备",
-      "createTime": "2025-08-01 09:30:00",
-      "engine": "个人信息识别引擎",
-      "regulation": ["汽车数据安全管理若干规定（试行）"],
-      "status": "未发布",
-      "creator": "马辉"
-      },
-      {
-      "id": "sec-018",
-      "name": "车联网服务提供商需为用户提供一键导出其在平台留存的所有个人数据的功能",
-      "createTime": "2025-08-01 09:40:00",
-      "engine": "个人信息识别引擎",
-      "regulation": ["汽车数据安全管理若干规定（试行）"],
-      "status": "启用",
-      "creator": "杨悦"
-      },
-      {
-      "id": "sec-019",
-      "name": "利用车联网数据进行市场调研活动，不得泄露调研对象的具体身份信息",
-      "createTime": "2025-08-01 09:50:00",
-      "engine": "个人信息识别引擎",
-      "regulation": ["汽车数据安全管理若干规定（试行）"],
-      "status": "启用",
-      "creator": "孙明"
-      },
-      {
-      "id": "sec-020",
-      "name": "车联网设备在首次接入网络时，需向用户推送详细的数据收集与使用政策说明",
-      "createTime": "2025-08-01 10:00:00",
-      "engine": "个人信息识别引擎",
-      "regulation": ["汽车数据安全管理若干规定（试行）"],
-      "status": "未启用",
-      "creator": "胡静"
-      },
-      {
-      "id": "sec-021",
-      "name": "车联网数据处理者需建立数据安全审计日志留存制度，日志至少保存 2 年",
-      "createTime": "2025-08-01 10:10:00",
-      "engine": "个人信息识别引擎",
-      "regulation": ["汽车数据安全管理若干规定（试行）"],
-      "status": "启用",
-      "creator": "郑伟"
-      },
-      {
-      "id": "sec-022",
-      "name": "禁止车联网平台将用户的紧急救援数据用于商业广告投放活动",
-      "createTime": "2025-08-01 10:20:00",
-      "engine": "个人信息识别引擎",
-      "regulation": ["汽车数据安全管理若干规定（试行）"],
-      "status": "未启用",
-      "creator": "王萌"
-      },
-      {
-      "id": "sec-023",
-      "name": "车联网企业若发生数据安全事件，需在事件发生后 1 小时内向当地网信部门报告",
-      "createTime": "2025-08-01 10:30:00",
-      "engine": "个人信息识别引擎",
-      "regulation": ["汽车数据安全管理若干规定（试行）"],
-      "status": "启用",
-      "creator": "李华"
-      }
+    "createTime": "2025-07-09 10:35:00"
+  }
 )
 
+// 生成后续数据，确保序号连续性
+for (let i = 0; i < count; i++) {
+  const randomTimestamp = Mock.Random.integer(startTime, endTime)
+  List.push(Mock.mock({
+    id: Mock.Random.guid(),
+    sequence: i + 9, // 从9开始，确保序号连续
+    ruleId: Mock.mock('@string("number", 1, 1)-@string("number", 1, 1)-@string("number", 1, 1)-@string("number", 1, 1)'),
+    ruleSource: Mock.Random.pick(ruleSources),
+    ruleDescription: '规则描述' + (i + 9),
+    ruleType: Mock.Random.pick(ruleTypes),
+    dataAssetName: '数据资产' + (i + 9),
+    status: Mock.Random.pick(statuses),
+    createTime: new Date(randomTimestamp).toISOString().slice(0, 19).replace('T', ' ')
+  }))
+}
+
 module.exports = [
-  // 获取统计数据
-  {
-    url: '/api/rule/stats',
-    type: 'get',
-    response: (req) => {
-      const { startTime, endTime } = req.query
-      console.log('Mock API 接收到时间参数:', { startTime, endTime })
-      const enabledCount = List.filter(item => item.status === '启用').length
-      const regulationCount = new Set(List.flatMap(item => Array.isArray(item.regulation) ? item.regulation : [item.regulation])).size
-      const unpublishedCount = List.filter(item => item.status === '未发布').length
-      const highFrequencyTriggerCount = Mock.Random.integer(0, 100)
-
-      const now = new Date()
-      const currentMonth = now.getMonth()
-      const currentYear = now.getFullYear()
-      const monthlyNewCount = List.filter(item => {
-        const createDate = new Date(item.createTime)
-        return createDate.getMonth() === currentMonth && createDate.getFullYear() === currentYear
-      }).length
-
-      // 生成更完整的月度数据，包含最近2年的数据
-      const monthlyData = {}
-      List.forEach(item => {
-        const createDate = new Date(item.createTime)
-        const yearMonth = `${createDate.getFullYear()}-${('0' + (createDate.getMonth() + 1)).slice(-2)}`
-        if (!monthlyData[yearMonth]) {
-          monthlyData[yearMonth] = 0
-        }
-        monthlyData[yearMonth]++
-      })
-
-      // 为了演示效果，补充一些历史数据
-      for (let i = 23; i >= 0; i--) {
-        const date = new Date(now.getFullYear(), now.getMonth() - i, 1)
-        const yearMonth = `${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}`
-        if (!monthlyData[yearMonth]) {
-          monthlyData[yearMonth] = Mock.Random.integer(3, 25)
-        }
-      }
-
-      const chartData = {
-        months: [],
-        counts: []
-      }
-
-      // 处理时间范围参数
-      let startDate, endDate
-      if (startTime && endTime) {
-        try {
-          startDate = new Date(startTime)
-          endDate = new Date(endTime)
-          console.log('解析时间范围:', { startDate, endDate })
-        } catch (error) {
-          console.log('时间范围参数解析失败，使用默认范围:', { startTime, endTime })
-          startDate = null
-          endDate = null
-        }
-      }
-
-      // 如果没有有效的时间范围，使用默认的6个月范围
-      if (!startDate || !endDate || isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
-        endDate = new Date()
-        startDate = new Date()
-        startDate.setMonth(startDate.getMonth() - 5) // 6个月的数据
-      }
-
-      const currentDate = new Date(startDate.getFullYear(), startDate.getMonth(), 1)
-      while (currentDate <= endDate) {
-        const yearMonth = `${currentDate.getFullYear()}-${('0' + (currentDate.getMonth() + 1)).slice(-2)}`
-        chartData.months.push(yearMonth)
-        chartData.counts.push(monthlyData[yearMonth] || 0)
-        currentDate.setMonth(currentDate.getMonth() + 1)
-      }
-
-      // 确保至少有一些数据显示
-      if (chartData.months.length === 0) {
-        for (let i = 5; i >= 0; i--) {
-          const date = new Date(now.getFullYear(), now.getMonth() - i, 1)
-          const yearMonth = `${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}`
-          chartData.months.push(yearMonth)
-          chartData.counts.push(monthlyData[yearMonth] || 0)
-        }
-      }
-
-      console.log('返回的图表数据:', chartData)
-      
-      return {
-        code: 20000,
-        data: {
-          total: List.length,
-          enabled: enabledCount,
-          monthlyNew: monthlyNewCount,
-          regulations: regulationCount,
-          unpublished: unpublishedCount,
-          highFrequency: highFrequencyTriggerCount,
-          chartData
-        }
-      }
-    }
-  },
   // 获取规则列表
   {
     url: '/api/rule/list',
     type: 'get',
     response: (req) => {
-      const { project, keyword, status, regulation, engine, page = 1, limit = 10, sort, order } = req.query
+      const { ruleSource, keyword, status, ruleType, page = 1, limit = 10, sort, order } = req.query
       const mockList = List.filter(item => {
         let valid = true
-        if (project && item.projectKey !== project) valid = false
-        if (keyword && !item.name.includes(keyword) && !item.id.includes(keyword)) valid = false
+        if (ruleSource && item.ruleSource !== ruleSource) valid = false
+        if (keyword && !item.ruleId.includes(keyword) && !item.ruleDescription.includes(keyword) && !item.dataAssetName.includes(keyword)) valid = false
         if (status && item.status !== status) valid = false
-        if (engine && item.engine !== engine) valid = false
-        if (regulation && !item.regulation.includes(regulation)) valid = false
+        if (ruleType && item.ruleType !== ruleType) valid = false
         return valid
       })
 

@@ -1,186 +1,113 @@
 <template>
   <div class="app-container">
-    <el-row :gutter="30" type="flex" class="box-row">
-      <el-col :span="15">
-        <!-- 第一行 - 前两个方框 -->
-        <div class="white-box first-box">
-          <div class="part-container">
-            <!-- 第一排 -->
-            <div class="part-row">
-              <div class="part-item">
-                <div class="part-header">
-                  <img src="@/assets/rules/1.png">
-                  <div class="part-label">
-                    规则总数
-                  </div>
-                </div>
-                <div class="part-number">{{ stats.total }}</div>
-                <div class="part-desc">当前库内所有规则</div>
-              </div>
-              <div class="part-item">
-                <div class="part-header">
-                  <img src="@/assets/rules/2.png" alt="1">
-                  <div class="part-label">
-                    已启用规则
-                  </div>
-                </div>
-                <div class="part-number">{{ stats.enabled }}</div>
-                <div class="part-desc">在生产环境中生效的规则</div>
-              </div>
-              <div class="part-item">
-                <div class="part-header">
-                  <img src="@/assets/rules/3.png" alt="1">
-                  <div class="part-label">
-                    本月新增
-                  </div>
-                </div>
-                <div class="part-number">{{ stats.monthlyNew }}</div>
-                <div class="part-desc">本自然月内新启用的规则数</div>
-              </div>
-            </div>
-            <!-- 第二排 -->
-            <div class="part-row">
-              <div class="part-item">
-                <div class="part-header">
-                  <img src="@/assets/rules/4.png" alt="1">
-                  <div class="part-label">
-                    覆盖法规数
-                  </div>
-                </div>
-                <div class="part-number">{{ stats.regulations }}</div>
-                <div class="part-desc">已关联的内外部法规总数</div>
-              </div>
-              <div class="part-item">
-                <div class="part-header">
-                  <img src="@/assets/rules/5.png" alt="1">
-                  <div class="part-label">
-                    待审核规则
-                  </div>
-                </div>
-                <div class="part-number">{{ stats.unpublished }}</div>
-                <div class="part-desc">新建或修改后等待审批的规则</div>
-              </div>
-              <div class="part-item">
-                <div class="part-header">
-                  <img src="@/assets/rules/6.png" alt="1">
-                  <div class="part-label">
-                    高频触发规则
-                  </div>
-                </div>
-                <div class="part-number">{{ stats.highFrequency }}</div>
-                <div class="part-desc">过去24h内触发次数超过100次的规则</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </el-col>
-      <!-- 第二个方框 -->
-      <el-col :span="9">
-        <div class="white-box second-box">
-          <div class="part-container">
-            <div class="part-row">
-              <div class="chart-title-container">
-                <div class="chart-title">规则新增趋势</div>
-                <el-date-picker
-                  v-model="chartTimeRange"
-                  type="monthrange"
-                  range-separator="至"
-                  start-placeholder="开始月份"
-                  end-placeholder="结束月份"
-                />
-              </div>
-            </div>
-            <div class="part-row">
-              <div ref="chartPlaceholder" class="chart-placeholder" style="height: 250px;" />
-            </div>
-          </div>
-        </div>
-      </el-col>
-    </el-row>
     <el-row :gutter="30" class="box-row">
-      <!-- 第三个方框 -->
+      <!-- 规则库列表表单 -->
       <el-col :span="24">
-        <div class="white-box third-box">
-          <div class="box-title">规则库列表</div>
-          <div class="filter-container" style="display: flex;">
-            <el-select v-model="listQuery.engine" placeholder="所属规则引擎" clearable class="filter-item" style="width: 150px; margin-right: 10px;" @change="handleFilter">
-              <el-option v-for="item in engineOptions" :key="item" :label="item" :value="item" />
-            </el-select>
-            <el-select v-model="listQuery.regulation" placeholder="关联法规" clearable class="filter-item" style="width: 130px; margin-right: 10px;" @change="handleFilter">
-              <el-option v-for="item in regulationOptions" :key="item" :label="item" :value="item" />
-            </el-select>
-            <el-select v-model="listQuery.status" placeholder="状态" clearable class="filter-item" style="width: 110px; margin-right: 10px;" @change="handleFilter">
-              <el-option v-for="item in statusOptions" :key="item" :label="item" :value="item" />
-            </el-select>
-            <el-input v-model="listQuery.keyword" placeholder="请输入你想要搜索的规则" class="filter-item" style="flex: 1;" prefix-icon="el-icon-search" @keyup.enter.native="handleFilter" />
-          </div>
-          <div class="table-wrapper">
-            <el-table
-              :data="list"
-              fit
-              highlight-current-row
-              style="width: 100%;"
-              @sort-change="handleSortChange"
-            >
-              <el-table-column label="规则名称" prop="name" min-width="180" sortable="custom" />
-              <el-table-column label="所属引擎" prop="engine" min-width="150" sortable="custom" />
-              <el-table-column label="关联法规" prop="regulation" min-width="150" sortable="custom">
-                <template slot-scope="{row}">
-                  <span v-if="Array.isArray(row.regulation)">{{ row.regulation.join(', ') }}</span>
-                  <span v-else>{{ row.regulation }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column label="状态" prop="status" min-width="80" sortable="custom" align="center">
-                <template slot-scope="{row}">
-                  <el-tag :class="['status-tag', row.status === '启用' ? 'status-enabled' : 'status-unpublished']" size="small">
-                    {{ row.status }}
-                  </el-tag>
-                </template>
-              </el-table-column>
-              <el-table-column label="创建者" prop="creator" min-width="100" sortable="custom" />
-              <el-table-column label="创建日期" prop="createTime" min-width="150" sortable="custom" />
-
-            </el-table>
-          </div>
-          <pagination
-            v-show="total > 0"
-            :total="total"
-            :page.sync="listQuery.page"
-            :limit.sync="listQuery.limit"
-            @pagination="getList"
-          />
-          <el-dialog :title="dialogStatus==='edit' ? '编辑规则' : '新增规则'" :visible.sync="dialogFormVisible">
-            <el-form ref="dataForm" :model="temp" :rules="rules" label-width="80px">
-              <el-form-item label="规则名称" prop="name">
-                <el-input v-model="temp.name" />
-              </el-form-item>
-              <el-form-item label="所属引擎" prop="engine">
-                <el-select v-model="temp.engine" placeholder="请选择引擎">
-                  <el-option v-for="item in engineOptions" :key="item" :label="item" :value="item" />
-                </el-select>
-              </el-form-item>
-              <el-form-item label="关联法规" prop="regulation">
-                <el-select v-model="temp.regulation" multiple placeholder="请选择关联法规">
-                  <el-option v-for="item in regulationOptions" :key="item" :label="item" :value="item" />
-                </el-select>
-              </el-form-item>
-              <el-form-item label="状态" prop="status">
-                <el-radio-group v-model="temp.status">
-                  <el-radio v-for="item in statusOptions" :key="item" :label="item">{{ item }}</el-radio>
-                </el-radio-group>
-              </el-form-item>
-              <el-form-item label="规则内容" prop="content">
-                <el-input v-model="temp.content" type="textarea" />
-              </el-form-item>
-              <el-form-item label="规则描述" prop="desc">
-                <el-input v-model="temp.desc" type="textarea" />
-              </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-              <el-button @click="dialogFormVisible = false">取消</el-button>
-              <el-button type="primary" @click="submitEdit">保存</el-button>
+        <div class="content-wrapper">
+          <!-- 左侧侧框 -->
+          <div class="left-panel">
+            <div class="panel-section">
+              <div class="panel-header">法规条例</div>
+              <div class="panel-content">
+                <div class="panel-item">工信部等-《汽车数据出境安全指引》</div>
+                <div class="panel-item">网信办等-《汽车数据安全管理若干规定》</div>
+                <div class="panel-item">自然资源部-《智能网联汽车时空数据安全处理基本要求》</div>
+                <div class="panel-item">自然资源部-《智能网联汽车时空数据传感系统安全基本要求》</div>
+                <div class="panel-item">《中华人民共和国个人信息保护法》</div>
+              </div>
             </div>
-          </el-dialog>
+            <div class="panel-section">
+              <div class="panel-header">标准规范</div>
+              <div class="panel-content">
+                <div class="panel-item">《汽车数据通用要求》</div>
+                <div class="panel-item">《汽车整车信息安全技术要求》</div>
+              </div>
+            </div>
+          </div>
+          <!-- 右侧规则库列表表单 -->
+          <div class="right-panel">
+            <div class="white-box third-box">
+              <div class="box-title">规则库列表</div>
+              <div class="filter-container" style="display: flex;">
+                <el-select v-model="listQuery.ruleSource" placeholder="规则来源" clearable class="filter-item" style="width: 150px; margin-right: 10px;" @change="handleFilter">
+                  <el-option v-for="item in ruleSourceOptions" :key="item" :label="item" :value="item" />
+                </el-select>
+                <el-select v-model="listQuery.ruleType" placeholder="规则类型" clearable class="filter-item" style="width: 150px; margin-right: 10px;" @change="handleFilter">
+                  <el-option v-for="item in ruleTypeOptions" :key="item" :label="item" :value="item" />
+                </el-select>
+                <el-select v-model="listQuery.status" placeholder="生效状态" clearable class="filter-item" style="width: 120px; margin-right: 10px;" @change="handleFilter">
+                  <el-option v-for="item in statusOptions" :key="item" :label="item" :value="item" />
+                </el-select>
+                <el-input v-model="listQuery.keyword" placeholder="请输入规则ID、规则描述或数据资产名称" class="filter-item" style="flex: 1;" prefix-icon="el-icon-search" @keyup.enter.native="handleFilter" />
+                <el-button type="primary" icon="el-icon-plus" style="margin-left: 10px; display: none;" @click="handleCreate">新增规则</el-button>
+              </div>
+              <div class="table-wrapper">
+                <el-table
+                  :data="list"
+                  fit
+                  highlight-current-row
+                  style="width: 100%;"
+                  @sort-change="handleSortChange"
+                >
+                  <el-table-column label="序号" prop="sequence" min-width="60" sortable="custom" align="center" />
+                  <el-table-column label="规则ID" prop="ruleId" min-width="80" sortable="custom" align="center" />
+                  <el-table-column label="规则来源" prop="ruleSource" min-width="150" sortable="custom" align="center" />
+                  <el-table-column label="规则描述" prop="ruleDescription" min-width="300" sortable="custom" align="center" />
+                  <el-table-column label="规则类型" prop="ruleType" min-width="120" sortable="custom" align="center" />
+                  <el-table-column label="数据资产名称" prop="dataAssetName" min-width="150" sortable="custom" align="center" />
+                  <el-table-column label="生效状态" prop="status" min-width="100" sortable="custom" align="center">
+                    <template slot-scope="{row}">
+                      <el-tag :class="['status-tag', row.status === '启用' ? 'status-enabled' : 'status-unpublished']" size="small">
+                        {{ row.status }}
+                      </el-tag>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </div>
+              <pagination
+                v-show="total > 0"
+                :total="total"
+                :page.sync="listQuery.page"
+                :limit.sync="listQuery.limit"
+                @pagination="getList"
+              />
+              <el-dialog :title="dialogStatus==='edit' ? '编辑规则' : '新增规则'" :visible.sync="dialogFormVisible">
+                <el-form ref="dataForm" :model="temp" :rules="rules" label-width="120px">
+                  <el-form-item label="序号" prop="sequence">
+                    <el-input-number v-model="temp.sequence" :min="1" :max="9999" placeholder="请输入序号" />
+                  </el-form-item>
+                  <el-form-item label="规则ID" prop="ruleId">
+                    <el-input v-model="temp.ruleId" placeholder="请输入规则ID，格式如：1-1-1-1" />
+                  </el-form-item>
+                  <el-form-item label="规则来源" prop="ruleSource">
+                    <el-select v-model="temp.ruleSource" placeholder="请选择规则来源">
+                      <el-option v-for="item in ruleSourceOptions" :key="item" :label="item" :value="item" />
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item label="规则描述" prop="ruleDescription">
+                    <el-input v-model="temp.ruleDescription" type="textarea" :rows="3" placeholder="请输入规则描述" />
+                  </el-form-item>
+                  <el-form-item label="规则类型" prop="ruleType">
+                    <el-select v-model="temp.ruleType" placeholder="请选择规则类型">
+                      <el-option v-for="item in ruleTypeOptions" :key="item" :label="item" :value="item" />
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item label="数据资产名称" prop="dataAssetName">
+                    <el-input v-model="temp.dataAssetName" placeholder="请输入数据资产名称" />
+                  </el-form-item>
+                  <el-form-item label="生效状态" prop="status">
+                    <el-radio-group v-model="temp.status">
+                      <el-radio v-for="item in statusOptions" :key="item" :label="item">{{ item }}</el-radio>
+                    </el-radio-group>
+                  </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                  <el-button @click="dialogFormVisible = false">取消</el-button>
+                  <el-button type="primary" @click="submitEdit">保存</el-button>
+                </div>
+              </el-dialog>
+            </div>
+          </div>
         </div>
       </el-col>
     </el-row>
@@ -189,88 +116,57 @@
 
 <script>
 import Pagination from '@/components/Pagination'
-import { fetchRuleList, updateRule, deleteRule, createRule, fetchRuleStats } from '@/api/rule'
-import echarts from 'echarts'
+import { fetchRuleList, updateRule, deleteRule, createRule } from '@/api/rule'
 
 export default {
   name: 'RulesOverview',
   components: { Pagination },
   data() {
-    const end = new Date()
-    const start = new Date()
-    start.setMonth(start.getMonth() - 6)
     return {
-      chart: null,
-      chartTimeRange: [start, end],
       listQuery: {
         page: 1,
         limit: 10,
-        engine: '',
-        regulation: '',
+        ruleSource: '',
+        ruleType: '',
         status: '',
         keyword: '',
         sort: '',
         order: ''
       },
-      engineOptions: ['个人信息识别引擎', '人脸与生物特征识别引擎', '敏感地理位置识别引擎', '图像与点云识别引擎'],
-      regulationOptions: ['汽车数据出境安全指引', '汽车数据安全管理若干规定（试行）'],
+      ruleSourceOptions: ['汽车数据出境安全指引', '汽车数据安全管理若干规定'],
+      ruleTypeOptions: ['文本关键词', '文本关键词/数据特征分析', '文本关键词/图像特征/点云数据分析', '图像特征识别'],
       statusOptions: ['启用', '未发布'],
       list: [],
       total: 0,
-      stats: {},
 
       listLoading: false,
       dialogFormVisible: false,
       dialogStatus: '',
       temp: {
         id: '',
-        name: '',
-        engine: '',
-        regulation: [],
-        status: '未发布',
-        creator: '',
-        content: '',
-        desc: '',
-        createTime: ''
+        sequence: 1,
+        ruleId: '',
+        ruleSource: '',
+        ruleDescription: '',
+        ruleType: '',
+        dataAssetName: '',
+        status: '未发布'
       },
       rules: {
-        name: [{ required: true, message: '请输入规则名称', trigger: 'blur' }],
-        engine: [{ required: true, message: '请选择所属引擎', trigger: 'change' }],
-        regulation: [{ required: true, message: '请选择关联法规', trigger: 'change' }],
-        status: [{ required: true, message: '请选择状态', trigger: 'change' }],
-        content: [{ required: true, message: '请输入规则内容', trigger: 'blur' }]
-      }
-    }
-  },
-  watch: {
-    chartTimeRange(newRange) {
-      console.log('时间范围变化:', newRange)
-      if (newRange && newRange.length === 2) {
-        this.getStats()
+        sequence: [{ required: true, message: '请输入序号', trigger: 'blur' }],
+        ruleId: [{ required: true, message: '请输入规则ID', trigger: 'blur' }],
+        ruleSource: [{ required: true, message: '请选择规则来源', trigger: 'change' }],
+        ruleDescription: [{ required: true, message: '请输入规则描述', trigger: 'blur' }],
+        ruleType: [{ required: true, message: '请选择规则类型', trigger: 'change' }],
+        dataAssetName: [{ required: true, message: '请输入数据资产名称', trigger: 'blur' }],
+        status: [{ required: true, message: '请选择生效状态', trigger: 'change' }]
       }
     }
   },
   created() {
     this.getList()
-    this.getStats()
   },
-  mounted() {
-    window.addEventListener('resize', this.resizeChart)
-  },
-  beforeDestroy() {
-    window.removeEventListener('resize', this.resizeChart)
-    if (this.chart) {
-      this.chart.dispose()
-      this.chart = null
-    }
-  },
-
   methods: {
-    resizeChart() {
-      if (this.chart && !this.chart.isDisposed()) {
-        this.chart.resize()
-      }
-    },
     handleFilter() {
       this.listQuery.page = 1
       this.getList()
@@ -283,14 +179,13 @@ export default {
     handleCreate() {
       this.temp = {
         id: '',
-        name: '',
-        engine: '',
-        regulation: [],
-        status: '未发布',
-        creator: '当前用户', // or get from user info
-        content: '',
-        desc: '',
-        createTime: ''
+        sequence: 1,
+        ruleId: '',
+        ruleSource: '',
+        ruleDescription: '',
+        ruleType: '',
+        dataAssetName: '',
+        status: '未发布'
       }
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
@@ -331,115 +226,6 @@ export default {
         }
       })
     },
-
-    initChart(xAxisData = ['202501', '202502', '202503', '202504', '202505', '202506'], seriesData = [10, 52, 200, 334, 390, 330]) {
-      console.log('初始化图表，数据:', { xAxisData, seriesData })
-      const chartDom = this.$refs.chartPlaceholder
-
-      if (!chartDom) {
-        console.error('图表容器未找到')
-        return
-      }
-
-      // 如果图表已存在，先销毁
-      if (this.chart) {
-        this.chart.dispose()
-        this.chart = null
-      }
-
-      try {
-        this.chart = echarts.init(chartDom)
-        const maxData = Math.max(...seriesData)
-        const yAxisMax = seriesData.length > 0 ? Math.ceil(maxData * 1.2) : 100
-
-        const option = {
-          backgroundColor: '#fff',
-          tooltip: {
-            trigger: 'axis',
-            axisPointer: {
-              type: 'shadow'
-            },
-            formatter: '{b}<br/>新增规则: {c0} 条'
-          },
-          grid: {
-            left: '6%',
-            right: '8%',
-            bottom: '3%',
-            top: '3%',
-            containLabel: true
-          },
-          xAxis: {
-            type: 'category',
-            data: xAxisData,
-            axisLabel: {
-              interval: 0,
-              color: '#6E7079'
-            },
-            axisLine: {
-              lineStyle: {
-                color: '#6E7079'
-              }
-            }
-          },
-          yAxis: {
-            type: 'value',
-            max: yAxisMax,
-            name: '',
-            axisLabel: {
-              formatter: '{value}',
-              color: '#6E7079'
-            },
-            axisLine: {
-              lineStyle: {
-                color: '#6E7079'
-              }
-            },
-            splitLine: {
-              show: true,
-              lineStyle: {
-                type: 'solid',
-                color: '#D7DCE5'
-              }
-            }
-          },
-          series: [
-            {
-              name: '新增规则',
-              type: 'bar',
-              data: seriesData,
-              itemStyle: {
-                color: '#5470C6'
-              },
-              label: {
-                show: true,
-                position: 'top',
-                formatter: '{c}',
-                color: '#6E7079'
-              },
-              barWidth: '60%'
-            },
-            {
-              name: '背景',
-              type: 'bar',
-              data: seriesData.map(() => yAxisMax),
-              itemStyle: {
-                color: '#F0F0F0'
-              },
-              barWidth: '60%',
-              barGap: '-100%',
-              silent: true,
-              animation: false,
-              zlevel: -1
-            }
-          ]
-        }
-
-        this.chart.setOption(option)
-        console.log('图表初始化成功')
-      } catch (error) {
-        console.error('图表初始化失败:', error)
-      }
-    },
     getList() {
       this.listLoading = true
       const query = { ...this.listQuery }
@@ -455,37 +241,6 @@ export default {
         this.listLoading = false
       }).catch(() => {
         this.listLoading = false
-      })
-    },
-    getStats() {
-      const params = {}
-      if (this.chartTimeRange && this.chartTimeRange.length === 2) {
-        // 使用字符串格式传递时间范围，避免数组序列化问题
-        params.startTime = this.chartTimeRange[0].toISOString()
-        params.endTime = this.chartTimeRange[1].toISOString()
-        console.log('发送时间范围参数:', { startTime: params.startTime, endTime: params.endTime })
-      } else {
-        console.log('没有时间范围参数，使用默认范围')
-      }
-      fetchRuleStats(params).then(res => {
-        console.log('获取统计数据成功:', res.data)
-        this.stats = res.data
-
-        // 等待下一次DOM更新后初始化图表
-        this.$nextTick(() => {
-          if (res.data.chartData && res.data.chartData.months && res.data.chartData.counts) {
-            this.initChart(res.data.chartData.months, res.data.chartData.counts)
-          } else {
-            console.warn('API 返回的图表数据为空，使用默认数据')
-            this.initChart()
-          }
-        })
-      }).catch(error => {
-        console.error('获取统计数据失败:', error)
-        // 使用默认数据
-        this.$nextTick(() => {
-          this.initChart()
-        })
       })
     }
   }
@@ -534,6 +289,16 @@ export default {
 .el-table .cell {
   position: relative;
   padding-right: 20px; /* 为排序图标留出空间 */
+  word-break: break-word; /* 允许长单词换行 */
+  white-space: normal; /* 允许文本换行 */
+  line-height: 1.4; /* 设置行高 */
+  text-align: center; /* 所有列内容居中 */
+}
+
+/* 规则描述列的特殊样式 */
+.el-table .el-table__row .el-table__cell:nth-child(4) .cell {
+  text-align: center; /* 规则描述列也居中 */
+  padding: 8px 12px;
 }
 
 .status-tag {
@@ -598,28 +363,6 @@ export default {
 </style>
 
 <style lang="scss" scoped>
-.chart-title-container {
-  display: flex;
-  flex:1;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.chart-title {
-  font-size: 23px;
-  font-weight: bold;
-  color:#4560f7;
-}
-
-.chart-placeholder {
-  height: 250px;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .app-container {
   background-color: #f5f5f5;
   padding: 10px 40px 10px;
@@ -650,77 +393,160 @@ export default {
 .third-box .el-table {
   margin-top: 15px;
 }
-.first-box, .second-box {
-  display: flex;
-  align-items: center;
-  padding: 20px 10px;
-  height: 100%;
-}
 
 .white-box.third-box {
-  padding: 20px 60px;
+  padding: 20px 20px;
 }
 
-.part-container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 1px;
-  gap: 15px;
+/* 表格响应式优化 */
+@media (max-width: 1200px) {
+  .white-box.third-box {
+    padding: 20px 25px;
+  }
 }
 
-.part-row {
-  display: flex;
-  flex: 1;
+@media (max-width: 992px) {
+  .white-box.third-box {
+    padding: 20px 20px;
+  }
+
+  .filter-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .filter-item {
+    width: 100% !important;
+    margin-right: 0 !important;
+  }
+
+  .el-select, .el-input {
+    min-width: auto;
+  }
 }
 
-.part-item {
-  flex: 1;
-  position: relative;
-  padding: 10px 1px 8px 20px;
-  display: flex;
-  flex-direction: column;
-  row-gap:5px;
+@media (max-width: 768px) {
+  .white-box.third-box {
+    padding: 15px 15px;
+  }
+
+  .app-container {
+    padding: 10px 20px 10px;
+  }
+
+  .box-title {
+    font-size: 20px;
+  }
 }
 
-.part-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+/* 左侧侧框样式 */
+.left-panel {
+  background-color: #fff;
+  border: 1px solid #e6e6e6;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  width: 200px;
+  margin-right: 15px;
+  flex-shrink: 0;
 }
 
-.part-item img {
-  width:40px;
-  height:40px;
+.panel-section {
+  margin-bottom: 15px;
 }
 
-/* 仅在每行第1和第2个part-item右侧添加竖线 */
-.part-row .part-item:nth-child(1),
-.part-row .part-item:nth-child(2) {
-  border-right: 2px solid #e0e0e0;
-}
-.part-row:first-child .part-item {
-border-bottom: none;
-}
-.part-item:not(:last-child) {
-border-right: none;
+.panel-section:last-child {
+  margin-bottom: 0;
 }
 
-/* 移除所有水平边框样式 */
-.part-label {
-  color: #828282;
-  font-weight: 400;
-  font-size: 20px;
+.panel-header {
+  background-color: #4560f7;
+  color: #fff;
+  padding: 10px 12px;
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
 }
-.part-number{
-  color:#4560f7;
-  font-weight: 800;
-  font-size: 35px;
-  margin-left:20%
+
+.panel-content {
+  padding: 12px;
+  background-color: #f8f9fa;
 }
-.part-desc{
-  color:#828282;
-  font-weight: 400;
+
+.panel-item {
+  color: #6c757d;
   font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.panel-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.panel-item:hover {
+  color: #4560f7;
+  cursor: pointer;
+}
+
+.content-wrapper {
+  display: flex;
+  gap: 0px;
+  min-width: 0; /* 确保flex子元素可以收缩 */
+}
+
+.right-panel {
+  flex: 1;
+  min-width: 0; /* 确保内容可以收缩 */
+  overflow: hidden; /* 防止内容溢出 */
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+  .left-panel {
+    width: 200px;
+  }
+
+  .content-wrapper {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 992px) {
+  .left-panel {
+    width: 180px;
+  }
+
+  .panel-header {
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+
+  .panel-content {
+    padding: 10px;
+  }
+
+  .panel-item {
+    font-size: 11px;
+    padding: 5px 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .content-wrapper {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .left-panel {
+    width: 100%;
+    margin-right: 0;
+  }
+
+  .right-panel {
+    min-width: 100%;
+  }
 }
 </style>
