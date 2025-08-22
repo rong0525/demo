@@ -161,7 +161,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'index',
-        component: () => import('@/views/data-sum/index'),
+        component: () => import('@/views/data-sum-re/index'),
         name: 'DataSum',
         meta: { title: '数据概览', icon: 'el-icon-s-marketing', affix: true, top: '数据概览' }
       }
