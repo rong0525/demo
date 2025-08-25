@@ -4,9 +4,9 @@
 
       <el-col :xs="24" :sm="24" :md="4" :lg="4" :xl="4">
         <el-card class="box-card fixed-height-card" shadow="never">
-          <div slot="header" class="clearfix blue-background">
+          <!-- <div slot="header" class="clearfix blue-background">
             <span>法条标准目录</span>
-          </div>
+          </div> -->
           <div class="card-content">
             <el-menu
               :default-active="activeFilter"
@@ -48,7 +48,7 @@
               </el-menu-item-group>
 
               <el-menu-item index="all" class="menu-item-style">
-                <span slot="title">全部数据</span>
+                <span slot="title" class="group-title">全部数据</span>
               </el-menu-item>
 
             </el-menu>
@@ -96,6 +96,16 @@
               <el-table-column prop="dataAsset" label="涉及数据资产" sortable />
               <el-table-column prop="violatingEntity" label="违规主体（域名/IP）" sortable />
             </el-table>
+            <!-- 分页器 -->
+            <el-pagination
+              style="margin-top: 16px; text-align: right;"
+              background
+              layout="prev, pager, next, jumper"
+              :current-page="currentPage"
+              :page-size="pageSize"
+              :total="filteredTotal"
+              @current-change="handlePageChange"
+            />
           </div>
         </el-card>
       </el-col>
@@ -485,20 +495,35 @@ export default {
           'category': '法规条例'
         }
       ],
-      activeFilter: 'all'
+      activeFilter: 'all',
+      currentPage: 1,
+      pageSize: 10
     }
   },
   computed: {
-    filteredTableData() {
+    filteredList() {
       if (this.activeFilter === 'all') {
         return this.originalTableData
       }
       return this.originalTableData.filter(item => item.title === this.activeFilter)
+    },
+    filteredTableData() {
+      // 只返回当前页的数据
+      const start = (this.currentPage - 1) * this.pageSize
+      const end = start + this.pageSize
+      return this.filteredList.slice(start, end)
+    },
+    filteredTotal() {
+      return this.filteredList.length
     }
   },
   methods: {
     handleSelectFilter(key) {
       this.activeFilter = key
+      this.currentPage = 1 // 切换筛选时重置到第一页
+    },
+    handlePageChange(page) {
+      this.currentPage = page
     }
   }
 }
@@ -520,7 +545,7 @@ export default {
 
 /* 左右卡片固定高度 */
 .fixed-height-card {
-  height: calc(100vh - 40px); /* 视口高度减去上下各20px的边距 */
+  height: calc(100vh - 12vh); /* 视口高度减去上下各20px的边距 */
   display: flex; /* 使用flexbox布局 */
   flex-direction: column; /* 垂直排列 */
 }
@@ -528,7 +553,7 @@ export default {
 /* 卡片内容区域自动填充剩余空间并显示滚动条 */
 .fixed-height-card .el-card__body {
   flex: 1; /* 自动填充剩余空间 */
-  padding: 20px;
+  padding: 0px 20px;
   display: flex; /* 再次使用flexbox布局 */
   flex-direction: column;
 }
@@ -563,10 +588,24 @@ export default {
   word-wrap: break-word;
 }
 
+/* 分组标题字体样式 */
+.group-title {
+  font-size: 20px;
+  color: #4560F7;
+  font-weight: bold;
+}
+
+/* “全部数据”菜单项样式与 .group-title 一致 */
+.all-data-title {
+  font-size: 20px;
+  color: #4560F7;
+  font-weight: bold;
+}
+
 /* 二级菜单项和“全部数据”项的通用样式 */
 .custom-menu .menu-item-style {
   background-color: #fff !important;
-  color: #333 !important;
+  color: #606266 !important;
   border-bottom: 1px solid #e0e0e0;
   padding: 10px 20px 10px 30px !important;
   height: auto !important;
@@ -590,7 +629,7 @@ export default {
   background-color: #E0E0E0 !important;
 }
 .custom-menu .menu-item-style.is-active {
-  background-color: #E0E0E0 !important;
+  background-color: #eaf3ff !important; /* 更浅的蓝色底色 */
   color: #4560F7 !important;
   font-weight: bold;
 }
