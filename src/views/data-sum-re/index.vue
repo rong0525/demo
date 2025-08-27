@@ -3,7 +3,9 @@
     <!-- 顶部统计栏 -->
     <top-status />
     <el-tabs class="middle-content" type="border-card">
-      <el-tab-pane label="流量分析">流量分析</el-tab-pane>
+      <el-tab-pane label="流量分析">
+        <traffic-table />
+      </el-tab-pane>
       <el-tab-pane label="数据资产">
         <data-asset />
       </el-tab-pane>
@@ -14,11 +16,13 @@
 <script>
 import TopStatus from '@/views/data-sum-re/components/TopStatus.vue'
 import DataAsset from '@/views/data-sum-re/components/DataAsset.vue'
+import TrafficTable from '@/views/data-sum-re/components/flow.vue'
 export default {
   name: 'DataSum',
   components: {
     TopStatus,
-    DataAsset
+    DataAsset,
+    TrafficTable
   },
   methods: {
     // 处理资产详情查看
