@@ -202,6 +202,18 @@ export const constantRoutes = [
         meta: { title: '规则概览', icon: 'el-icon-s-order', affix: true, top: '规则概览' }
       }
     ]
+  },
+  {
+    path: '/audit-log',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/audit-log/index'),
+        name: 'AuditLog',
+        meta: { title: '审计报告', icon: 'news.png', affix: true, top: '审计报告' }
+      }
+    ]
   }
 ]
 

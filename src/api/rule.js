@@ -31,11 +31,3 @@ export function createRule(data) {
     data
   })
 }
-
-export function fetchRuleStats(params) {
-  return request({
-    url: '/api/rule/stats',
-    method: 'get',
-    params
-  })
-}
