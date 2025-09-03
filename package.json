@@ -23,7 +23,7 @@
     "driver.js": "0.9.5",
     "dropzone": "5.5.1",
     "echarts": "4.2.1",
-    "echarts-gl": "^2.0.9",
+    "echarts-gl": "^1.1.2",
     "element-ui": "^2.15.13",
     "file-saver": "2.0.1",
     "fuse.js": "3.4.4",

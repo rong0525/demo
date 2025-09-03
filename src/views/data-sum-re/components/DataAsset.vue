@@ -1,134 +1,184 @@
 <script lang="ts">
+import { getTableData } from '@/views/data-sum-re/database/db.ts'
 export default {
   data() {
     return {
+      // todo 这里先写死吧，后面有接口了再说
       options: [{
-        value: '选项1',
-        label: '地理测绘数据'
+        value: '地理测绘数据',
+        label: '地理测绘数据',
+        children: [
+          {
+            value: '位置类数据',
+            label: '位置类数据'
+          },
+          {
+            value: '点云类数据',
+            label: '点云类数据'
+          },
+          {
+            value: '影像类数据',
+            label: '影像类数据'
+          },
+          {
+            value: '惯导类数据',
+            label: '惯导类数据'
+          },
+          {
+            value: '构图类数据',
+            label: '构图类数据'
+          },
+          {
+            value: '自动驾驶地图数据',
+            label: '自动驾驶地图数据'
+          }
+        ]
       }, {
-        value: '选项2',
-        label: '车辆及网联数据'
+        value: '车辆及网联数据',
+        label: '车辆及网联数据',
+        children: [
+          {
+            value: '算法训练数据',
+            label: '算法训练数据'
+          },
+          {
+            value: '算法模型',
+            label: '算法模型'
+          },
+          {
+            value: '算法特征数据',
+            label: '算法特征数据'
+          },
+          {
+            value: '源代码',
+            label: '源代码'
+          },
+          {
+            value: '研发类数据',
+            label: '研发类数据'
+          }
+        ]
       }, {
-        value: '选项3',
-        label: '自动驾驶数据'
+        value: '自动驾驶数据',
+        label: '自动驾驶数据',
+        children: [
+          {
+            value: '车辆数据',
+            label: '车辆数据'
+          },
+          {
+            value: 'OTA数据',
+            label: 'OTA数据'
+          },
+          {
+            value: '网联通信数据',
+            label: '网联通信数据'
+          },
+          {
+            value: '研发类数据',
+            label: '研发类数据'
+          }
+        ]
       }, {
-        value: '选项4',
-        label: '车路协同数据'
+        value: '车路协同数据',
+        label: '车路协同数据',
+        children: [
+          {
+            value: '人员流量',
+            label: '人员流量'
+          },
+          {
+            value: '车辆流量',
+            label: '车辆流量'
+          },
+          {
+            value: '目标物成像数据',
+            label: '目标物成像数据'
+          },
+          {
+            value: '交通流指标数据',
+            label: '交通流指标数据'
+          }
+        ]
       }, {
-        value: '选项5',
+        value: '个人信息数据',
         label: '个人信息数据',
         children: [
           {
-            value: '选项5-1',
+            value: '身份信息',
             label: '身份信息'
           },
           {
-            value: '选项5-2',
+            value: '行踪轨迹数据',
             label: '行踪轨迹数据'
           },
           {
-            value: '选项5-3',
+            value: '个人财产信息',
             label: '个人财产信息'
           },
           {
-            value: '选项5-4',
+            value: '生物特征数据',
             label: '生物特征数据'
           },
           {
-            value: '选项5-5',
+            value: '其他个人信息',
             label: '其他个人信息'
           }
         ]
       }, {
-        value: '选项6',
-        label: '平台运营数据'
+        value: '平台运营数据',
+        label: '平台运营数据',
+        children: [
+          {
+            value: '网络规划数据',
+            label: '网络规划数据'
+          },
+          {
+            value: '充电运行数据',
+            label: '充电运行数据'
+          }
+        ]
       }, {
-        value: '选项7',
-        label: '企业及其他数据'
+        value: '企业及其他数据',
+        label: '企业及其他数据',
+        children: [
+          {
+            value: '企业经营数据',
+            label: '企业经营数据'
+          },
+          {
+            value: '其他数据',
+            label: '其他数据'
+          }
+        ]
       }],
-      testTableData: [
-        {
-          'first-class': '地理测绘数据',
-          'second-class': '构图类数据',
-          'name': '高精度构图数据',
-          'level': '核心数据',
-          'count': 2000,
-          'related-domain-or-ip': 'dev.car-e.com'
-        },
-        {
-          'first-class': '地理测绘数据',
-          'second-class': '惯导类数据',
-          'name': 'IMU惯导数据',
-          'level': '重要数据',
-          'count': 5000,
-          'related-domain-or-ip': 'secure.car-d.com'
-        },
-        {
-          'first-class': '自动驾驶数据',
-          'second-class': '算法训练数据',
-          'name': '标注训练数据',
-          'level': '重要数据',
-          'count': 25000,
-          'related-domain-or-ip': 'train.car-e.com'
-        },
-        {
-          'first-class': '车辆及联网数据',
-          'second-class': 'OTA数据',
-          'name': 'OTA升级包',
-          'level': '一般数据',
-          'count': 20,
-          'related-domain-or-ip': 'ota.car-e.com'
-        },
-        {
-          'first-class': '车辆及联网数据',
-          'second-class': '网联通信数据',
-          'name': '车联网通信日志',
-          'level': '一般数据',
-          'count': 1000,
-          'related-domain-or-ip': 'connect.car-e.com'
-        },
-        {
-          'first-class': '车路协同数据',
-          'second-class': '车辆流量',
-          'name': '城市车辆流量统计',
-          'level': '重要数据',
-          'count': 300,
-          'related-domain-or-ip': 'traffic.car-d.com'
-        },
-        {
-          'first-class': '车路协同数据',
-          'second-class': '交通流指标数据',
-          'name': '交通信号灯状态',
-          'level': '一般数据',
-          'count': 100,
-          'related-domain-or-ip': 'signal.car-d.com'
-        },
-        {
-          'first-class': '平台运营数据',
-          'second-class': '充电运行数据',
-          'name': '公共充电桩使用记录',
-          'level': '一般数据',
-          'count': 500,
-          'related-domain-or-ip': 'charge.car-c.com'
-        },
-        {
-          'first-class': '个人信息数据',
-          'second-class': '生物特征数据',
-          'name': '驾驶员面部数据',
-          'level': '敏感个人信息',
-          'count': 1500,
-          'related-domain-or-ip': 'secure.car-d.com'
-        },
-        {
-          'first-class': '企业及其它数据',
-          'second-class': '企业经营数据',
-          'name': '售后工单数据',
-          'level': '一般数据',
-          'count': 100,
-          'related-domain-or-ip': 'service.car-a.com'
-        }
-      ]
+      tableData: [],
+      allTableData: []
     }
+  },
+  mounted() {
+    getTableData().then(res => {
+      this.allTableData = res.concat()
+      this.tableData = res.concat()
+    })
+  },
+  methods: {
+    // 定义选中的功能
+    handleSelector
+  }
+}
+// data 返回的数据是 array
+function handleSelector(data) {
+  let filteredTableData = []
+  console.log(data.length)
+  if (data.length > 0) {
+    filteredTableData = this.allTableData.filter(item => {
+      return item.data_category === data[0] && item.data_son_category[1]
+    })
+    this.tableData = filteredTableData
+  } else {
+    console.log(this.allTableData)
+    this.tableData = this.allTableData.concat()
   }
 }
 </script>
@@ -137,7 +187,7 @@ export default {
   <el-row style="display: flex">
     <!--左边的选择框-->
     <el-col :lg="6">
-      <el-cascader :options="options" clearable style="padding-left: 5vh;padding-top: 4vh" />
+      <el-cascader :options="options" clearable style="padding-left: 5vh;padding-top: 4vh" @change="handleSelector" />
     </el-col>
     <el-col :lg="1" class="divider-container"><el-divider class="el-divider--vertical" direction="vertical" /></el-col>
     <!--右边的表格-->
@@ -149,26 +199,26 @@ export default {
         <i class="el-icon-share table-icon" style="float: right;" />
         <i class="el-icon-printer table-icon" style="float: right;" />
       </div>
-      <el-table border style="margin-top: 1vh" :data="testTableData" :cell-style="{color: '#8A8A8A'}">
-        <el-table-column label="数据大类" prop="first-class" sortable />
-        <el-table-column label="子类别" prop="second-class" sortable />
-        <el-table-column label="数据资产名称" prop="name" sortable />
-        <el-table-column v-slot:default="scope" label="敏感等级" prop="level" sortable>
-          <template v-if="scope.row.level === '核心数据'">
-            <el-tag color="#F7A6A6" style="color: #AF2828" disable-transitions>{{ scope.row.level }}</el-tag>
+      <el-table border style="margin-top: 1vh" :data="tableData" :cell-style="{color: '#8A8A8A'}">
+        <el-table-column label="数据大类" prop="data_category" sortable />
+        <el-table-column label="子类别" prop="data_son_category" sortable />
+        <el-table-column label="数据资产名称" prop="data_assets" sortable />
+        <el-table-column v-slot:default="scope" label="敏感等级" prop="sensitivity_level" sortable>
+          <template v-if="scope.row.sensitivity_level === 1">
+            <el-tag color="#F7A6A6" style="color: #AF2828" disable-transitions>核心数据</el-tag>
           </template>
-          <template v-if="scope.row.level === '敏感个人信息'">
-            <el-tag color="#FFD1BA" style="color: #AF5C28" disable-transitions>{{ scope.row.level }}</el-tag>
+          <template v-if="scope.row.sensitivity_level === 2">
+            <el-tag color="#FFD1BA" style="color: #AF5C28" disable-transitions>敏感个人信息</el-tag>
           </template>
-          <template v-if="scope.row.level === '重要数据'">
-            <el-tag color="#FFD98C" style="color: #AD7300" disable-transitions>{{ scope.row.level }}</el-tag>
+          <template v-if="scope.row.sensitivity_level === 3">
+            <el-tag color="#FFD98C" style="color: #AD7300" disable-transitions>重要数据</el-tag>
           </template>
-          <template v-if="scope.row.level === '一般数据'">
-            <el-tag color="#C4CDF9" style="color: #284DBC" disable-transitions>{{ scope.row.level }}</el-tag>
+          <template v-if="scope.row.sensitivity_level === 4">
+            <el-tag color="#C4CDF9" style="color: #284DBC" disable-transitions>一般数据</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="数据量（万条）" prop="count" sortable />
-        <el-table-column label="关联域名/IP" prop="related-domain-or-ip" sortable />
+        <el-table-column label="数据量（万条）" prop="volume" sortable />
+        <el-table-column label="关联域名/IP" prop="associated_domain_ip" sortable />
       </el-table>
     </el-col>
   </el-row>

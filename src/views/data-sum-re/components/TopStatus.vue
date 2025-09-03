@@ -1,5 +1,30 @@
-<script setup lang="ts">
+<script lang="ts">
+import { fetchCrossBorderDomainCount, fetchDomainUniqueCount, fetchInFlowCount } from '@/views/data-sum-re/database/db.ts'
 
+export default {
+  data() {
+    return {
+      allDomainCount: 0,
+      crossBorderDomainCount: 0,
+      crossBorderDomainPercent: 0,
+      inFlowCount: 0,
+      outFlowCount: 0
+    }
+  },
+  mounted() {
+    fetchDomainUniqueCount().then(res => {
+      this.allDomainCount = res
+    })
+    fetchCrossBorderDomainCount().then(res => {
+      this.crossBorderDomainCount = res
+      this.crossBorderDomainPercent = (this.crossBorderDomainCount / this.allDomainCount) * 100
+    })
+    fetchInFlowCount().then(res => {
+      this.inFlowCount = res.inflowCount
+      this.outFlowCount = res.outflowCount
+    })
+  }
+}
 </script>
 
 <template>
@@ -13,7 +38,7 @@
           </el-col>
           <el-col :span="15">
             <div class="top-status-title">数据流入总量</div>
-            <div class="top-status-data">1.534 PB</div>
+            <div class="top-status-data">{{ inFlowCount }} 条</div>
           </el-col>
         </el-row>
         <el-row>
@@ -30,7 +55,7 @@
           </el-col>
           <el-col :span="15">
             <div class="top-status-title">数据流出总量</div>
-            <div class="top-status-data">1.269 PB</div>
+            <div class="top-status-data">{{ outFlowCount }} 条</div>
           </el-col>
         </el-row>
         <el-row>
@@ -47,7 +72,7 @@
           </el-col>
           <el-col :span="15">
             <div class="top-status-title">域名资产总数</div>
-            <div class="top-status-data">1200 个</div>
+            <div class="top-status-data"> {{ allDomainCount }} 个</div>
           </el-col>
         </el-row>
         <el-row>
@@ -64,7 +89,7 @@
           </el-col>
           <el-col :span="15">
             <div class="top-status-title">高风险域名数</div>
-            <div class="top-status-data">15 PB</div>
+            <div class="top-status-data"> {{ crossBorderDomainCount }} 个</div>
           </el-col>
         </el-row>
         <el-row>
@@ -81,7 +106,7 @@
           </el-col>
           <el-col :span="15">
             <div class="top-status-title">跨境流量占比</div>
-            <div class="top-status-data">35.8 %</div>
+            <div class="top-status-data">{{ crossBorderDomainPercent }} %</div>
           </el-col>
         </el-row>
         <el-row>
