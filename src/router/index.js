@@ -180,18 +180,6 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/event-report',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/event-report/index'),
-        name: 'eventReport',
-        meta: { title: '事件通报', icon: 'news.png', affix: true, top: '重点事件通报' }
-      }
-    ]
-  },
-  {
     path: '/rules',
     component: Layout,
     children: [
