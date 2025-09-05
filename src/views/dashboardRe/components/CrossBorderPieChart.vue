@@ -6,6 +6,7 @@
 import echarts from 'echarts'
 require('echarts/theme/macarons') // echarts theme
 import resize from './mixins/resize'
+import { fetchCrossBorderDomainCount, fetchDomainUniqueCount } from '@/views/data-sum-re/database/db.ts'
 
 export default {
   mixins: [resize],
@@ -29,12 +30,21 @@ export default {
   },
   data() {
     return {
+      allDomainCount: 0,
+      crossBorderDomainCount: 0,
       chart: null
     }
   },
   mounted() {
-    this.$nextTick(() => {
-      this.initChart()
+    fetchDomainUniqueCount().then(res => {
+      this.allDomainCount = res
+      // 通过嵌套保证串行
+      fetchCrossBorderDomainCount().then(res => {
+        this.crossBorderDomainCount = res
+        this.$nextTick(() => {
+          this.initChart()
+        })
+      })
     })
   },
   beforeDestroy() {
@@ -49,11 +59,11 @@ export default {
       this.chart = echarts.init(this.$el, 'macarons')
       this.chart.setOption({
         title: {
-          text: '73.1%',
+          text: ((this.crossBorderDomainCount / this.allDomainCount).toFixed(2) * 100).toString() + '%',
           left: 'center',
           top: 'center',
           textStyle: {
-            fontSize: 12,
+            fontSize: 12
           }
         },
         tooltip: {
@@ -67,8 +77,8 @@ export default {
             radius: ['55%', '86%'],
             center: ['50%', '49%'],
             data: [
-              { value: 73.1, name: '合规数据' },
-              { value: 26.9, name: '不合规数据' }
+              { value: this.crossBorderDomainCount, name: '跨境域名' },
+              { value: this.allDomainCount - this.crossBorderDomainCount, name: '非跨境域名' }
             ],
             label: {
               show: false

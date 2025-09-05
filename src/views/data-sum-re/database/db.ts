@@ -105,7 +105,7 @@ export async function fetchCrossBorderDomainCount() {
   return count
 }
 
-export async function fetchInFlowCount() {
+export async function fetchFlowCount() {
   let inflowCount = 0
   let outflowCount = 0
   await axios.get(url + '/mfemcbrwc4tik3r/records', {
@@ -123,5 +123,29 @@ export async function fetchInFlowCount() {
   return {
     inflowCount: inflowCount,
     outflowCount: outflowCount
+  }
+}
+
+export async function fetchRuleCount() {
+  let rules = []
+  let allRuleCount = 0
+  let activatedRuleCount = 0
+  await axios.get(url + '/m2pw08ctw3f2ww9/records?limit=1000', {
+    headers: defaultToken
+  }).then(async response => {
+    response.data.list.forEach((item) => {
+      if (item.rule_status === 1) {
+        activatedRuleCount++
+      }
+    })
+    rules = response.data.list
+    allRuleCount = response.data.list.length
+  }).catch(err => {
+    console.error(err)
+  })
+  return {
+    rules: rules,
+    allRuleCount: allRuleCount,
+    activatedRuleCount: activatedRuleCount
   }
 }

@@ -6,6 +6,7 @@
 import echarts from 'echarts'
 require('echarts/theme/macarons') // echarts theme
 import resize from './mixins/resize'
+import { fetchFlowCount } from '@/views/data-sum-re/database/db.ts'
 
 export default {
   mixins: [resize],
@@ -29,12 +30,18 @@ export default {
   },
   data() {
     return {
-      chart: null
+      chart: null,
+      inFlowCount: 0,
+      outFlowCount: 0
     }
   },
   mounted() {
-    this.$nextTick(() => {
-      this.initChart()
+    fetchFlowCount().then(res => {
+      this.inFlowCount = res.inflowCount
+      this.outFlowCount = res.outflowCount
+      this.$nextTick(() => {
+        this.initChart()
+      })
     })
   },
   beforeDestroy() {
@@ -55,17 +62,17 @@ export default {
         legend: {
           bottom: 'bottom',
           padding: [0, 0, 0, 0],
-          data: ['重要数据', '一般数据']
+          data: ['流入', '流出']
         },
         series: [
           {
-            name: 'WEEKLY WRITE ARTICLES',
+            name: '流量占比图',
             type: 'pie',
             radius: [75, 115],
             center: ['50%', '45%'],
             data: [
-              { value: 320, name: '重要数据' },
-              { value: 240, name: '一般数据' }
+              { value: this.inFlowCount, name: '流入' },
+              { value: this.outFlowCount, name: '流出' }
             ],
             label: {
               formatter: '{b}\n{d}%'

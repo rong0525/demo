@@ -37,6 +37,7 @@ export default {
   padding-left: 6vh;
   padding-right: 6vh;
   background-color:#eff1f4;;
+  min-height: 100vh;
 }
 
 .middle-content {
@@ -49,7 +50,7 @@ export default {
   overflow: hidden;
 }
 /* 响应式调整 */
-@media (max-width: 1200px) {
+@media (max-width: 200vh) {
   .middle-content {
     flex-direction: column;
     height: auto;

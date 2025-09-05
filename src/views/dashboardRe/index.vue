@@ -16,43 +16,52 @@
               <el-row type="flex" class="inner-row">
                 <el-col :lg="6">
                   <el-row>
-                    <el-col :lg="24">
-                      <div class="module-title">
-                        今日数据流入总量
-                      </div>
-                      <div class="todayTotalFlow">{{ todayTotalFlow }}&nbsp;TB</div>
-                    </el-col>
-                    <el-col :lg="24" style="margin-top: 2.5vh">
-                      <div class="module-title">
-                        较昨日同比增长
-                      </div>
-                      <div class="oneDayBoost">{{ oneDayBoost }}</div>
-                    </el-col>
+                    <!--                    <el-col :lg="24">-->
+                    <!--                      <div class="module-title">-->
+                    <!--                        今日数据流入总量-->
+                    <!--                      </div>-->
+                    <!--                      <div class="todayTotalFlow">{{ todayTotalFlow }}&nbsp;TB</div>-->
+                    <!--                    </el-col>-->
+                    <!--                    <el-col :lg="24" style="margin-top: 2.5vh">-->
+                    <!--                      <div class="module-title">-->
+                    <!--                        较昨日同比增长-->
+                    <!--                      </div>-->
+                    <!--                      <div class="oneDayBoost">{{ oneDayBoost }}</div>-->
+                    <!--                    </el-col>-->
+                    <div class="complianceTitle">
+                      跨境域名占比图
+                    </div>
+                    <crossBorderPieChart />
                   </el-row>
                 </el-col>
                 <el-col :lg="1" class="divider-container"><el-divider class="el-divider--vertical" direction="vertical" /></el-col>
                 <el-col :lg="9">
-                  <el-row>
-                    <el-col :lg="24">
-                      <div class="module-title">
-                        近7天数据流入趋势
-                      </div>
-                    </el-col>
-                    <el-col :lg="24">
-                      <SevenDaysFlowLineChart :chart-data="lineChartData" />
-                    </el-col>
-                  </el-row>
+                  <!--                  <el-row>-->
+                  <!--                    <el-col :lg="24">-->
+                  <!--                      <div class="module-title">-->
+                  <!--                        近7天数据流入趋势-->
+                  <!--                      </div>-->
+                  <!--                    </el-col>-->
+                  <!--                    <el-col :lg="24">-->
+                  <!--                      <SevenDaysFlowLineChart :chart-data="lineChartData" />-->
+                  <!--                    </el-col>-->
+                  <!--                  </el-row>-->
+                  <div class="module-title" style="font-weight: bold">
+                    <span style="font-weight: bold;font-size: 4.5vh;color: #1F78D1">{{ currentMonth }}月</span>
+                    不合规条数趋势
+                  </div>
+                  <thirtyDaysComplianceDataLineChart :chart-data="thirtyDaysComplianceDataLineChartData" />
                 </el-col>
                 <el-col :lg="1" class="divider-container"><el-divider class="el-divider--vertical" direction="vertical" /></el-col>
                 <el-col :lg="7">
                   <el-row>
                     <el-col :lg="24">
                       <div class="module-title">
-                        重要数据分级占比图
+                        流量占比图
                       </div>
                     </el-col>
                     <el-col :lg="24" style="margin-top: 1.5vh">
-                      <importantDataPie />
+                      <flowPieChart />
                     </el-col>
                   </el-row>
                 </el-col>
@@ -76,21 +85,20 @@
               <el-col :lg="13">
                 <el-row>
                   <el-col :lg="14">
-                    <div class="complianceTitle">
-                      当前合规率
-                    </div>
-                    <div class="complianceRate">{{ complianceRate }}</div>
+                    <!--                    <div class="complianceTitle">-->
+                    <!--                      跨境域名占比图-->
+                    <!--                    </div>-->
+                    <!--                    <div class="complianceRate">{{ complianceRate }}</div>-->
                   </el-col>
                   <el-col :lg="10">
-                    <complianceDataPieChart />
+                    <!--                    <crossBorderPieChart />-->
                   </el-col>
                   <el-col :lg="24" style="margin-top: 1.5vh">
-                    <div class="module-title" style="font-weight: bold">
-                      近
-                      <span style="font-weight: bold;font-size: 4.5vh;color: #1F78D1">30天</span>
-                      合规率趋势
-                    </div>
-                    <thirtyDaysComplianceDataLineChart :chart-data="thirtyDaysComplianceDataLineChartData" />
+                    <!--                    <div class="module-title" style="font-weight: bold">-->
+                    <!--                      <span style="font-weight: bold;font-size: 4.5vh;color: #1F78D1">{{ currentMonth }}月</span>-->
+                    <!--                      不合规条数趋势-->
+                    <!--                    </div>-->
+                    <!--                    <thirtyDaysComplianceDataLineChart :chart-data="thirtyDaysComplianceDataLineChartData" />-->
                   </el-col>
                 </el-row>
               </el-col>
@@ -103,20 +111,20 @@
                     </div>
                   </el-col>
                   <el-col :lg="24" style="margin-top: 0.7vh">
-                    <el-table class="el-table-unComplianceTop10" :data="unComplianceTop10Data" :show-header="false" style="font-size:1.4vh">
-                      <el-table-column v-slot:default="scope" prop="type" width="52">
-                        <template v-if="scope.row.type === 'person'">
-                          <img src="./components/static/uncompliance/person.png" style="width:100%;height:100%;" alt="">
-                        </template>
-                        <template v-if="scope.row.type === 'society'">
-                          <img src="./components/static/uncompliance/society.png" style="width:100%;height:100%;" alt="">
-                        </template>
-                        <template v-if="scope.row.type === 'location'">
-                          <img src="./components/static/uncompliance/location.png" style="width:100%;height:100%;" alt="">
-                        </template>
-                      </el-table-column>
-                      <el-table-column prop="info" />
-                    </el-table>
+                    <!--                    <el-table class="el-table-unComplianceTop10" :data="unComplianceTop10Data" :show-header="false" style="font-size:1.4vh">-->
+                    <!--                      <el-table-column v-slot:default="scope" prop="type" width="46" align="center">-->
+                    <!--                        <template v-if="scope.row.type === 'person'">-->
+                    <!--                          <img src="./components/static/uncompliance/person.png" style="width:2.5vh;height:100%;padding-top:0.2vh" alt="">-->
+                    <!--                        </template>-->
+                    <!--                        <template v-if="scope.row.type === 'society'">-->
+                    <!--                          <img src="./components/static/uncompliance/society.png" style="width:2.5vh;height:100%;padding-top:0.2vh" alt="">-->
+                    <!--                        </template>-->
+                    <!--                        <template v-if="scope.row.type === 'location'">-->
+                    <!--                          <img src="./components/static/uncompliance/location.png" style="width:2.5vh;height:100%;padding-top:0.2vh" alt="">-->
+                    <!--                        </template>-->
+                    <!--                      </el-table-column>-->
+                    <!--                      <el-table-column prop="info" />-->
+                    <!--                    </el-table>-->
                   </el-col>
                 </el-row>
               </el-col>
@@ -138,37 +146,37 @@
               <div class="horizon-underline" />
             </el-col>
             <!--          内部行-->
-            <el-col>
-              <el-table :data="importantEvents" :cell-style="{padding:'1.2vh'}" :show-header="false">
-                <el-table-column v-slot:default="scope" prop="type" width="92vh">
-                  <template v-if="scope.row.type === '数据传输异常预警'">
-                    <img src="./components/static/important-event/transfer-warning.png" style="width:100%;height:100%;" alt="">
-                  </template>
-                  <template v-if="scope.row.type === '地理位置数据越界传输'">
-                    <img src="./components/static/important-event/location.png" style="width:100%;height:100%;" alt="">
-                  </template>
-                  <template v-if="scope.row.type === '人脸图像未脱敏存储'">
-                    <img src="./components/static/important-event/people-face.png" style="width:100%;height:100%;" alt="">
-                  </template>
-                  <template v-if="scope.row.type === '车机系统日志异常'">
-                    <img src="./components/static/important-event/car-and-machine.png" style="width:100%;height:100%;" alt="">
-                  </template>
-                  <template v-if="scope.row.type === '关键合规规则更新'">
-                    <img src="./components/static/important-event/rule-update.png" style="width:100%;height:100%;" alt="">
-                  </template>
-                </el-table-column>
-                <el-table-column prop="type, info, time">
-                  <template v-slot:default="scope">
-                    <div style="font-size: 1.8vh;color: #8A8A8A">
-                      {{ scope.row.type }}：{{ scope.row.info }}
-                    </div>
-                    <div style="font-size: 1.5vh;color: #8A8A8A;margin-top: 0.3vh">
-                      {{ scope.row.time }}
-                    </div>
-                  </template>
-                </el-table-column>
-              </el-table>
-            </el-col>
+            <!--            <el-col>-->
+            <!--              <el-table :data="importantEvents" :cell-style="{padding:'1.2vh'}" :show-header="false">-->
+            <!--                <el-table-column v-slot:default="scope" prop="type" width="92vh">-->
+            <!--                  <template v-if="scope.row.type === '数据传输异常预警'">-->
+            <!--                    <img src="./components/static/important-event/transfer-warning.png" style="width:100%;height:100%;" alt="">-->
+            <!--                  </template>-->
+            <!--                  <template v-if="scope.row.type === '地理位置数据越界传输'">-->
+            <!--                    <img src="./components/static/important-event/location.png" style="width:100%;height:100%;" alt="">-->
+            <!--                  </template>-->
+            <!--                  <template v-if="scope.row.type === '人脸图像未脱敏存储'">-->
+            <!--                    <img src="./components/static/important-event/people-face.png" style="width:100%;height:100%;" alt="">-->
+            <!--                  </template>-->
+            <!--                  <template v-if="scope.row.type === '车机系统日志异常'">-->
+            <!--                    <img src="./components/static/important-event/car-and-machine.png" style="width:100%;height:100%;" alt="">-->
+            <!--                  </template>-->
+            <!--                  <template v-if="scope.row.type === '关键合规规则更新'">-->
+            <!--                    <img src="./components/static/important-event/rule-update.png" style="width:100%;height:100%;" alt="">-->
+            <!--                  </template>-->
+            <!--                </el-table-column>-->
+            <!--                <el-table-column prop="type, info, time">-->
+            <!--                  <template v-slot:default="scope">-->
+            <!--                    <div style="font-size: 1.8vh;color: #8A8A8A">-->
+            <!--                      {{ scope.row.type }}：{{ scope.row.info }}-->
+            <!--                    </div>-->
+            <!--                    <div style="font-size: 1.5vh;color: #8A8A8A;margin-top: 0.3vh">-->
+            <!--                      {{ scope.row.time }}-->
+            <!--                    </div>-->
+            <!--                  </template>-->
+            <!--                </el-table-column>-->
+            <!--              </el-table>-->
+            <!--            </el-col>-->
           </el-row>
         </el-card>
       </el-col>
@@ -204,64 +212,64 @@
                       <div class="pink-count">{{ ruleInfo.activatedCounts }}条</div>
                     </el-col>
                     <el-col :lg="12" style="margin-top: 2.5vh">
-                      <div class="module-title">最近更新时间</div>
-                      <div class="blue-count-time">{{ ruleInfo.updatedTime.split(' ')[0] }}</div>
-                      <div class="blue-count-time">{{ ruleInfo.updatedTime.split(' ')[1] }}</div>
+                      <!--                      <div class="module-title">最近更新时间</div>-->
+                      <!--                      <div class="blue-count-time">{{ ruleInfo.updatedTime.split(' ')[0] }}</div>-->
+                      <!--                      <div class="blue-count-time">{{ ruleInfo.updatedTime.split(' ')[1] }}</div>-->
                     </el-col>
                   </el-row>
                 </el-col>
                 <!--                第二列-->
-                <el-col :lg="7">
-                  <el-col :lg="24">
-                    <div class="module-title">规则总数</div>
-                  </el-col>
-                  <el-col style="margin-top: 1.0vh; margin-left: 3vh">
-                    <el-row>
-                      <el-col>
-                        <el-row>
-                          <el-col :lg="4" style="margin-top: 0.3vh">
-                            <img src="./components/static/uncompliance/location.png" style="width:80%;height:80%;" alt="">
-                          </el-col>
-                          <el-col :lg="20" style="margin-top: 0.3vh">
-                            <div class="module-title-smaller">个人信息识别引擎</div>
-                            <div class="rule-engine-info">已录入：{{ ruleEngineInfo.engine1.roledInCount }}<span style="margin-left: 2vh" />已启用：{{ ruleEngineInfo.engine1.activatedCount }}</div>
-                          </el-col>
-                          <el-col><div class="horizon-underline" /></el-col>
-                        </el-row>
-                        <el-row style="margin-top: 0.3vh">
-                          <el-col :lg="4" style="margin-top: 0.3vh">
-                            <img src="./components/static/uncompliance/person.png" style="width:80%;height:80%;" alt="">
-                          </el-col>
-                          <el-col :lg="20" style="margin-top: 0.3vh">
-                            <div class="module-title-smaller">人脸与生物特征识别引擎</div>
-                            <div class="rule-engine-info">已录入：{{ ruleEngineInfo.engine2.roledInCount }}<span style="margin-left: 2vh" />已启用：{{ ruleEngineInfo.engine2.activatedCount }}</div>
-                          </el-col>
-                          <el-col><div class="horizon-underline" /></el-col>
-                        </el-row>
-                        <el-row style="margin-top: 0.3vh">
-                          <el-col :lg="4" style="margin-top: 0.3vh">
-                            <img src="./components/static/uncompliance/society.png" style="width:80%;height:80%;" alt="">
-                          </el-col>
-                          <el-col :lg="20" style="margin-top: 0.3vh">
-                            <div class="module-title-smaller">敏感地理位置识别引擎</div>
-                            <div class="rule-engine-info">已录入：{{ ruleEngineInfo.engine3.roledInCount }}<span style="margin-left: 2vh" />已启用：{{ ruleEngineInfo.engine3.activatedCount }}</div>
-                          </el-col>
-                          <el-col><div class="horizon-underline" /></el-col>
-                        </el-row>
-                        <el-row style="margin-top: 0.3vh">
-                          <el-col :lg="4" style="margin-top: 0.3vh">
-                            <img src="./components/static/uncompliance/location.png" style="width:80%;height:80%;" alt="">
-                          </el-col>
-                          <el-col :lg="20" style="margin-top: 0.3vh">
-                            <div class="module-title-smaller">图像与点云识别引擎</div>
-                            <div class="rule-engine-info">已录入：{{ ruleEngineInfo.engine4.roledInCount }}<span style="margin-left: 2vh" />已启用：{{ ruleEngineInfo.engine4.activatedCount }}</div>
-                          </el-col>
-                          <el-col><div class="horizon-underline" /></el-col>
-                        </el-row>
-                      </el-col>
-                    </el-row>
-                  </el-col>
-                </el-col>
+                <!--                <el-col :lg="7">-->
+                <!--                  <el-col :lg="24">-->
+                <!--                    <div class="module-title">规则总数</div>-->
+                <!--                  </el-col>-->
+                <!--                  <el-col style="margin-top: 1.0vh; margin-left: 3vh">-->
+                <!--                    <el-row>-->
+                <!--                      <el-col>-->
+                <!--                        <el-row>-->
+                <!--                          <el-col :lg="4" style="margin-top: 0.3vh">-->
+                <!--                            <img src="./components/static/uncompliance/location.png" style="width:80%;height:80%;" alt="">-->
+                <!--                          </el-col>-->
+                <!--                          <el-col :lg="20" style="margin-top: 0.3vh">-->
+                <!--                            <div class="module-title-smaller">个人信息识别引擎</div>-->
+                <!--                            <div class="rule-engine-info">已录入：{{ ruleEngineInfo.engine1.roledInCount }}<span style="margin-left: 2vh" />已启用：{{ ruleEngineInfo.engine1.activatedCount }}</div>-->
+                <!--                          </el-col>-->
+                <!--                          <el-col><div class="horizon-underline" /></el-col>-->
+                <!--                        </el-row>-->
+                <!--                        <el-row style="margin-top: 0.3vh">-->
+                <!--                          <el-col :lg="4" style="margin-top: 0.3vh">-->
+                <!--                            <img src="./components/static/uncompliance/person.png" style="width:80%;height:80%;" alt="">-->
+                <!--                          </el-col>-->
+                <!--                          <el-col :lg="20" style="margin-top: 0.3vh">-->
+                <!--                            <div class="module-title-smaller">人脸与生物特征识别引擎</div>-->
+                <!--                            <div class="rule-engine-info">已录入：{{ ruleEngineInfo.engine2.roledInCount }}<span style="margin-left: 2vh" />已启用：{{ ruleEngineInfo.engine2.activatedCount }}</div>-->
+                <!--                          </el-col>-->
+                <!--                          <el-col><div class="horizon-underline" /></el-col>-->
+                <!--                        </el-row>-->
+                <!--                        <el-row style="margin-top: 0.3vh">-->
+                <!--                          <el-col :lg="4" style="margin-top: 0.3vh">-->
+                <!--                            <img src="./components/static/uncompliance/society.png" style="width:80%;height:80%;" alt="">-->
+                <!--                          </el-col>-->
+                <!--                          <el-col :lg="20" style="margin-top: 0.3vh">-->
+                <!--                            <div class="module-title-smaller">敏感地理位置识别引擎</div>-->
+                <!--                            <div class="rule-engine-info">已录入：{{ ruleEngineInfo.engine3.roledInCount }}<span style="margin-left: 2vh" />已启用：{{ ruleEngineInfo.engine3.activatedCount }}</div>-->
+                <!--                          </el-col>-->
+                <!--                          <el-col><div class="horizon-underline" /></el-col>-->
+                <!--                        </el-row>-->
+                <!--                        <el-row style="margin-top: 0.3vh">-->
+                <!--                          <el-col :lg="4" style="margin-top: 0.3vh">-->
+                <!--                            <img src="./components/static/uncompliance/location.png" style="width:80%;height:80%;" alt="">-->
+                <!--                          </el-col>-->
+                <!--                          <el-col :lg="20" style="margin-top: 0.3vh">-->
+                <!--                            <div class="module-title-smaller">图像与点云识别引擎</div>-->
+                <!--                            <div class="rule-engine-info">已录入：{{ ruleEngineInfo.engine4.roledInCount }}<span style="margin-left: 2vh" />已启用：{{ ruleEngineInfo.engine4.activatedCount }}</div>-->
+                <!--                          </el-col>-->
+                <!--                          <el-col><div class="horizon-underline" /></el-col>-->
+                <!--                        </el-row>-->
+                <!--                      </el-col>-->
+                <!--                    </el-row>-->
+                <!--                  </el-col>-->
+                <!--                </el-col>-->
                 <!--                第三列-->
                 <el-col :lg="7" style="display: flex; align-items: center;justify-content: center; flex: 1; height: 30vh">
                   <img src="./components/static/decorate.png" style="width:27vh;height:auto;" alt="">
@@ -440,10 +448,11 @@
 </style>
 
 <script>
-import SevenDaysFlowLineChart from './components/SevenDaysFlowLineChart.vue'
-import ImportantDataPieChart from './components/ImportantDataPieChart.vue'
-import CompliancePieChart from './components/CompliancePieChart.vue'
+import FlowPieChart from './components/FlowPieChart.vue'
+import CrossBorderPieChart from './components/CrossBorderPieChart.vue'
 import ThirtyDaysComplianceDataLineChart from './components/ThirtyDaysComplianceDataLineChart.vue'
+import { fetchRuleCount } from '@/views/data-sum-re/database/db.ts'
+import { fetchRuleDocumentCount, fetchUncomplianceData } from '@/views/dashboardRe/database/db.js'
 // 定义格式化封装函数
 function format(timer) {
   const year = timer.getFullYear()
@@ -461,17 +470,14 @@ function format(timer) {
 function pad(timeEl, total = 2, str = '0') {
   return timeEl.toString().padStart(total, str)
 }
-const lineChartData = {
-  newVisitis: {
-    expectedData: [100, 120, 161, 134, 105, 160, 165],
-    actualData: [8200, 9320, 9010, 9340, 12900, 13300, 10056]
-  }
-}
+// const lineChartData = {
+//   newVisitis: {
+//     expectedData: [100, 120, 161, 134, 105, 160, 165],
+//     actualData: [8200, 9320, 9010, 9340, 12900, 13300, 10056]
+//   }
+// }
 const thirtyDaysComplianceDataLineChartData = {
-  actualData: []
-}
-for (let i = 0; i < 30; i++) {
-  thirtyDaysComplianceDataLineChartData.actualData.push(Math.random() * 40 + 40)
+  actualData: new Array(31).fill(0)
 }
 const unComplianceTop10Data = [
   {
@@ -570,9 +576,9 @@ const ruleEngineInfo = {
 
 export default {
   components: {
-    'SevenDaysFlowLineChart': SevenDaysFlowLineChart,
-    'importantDataPie': ImportantDataPieChart,
-    'complianceDataPieChart': CompliancePieChart,
+    // 'SevenDaysFlowLineChart': SevenDaysFlowLineChart,
+    'flowPieChart': FlowPieChart,
+    'crossBorderPieChart': CrossBorderPieChart,
     'thirtyDaysComplianceDataLineChart': ThirtyDaysComplianceDataLineChart
   },
   data() {
@@ -580,13 +586,14 @@ export default {
       todayTotalFlow: 1.5,
       oneDayBoost: '↑ 15%',
       complianceRate: '73.1%',
-      lineChartData: lineChartData.newVisitis,
+      // lineChartData: lineChartData.newVisitis,
       thirtyDaysComplianceDataLineChartData: thirtyDaysComplianceDataLineChartData,
       unComplianceTop10Data: unComplianceTop10Data,
       importantEvents: importantEvents,
       ruleInfo: ruleInfo,
       ruleEngineInfo: ruleEngineInfo,
-      timer: null
+      timer: null,
+      currentMonth: 0
     }
   },
   computed: {
@@ -601,6 +608,26 @@ export default {
         console.log(this.lineChartData.actualData)
       }, 10000)
     }
+  },
+  mounted() {
+    // todo 原来可以在 js 中定义变量，然后在 mounted 中修改（data 中 export），这样数据也会自动同步
+    fetchRuleCount().then(res => {
+      ruleInfo.counts = res.allRuleCount
+      ruleInfo.activatedCounts = res.activatedRuleCount
+    })
+    fetchUncomplianceData().then(res => {
+      this.currentMonth = new Date().getMonth() + 1
+      var currentDay = new Date().getDate()
+      for (var i = 1; i <= currentDay; i++) {
+        this.thirtyDaysComplianceDataLineChartData.actualData[i - 1] = res.filter(item => {
+          return (new Date(item.ts).getDate()) === i
+        }).length
+      }
+      console.log(this.thirtyDaysComplianceDataLineChartData.actualData)
+    })
+    fetchRuleDocumentCount().then(res => {
+      ruleInfo.standardCounts = res
+    })
   },
   destroyed() {
     clearInterval(this.timer)

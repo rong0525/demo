@@ -153,7 +153,9 @@ export default {
         ]
       }],
       tableData: [],
-      allTableData: []
+      allTableData: [],
+      currentPage: 1,
+      pageSize: 10
     }
   },
   mounted() {
@@ -164,7 +166,18 @@ export default {
   },
   methods: {
     // 定义选中的功能
-    handleSelector
+    handleSelector,
+    // 每页条数改变时触发 选择一页显示多少行
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`)
+      this.currentPage = 1
+      this.pageSize = val
+    },
+    // 当前页改变时触发 跳转其他页
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`)
+      this.currentPage = val
+    }
   }
 }
 // data 返回的数据是 array
@@ -199,7 +212,7 @@ function handleSelector(data) {
         <i class="el-icon-share table-icon" style="float: right;" />
         <i class="el-icon-printer table-icon" style="float: right;" />
       </div>
-      <el-table border style="margin-top: 1vh" :data="tableData" :cell-style="{color: '#8A8A8A'}">
+      <el-table border style="margin-top: 1vh" :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)" :cell-style="{color: '#8A8A8A'}">
         <el-table-column label="数据大类" prop="data_category" sortable />
         <el-table-column label="子类别" prop="data_son_category" sortable />
         <el-table-column label="数据资产名称" prop="data_assets" sortable />
@@ -220,6 +233,18 @@ function handleSelector(data) {
         <el-table-column label="数据量（万条）" prop="volume" sortable />
         <el-table-column label="关联域名/IP" prop="associated_domain_ip" sortable />
       </el-table>
+      <el-pagination
+        align="center"
+        :current-page="currentPage"
+        :page-sizes="[10,20,50,100]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="tableData.length"
+        style="margin-top: 1vh"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
+
     </el-col>
   </el-row>
 </template>

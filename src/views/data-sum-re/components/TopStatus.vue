@@ -1,5 +1,5 @@
 <script lang="ts">
-import { fetchCrossBorderDomainCount, fetchDomainUniqueCount, fetchInFlowCount } from '@/views/data-sum-re/database/db.ts'
+import { fetchCrossBorderDomainCount, fetchDomainUniqueCount, fetchFlowCount } from '@/views/data-sum-re/database/db.ts'
 
 export default {
   data() {
@@ -14,12 +14,13 @@ export default {
   mounted() {
     fetchDomainUniqueCount().then(res => {
       this.allDomainCount = res
+      // 通过嵌套保证串行
+      fetchCrossBorderDomainCount().then(res => {
+        this.crossBorderDomainCount = res
+        this.crossBorderDomainPercent = ((this.crossBorderDomainCount / this.allDomainCount) * 100.00).toFixed(2)
+      })
     })
-    fetchCrossBorderDomainCount().then(res => {
-      this.crossBorderDomainCount = res
-      this.crossBorderDomainPercent = (this.crossBorderDomainCount / this.allDomainCount) * 100
-    })
-    fetchInFlowCount().then(res => {
+    fetchFlowCount().then(res => {
       this.inFlowCount = res.inflowCount
       this.outFlowCount = res.outflowCount
     })

@@ -20,7 +20,7 @@ export default {
     },
     height: {
       type: String,
-      default: '180%'
+      default: '380%'
     },
     autoResize: {
       type: Boolean,
@@ -66,7 +66,7 @@ export default {
     setOptions({ expectedData, actualData } = {}) {
       const xData = []
       for (let i = 0; i < 30; i++) {
-        xData.push('Day' + i.toString())
+        xData.push('Day' + (i + 1).toString())
       }
       this.chart.setOption({
         xAxis: {
@@ -92,7 +92,7 @@ export default {
             show: true
           },
           axisLabel: {
-            formatter: '{value}%'
+            formatter: '{value}'
           }
         },
         series: [
