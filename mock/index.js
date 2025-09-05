@@ -5,7 +5,8 @@ const user = require('./user')
 const role = require('./role')
 const article = require('./article')
 const search = require('./remote-search')
-const rule = require('./rule')
+// 仅禁用 rule 的 mock，其他保持
+// const rule = require('./rule')
 const hegui = require('./hegui')
 
 const mocks = [
@@ -13,7 +14,6 @@ const mocks = [
   ...role,
   ...article,
   ...search,
-  ...rule,
   ...hegui
 ]
 
