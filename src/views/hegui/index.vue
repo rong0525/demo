@@ -70,29 +70,45 @@
               <el-table-column type="expand">
                 <template slot-scope="props">
                   <el-form label-position="left" inline class="demo-table-expand">
-                    <el-form-item label="时间">
-                      <span>{{ props.row.time }}</span>
-                    </el-form-item>
-                    <el-form-item label="源IP">
-                      <span>{{ props.row.sourceIp }}</span>
-                    </el-form-item>
-                    <el-form-item label="目的IP">
-                      <span>{{ props.row.destIp }}</span>
-                    </el-form-item>
-                    <el-form-item label="违规内容">
-                      <span
-                        class="view-link"
-                        style="cursor:pointer;"
-                        @click="handleViewViolationContent(props.row)"
-                      >{{ props.row.violationContent }}</span>
-                    </el-form-item>
-                    <el-form-item label="原始流量">
-                      <span
-                        class="view-link"
-                        style="cursor:pointer;"
-                        @click="handleViewOriginalTraffic(props.row)"
-                      >{{ props.row.originalTraffic }}</span>
-                    </el-form-item>
+                    <!-- 第一行 -->
+                    <el-row :gutter="20">
+                      <el-col :span="12">
+                        <el-form-item label="时间">
+                          <span>{{ props.row.time }}</span>
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="12">
+                        <el-form-item label="源IP">
+                          <span>{{ props.row.sourceIp }}</span>
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                    <el-row :gutter="20">
+                      <el-col :span="12">
+                        <el-form-item label="目的IP">
+                          <span>{{ props.row.destIp }}</span>
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                    <!-- 第二行 -->
+                    <el-row :gutter="20">
+                      <el-col :span="12">
+                        <el-form-item label="违规内容">
+                          <span
+                            class="view-link"
+                            @click="handleViewViolationContent(props.row)"
+                          >[查看详情]</span>
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="12">
+                        <el-form-item label="原始流量">
+                          <span
+                            class="view-link"
+                            @click="handleViewOriginalTraffic(props.row)"
+                          >[查看详情]</span>
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
                   </el-form>
                 </template>
               </el-table-column>
@@ -119,11 +135,57 @@
         </el-card>
       </el-col>
     </el-row>
+
+    <!-- 违规内容详情弹窗 -->
+    <el-dialog
+      :visible.sync="dialogVisible"
+      title="违规内容详情"
+      width="60vw"
+      :close-on-click-modal="false"
+      class="violation-content-dialog"
+    >
+      <template #title>
+        <span>违规内容详情</span>
+        <el-button
+          class="dialog-download-btn"
+          type="primary"
+          size="mini"
+          @click="handleDownloadFile"
+        >
+          下载
+        </el-button>
+      </template>
+
+      <div class="dialog-content">
+        <el-scrollbar style="max-height: 70vh;">
+          <el-image
+            v-if="fileType === 'image'"
+            :src="`data:image/svg+xml;base64,${fileContent}`"
+            fit="contain"
+            style="width:100%;max-width:100%;height:auto;max-height:60vh;display:block;margin:auto;"
+          />
+          <el-input
+            v-else-if="fileType === 'text'"
+            type="textarea"
+            :value="fileContent"
+            rows="10"
+            readonly
+            class="dialog-textarea"
+            style="width:50%;min-width:400px;"
+          />
+          <div v-else>无法识别的文件类型</div>
+        </el-scrollbar>
+      </div>
+
+      <template #footer>
+        <el-button @click="dialogVisible = false">关闭</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { fetchHeguiList, fetchViolationContent, fetchOriginalTraffic } from '@/api/hegui'
+import { fetchHeguiList, downloadViolationContent, getFile, fetchOriginalTraffic } from '@/api/hegui'
 
 export default {
   name: 'FilterableTablePage',
@@ -133,7 +195,12 @@ export default {
       total: 0,
       activeFilter: 'all',
       currentPage: 1,
-      pageSize: 10
+      pageSize: 10,
+      dialogVisible: false, // 控制弹窗显示
+      fileContent: '', // 文件内容
+      fileType: '', // 文件类型
+      dialogFileName: '', // 文件名
+      dialogFileUrl: '' // 文件下载链接
     }
   },
   computed: {
@@ -172,15 +239,41 @@ export default {
       this.fetchTableData()
     },
     handleViewViolationContent(row) {
-      fetchViolationContent(row.violationId).then(res => {
-        const { type, value } = res.data
-        if (type === 'image' || type === 'link') {
-          window.open(value, '_blank')
-        } else if (type === 'text') {
-          // 可用 alert 或自定义弹窗
-          this.$alert(value, '违规内容详情', { confirmButtonText: '确定' })
-        }
-      })
+      const fileUrl = row.violationContent
+      console.log('Downloading and saving file from:', fileUrl)
+
+      if (!fileUrl || !fileUrl.startsWith('http')) {
+        this.$message.error('无效的违规内容链接')
+        return
+      }
+
+      // Step 1: 调用 downloadAndSave 接口
+      downloadViolationContent(fileUrl)
+        .then(fileName => {
+          console.log('File downloaded and saved as:', fileName)
+
+          // Step 2: 调用 getFile 接口获取文件内容和类型
+          // 后端已修改为“加后缀”而不是“改后缀”，前端无需处理文件名，只需用后端返回的 fileName
+          return getFile(fileName)
+        })
+        .then(response => {
+          const { content, fileType, fileName } = response.data
+          console.log('File content fetched:', response)
+
+          this.fileContent = content
+          this.fileType = fileType
+          this.dialogFileName = fileName
+          this.dialogVisible = true
+        })
+        .catch(error => {
+          console.error('Error in handleViewViolationContent:', error)
+          this.$message.error('操作失败，请稍后重试')
+        })
+    },
+    handleDownloadFile() {
+      // 直接用后端返回的 fileName 拼接下载链接
+      const downloadUrl = `${process.env.VUE_APP_BASE_API}/file/downloadFile?fileName=${encodeURIComponent(this.dialogFileName)}`
+      window.open(downloadUrl, '_blank')
     },
     handleViewOriginalTraffic(row) {
       fetchOriginalTraffic(row.violationId).then(res => {
@@ -301,7 +394,7 @@ export default {
 .table-container {
   flex: 1;
   overflow-y: auto;
-  height: 80vh;
+  height: 75vh;
   position: relative;
   /* 移除 height 固定值，让内容和分页器布局自适应 */
   /* height: 70vh; */
@@ -329,28 +422,66 @@ export default {
   border-radius: 4px;
 }
 .demo-table-expand label {
-  width: 90px;
-  color: #99a9bf;
-}
-.demo-table-expand .el-form-item {
-  margin-right: 0;
-  margin-bottom: 0;
-  width: 50%;
-}
-/deep/ .el-card__header {
-  padding: 0px;
   background-color: #4560F7;
   border-bottom: 1px solid #eee;
 }
 
-/* 统一“查看详情”和“查看原始流量”文字样式 */
+/* 弹窗样式 */
+.violation-content-dialog .el-dialog__header {
+  background-color: #4560F7;
+  color: #fff;
+  border-bottom: none;
+}
+.violation-content-dialog .el-dialog__header .dialog-download-btn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+}
+.violation-content-dialog .el-dialog__body {
+  padding: 0;
+}
+.violation-content-dialog .el-dialog__footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 20px;
+}
+.violation-content-dialog .el-dialog {
+  max-width: 90vw !important;
+  width: 60vw !important;
+  max-height: 80vh !important;
+}
+.violation-content-dialog .el-dialog__body {
+  overflow-y: auto;
+  max-height: 70vh;
+  padding: 0;
+}
+.dialog-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+.violation-content-dialog .el-image {
+  background: #fff;
+}
+
+/* 超链接样式 */
 .view-link {
   color: #409EFF;
   text-decoration: underline;
   cursor: pointer;
-  transition: color 0.2s;
+  transition: color 0.3s;
 }
 .view-link:hover {
   color: #1d78f7;
+}
+.dialog-textarea >>> .el-textarea__inner {
+  min-height: 200px;
+  height: 40vh !important;
+  max-height: 60vh;
+  resize: none;
+  font-size: 16px;
+  line-height: 1.6;
+  background: #fafbfc;
 }
 </style>

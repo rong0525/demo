@@ -24,8 +24,7 @@ service.interceptors.request.use(
     return config
   },
   error => {
-    // do something with request error
-    console.log(error) // for debug
+    console.error('Request error:', error) // log the request error
     return Promise.reject(error)
   }
 )
@@ -72,9 +71,10 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log('err' + error) // for debug
+    console.error('Response error:', error) // log the response error
+    const errorMessage = error.response?.data?.message || error.message || '请求失败'
     Message({
-      message: error.message,
+      message: errorMessage,
       type: 'error',
       duration: 5 * 1000
     })
