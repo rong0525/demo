@@ -1,5 +1,5 @@
 <template>
-  <div class="table-wrapper">
+  <div v-loading="loading" class="table-wrapper">
     <el-table
       :data="tableData"
       row-key="id"
@@ -12,11 +12,11 @@
           <div class="expand-wrap">
             <div class="kv-row">
               <span class="sub-label">最近活跃时间</span>
-              <span class="sub-value">{{ props.row.lastActive }}</span>
+              <span class="sub-value">{{ props.row.last_active }}</span>
             </div>
             <div class="kv-row">
               <span class="sub-label">风险描述摘要</span>
-              <span class="sub-value">{{ props.row.riskSummary }}</span>
+              <span class="sub-value">{{ props.row.risk_summary }}</span>
             </div>
           </div>
         </template>
@@ -34,7 +34,7 @@
       <!-- 流量总量 -->
       <el-table-column
         prop="total"
-        label="流量总量 (TB)"
+        label="流量总量"
         sortable
         min-width="120"
         align="center"
@@ -43,7 +43,7 @@
       <!-- 流入流量 -->
       <el-table-column
         prop="inflow"
-        label="流入流量 (TB)"
+        label="流入流量"
         sortable
         min-width="120"
         align="center"
@@ -52,7 +52,7 @@
       <!-- 流出流量 -->
       <el-table-column
         prop="outflow"
-        label="流出流量 (TB)"
+        label="流出流量"
         sortable
         min-width="120"
         align="center"
@@ -60,7 +60,7 @@
 
       <!-- 关联IP数量 -->
       <el-table-column
-        prop="ipCount"
+        prop="ip_count"
         label="关联IP数量 (个)"
         sortable
         min-width="120"
@@ -84,7 +84,7 @@
         align="center"
       >
         <template slot-scope="scope">
-          <span class="cross-rate">{{ scope.row.crossRate }}</span>
+          <span class="cross-rate">{{ scope.row.cross_rate }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -92,116 +92,43 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: 'TrafficTable',
   data() {
     return {
-      tableData: [
-        {
-          id: 1,
-          domain: 'data.car-a.com',
-          total: 850,
-          inflow: 220,
-          outflow: 630,
-          ipCount: 28,
-          countries: '美国、德国、中国',
-          crossRate: 38,
-          lastActive: '2025-07-31 10:30:00',
-          riskSummary:
-            '近期固定IP的流出流量在短时间内激增，疑含未脱敏的车机AI训练数据，存在境外传输合规风险。'
-        },
-        {
-          id: 2,
-          domain: 'telemetry.car-b.com',
-          total: 1200,
-          inflow: 1180,
-          outflow: 20,
-          ipCount: 56,
-          countries: '新加坡、中国',
-          crossRate: 5,
-          lastActive: '2025-07-31 11:00:00',
-          riskSummary:
-            '存在周期性大流入，可能包含车辆实时位置与遥测数据，需要核查最小化原则。'
-        },
-        {
-          id: 3,
-          domain: 'api.car-c.com',
-          total: 2100,
-          inflow: 500,
-          outflow: 1600,
-          ipCount: 180,
-          countries: '美国、巴西、中国',
-          crossRate: 25,
-          lastActive: '2025-07-31 09:15:00',
-          riskSummary:
-            '境外高峰时段调用集中，疑似研发测试接口被频繁访问，需限制测试账户权限。'
-        },
-        {
-          id: 4,
-          domain: 'ota.car-d.com',
-          total: 1500,
-          inflow: 1450,
-          outflow: 50,
-          ipCount: 12,
-          countries: '印度、中国',
-          crossRate: 2,
-          lastActive: '2025-07-31 08:00:00',
-          riskSummary:
-            '主要为系统OTA推送，数据类型相对可控，整体安全风险较低。'
-        },
-        {
-          id: 5,
-          domain: 'hr.car-d.com',
-          total: 15,
-          inflow: 5,
-          outflow: 10,
-          ipCount: 3,
-          countries: '美国、中国',
-          crossRate: 95,
-          lastActive: '2025-07-31 10:20:00',
-          riskSummary:
-            '流出比例异常偏高，或涉及员工敏感信息外发，需立即审计并加密脱敏。'
-        },
-        {
-          id: 6,
-          domain: 'map.car-c.com',
-          total: 720,
-          inflow: 500,
-          outflow: 220,
-          ipCount: 89,
-          countries: '德国、法国、中国',
-          crossRate: 60,
-          lastActive: '2025-07-31 09:45:00',
-          riskSummary:
-            '地图瓦片/轨迹相关数据对外分发较多，涉及境外存储与访问频繁。'
-        },
-        {
-          id: 7,
-          domain: 'test-env.car-d.com',
-          total: 8,
-          inflow: 3,
-          outflow: 5,
-          ipCount: 6,
-          countries: '日本、中国',
-          crossRate: 45,
-          lastActive: '2025-07-31 12:00:00',
-          riskSummary:
-            '测试环境接口频繁调用，存在跨境传输风险，应限制外网访问。'
-        },
-        {
-          id: 8,
-          domain: 'log.car-b.com',
-          total: 5500,
-          inflow: 5480,
-          outflow: 20,
-          ipCount: 320,
-          countries: '德国、日本、中国',
-          crossRate: 1,
-          lastActive: '2025-07-31 07:50:00',
-          riskSummary:
-            '以日志备份为主，跨境比例极低，注意日志中PII的脱敏与访问控制。'
+      tableData: [],
+      loading: true
+    }
+  },
+  created() {
+    this.fetchTableData()
+  },
+  methods: {
+    async fetchTableData() {
+      this.loading = true
+      try {
+        const options = {
+          method: 'GET',
+          url: 'http://10.21.147.42:8080/api/v2/tables/mfemcbrwc4tik3r/records',
+          params: {
+            offset: '0',
+            limit: '25',
+            where: '',
+            viewId: 'vw7x8jom2tfll2tm'
+          },
+          headers: {
+            'xc-token': 'WnJQ2xH9_TFUsjaeUI-sVHWKkDatX7ObFEp8hSVw'
+          }
         }
-      ]
+        const res = await axios.request(options)
+        this.tableData = res.data.list || []
+      } catch (e) {
+        this.tableData = []
+        console.error(e)
+      } finally {
+        this.loading = false
+      }
     }
   }
 }
@@ -210,7 +137,8 @@ export default {
 <style scoped>
 .table-wrapper {
   width: 100%;
-  height: 100%;           /* 表格充满父容器 */
+  height: 60vh; /* 或100%，根据父容器实际高度调整 */
+  min-height: 400px;
   display: flex;
   flex-direction: column;
 }
