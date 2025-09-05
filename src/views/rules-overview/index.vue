@@ -9,18 +9,30 @@
             <div class="panel-section">
               <div class="panel-header">法规条例</div>
               <div class="panel-content">
-                <div class="panel-item">工信部等-《汽车数据出境安全指引》</div>
-                <div class="panel-item">网信办等-《汽车数据安全管理若干规定》</div>
-                <div class="panel-item">自然资源部-《智能网联汽车时空数据安全处理基本要求》</div>
-                <div class="panel-item">自然资源部-《智能网联汽车时空数据传感系统安全基本要求》</div>
-                <div class="panel-item">《中华人民共和国个人信息保护法》</div>
+                <div
+                  class="panel-item selectable"
+                  :class="{ selected: selectedRegulations.includes('汽车数据出境安全指引（2025 版）') }"
+                  @click="toggleRegulation('汽车数据出境安全指引（2025 版）')"
+                >
+                  工信部等-《汽车数据出境安全指引》
+                </div>
+                <div
+                  class="panel-item selectable"
+                  :class="{ selected: selectedRegulations.includes('汽车数据安全管理若干规定') }"
+                  @click="toggleRegulation('汽车数据安全管理若干规定')"
+                >
+                  网信办等-《汽车数据安全管理若干规定》
+                </div>
+                <div class="panel-item disabled">自然资源部-《智能网联汽车时空数据安全处理基本要求》</div>
+                <div class="panel-item disabled">自然资源部-《智能网联汽车时空数据传感系统安全基本要求》</div>
+                <div class="panel-item disabled">《中华人民共和国个人信息保护法》</div>
               </div>
             </div>
             <div class="panel-section">
               <div class="panel-header">标准规范</div>
               <div class="panel-content">
-                <div class="panel-item">《汽车数据通用要求》</div>
-                <div class="panel-item">《汽车整车信息安全技术要求》</div>
+                <div class="panel-item disabled">《汽车数据通用要求》</div>
+                <div class="panel-item disabled">《汽车整车信息安全技术要求》</div>
               </div>
             </div>
           </div>
@@ -116,7 +128,7 @@
 
 <script>
 import Pagination from '@/components/Pagination'
-import { fetchRuleList, updateRule, deleteRule, createRule } from '@/api/rule'
+import { fetchRuleList } from '@/api/rule'
 
 export default {
   name: 'RulesOverview',
@@ -133,9 +145,10 @@ export default {
         sort: '',
         order: ''
       },
-      ruleSourceOptions: ['汽车数据出境安全指引', '汽车数据安全管理若干规定'],
-      ruleTypeOptions: ['文本关键词', '文本关键词/数据特征分析', '文本关键词/图像特征/点云数据分析', '图像特征识别'],
-      statusOptions: ['启用', '未发布'],
+      ruleSourceOptions: ['汽车数据出境安全指引（2025 版）', '汽车数据安全管理若干规定'],
+      ruleTypeOptions: ['文本关键词', '图像特征分析', '文本关键词/图像特征', '文本关键词/点云数据分析', '文本关键词/数据特征分析', '音频特征分析'],
+      statusOptions: ['启用', '未启用'],
+      selectedRegulations: ['汽车数据出境安全指引（2025 版）', '汽车数据安全管理若干规定'], // 默认全选法规条例
       list: [],
       total: 0,
 
@@ -150,7 +163,7 @@ export default {
         ruleDescription: '',
         ruleType: '',
         dataAssetName: '',
-        status: '未发布'
+        status: '未启用'
       },
       rules: {
         sequence: [{ required: true, message: '请输入序号', trigger: 'blur' }],
@@ -171,6 +184,18 @@ export default {
       this.listQuery.page = 1
       this.getList()
     },
+    // 切换法规条例选中状态（点击选择/取消选择）
+    toggleRegulation(key) {
+      const i = this.selectedRegulations.indexOf(key)
+      if (i === -1) {
+        this.selectedRegulations.push(key)
+      } else {
+        this.selectedRegulations.splice(i, 1)
+      }
+      this.listQuery.page = 1
+      this.getList()
+    },
+    // （已精简）
     handleSortChange({ prop, order }) {
       this.listQuery.sort = prop
       this.listQuery.order = order === 'ascending' ? 'asc' : 'desc'
@@ -185,7 +210,7 @@ export default {
         ruleDescription: '',
         ruleType: '',
         dataAssetName: '',
-        status: '未发布'
+        status: '未启用'
       }
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
@@ -195,49 +220,76 @@ export default {
       this.dialogStatus = 'edit'
       this.dialogFormVisible = true
     },
-    handleDelete(row) {
-      this.$confirm('确定要删除该规则吗？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        deleteRule(row.id).then(() => {
-          this.$message.success('删除成功')
-          this.getList()
-        })
-      })
+    handleDelete() {
+      this.$message.warning('当前未对接删除接口')
     },
     submitEdit() {
-      this.$refs.dataForm.validate(valid => {
-        if (valid) {
-          if (this.dialogStatus === 'edit') {
-            updateRule(this.temp).then(() => {
-              this.$message.success('修改成功')
-              this.dialogFormVisible = false
-              this.getList()
-            })
-          } else {
-            createRule(this.temp).then(() => {
-              this.$message.success('新增成功')
-              this.dialogFormVisible = false
-              this.getList()
-            })
-          }
-        }
-      })
+      this.$message.warning('当前未对接新增/编辑接口')
     },
     getList() {
       this.listLoading = true
       const query = { ...this.listQuery }
-      // 处理时间筛选
-      if (query.createTime && query.createTime.length === 2) {
-        query.startTime = query.createTime[0]
-        query.endTime = query.createTime[1]
-      }
-      delete query.createTime
+      // 已移除未使用的 createTime 相关逻辑
       fetchRuleList(query).then(res => {
-        this.list = res.data.items
-        this.total = res.data.total
+        // 后端返回格式：{ list: [...], PageInfo: { pageSize,totalRows,isFirstPage,isLastPage,page } }
+        const rawList = (res && res.list) || []
+        // 字段映射
+        const mapped = rawList.map((item, index) => ({
+          id: item.id,
+          sequence: (this.listQuery.page - 1) * this.listQuery.limit + index + 1,
+          ruleId: item.rule_id,
+          ruleSource: item.rule_document, // 规则来源
+          ruleDescription: item.rule_content, // 规则描述
+          ruleType: item.rule_category, // 规则类型先空着
+          dataAssetName: item.data_assets,
+          status: item.rule_status === 1 ? '启用' : '未启用'
+        }))
+
+        // 前端筛选
+        let filtered = mapped
+
+        // 左侧栏法规条例筛选（优先级最高）
+        if (this.selectedRegulations.length > 0) {
+          filtered = filtered.filter(x =>
+            this.selectedRegulations.some(regulation => x.ruleSource === regulation)
+          )
+        }
+
+        // 右侧筛选器
+        if (this.listQuery.ruleSource) {
+          filtered = filtered.filter(x => x.ruleSource === this.listQuery.ruleSource)
+        }
+        if (this.listQuery.ruleType) {
+          filtered = filtered.filter(x => x.ruleType === this.listQuery.ruleType)
+        }
+        if (this.listQuery.status) {
+          filtered = filtered.filter(x => x.status === this.listQuery.status)
+        }
+        if (this.listQuery.keyword) {
+          const kw = this.listQuery.keyword
+          filtered = filtered.filter(x =>
+            (x.ruleId && x.ruleId.includes(kw)) ||
+            (x.ruleDescription && x.ruleDescription.includes(kw)) ||
+            (x.dataAssetName && x.dataAssetName.includes(kw))
+          )
+        }
+
+        // 排序
+        if (this.listQuery.sort) {
+          const { sort, order } = this.listQuery
+          filtered = filtered.slice().sort((a, b) => {
+            const va = a[sort]
+            const vb = b[sort]
+            if (order === 'asc') return va > vb ? 1 : -1
+            return va < vb ? 1 : -1
+          })
+        }
+
+        // 分页（使用前端分页）
+        const start = (this.listQuery.page - 1) * this.listQuery.limit
+        const end = this.listQuery.page * this.listQuery.limit
+        this.total = filtered.length
+        this.list = filtered.slice(start, end)
         this.listLoading = false
       }).catch(() => {
         this.listLoading = false
@@ -477,8 +529,28 @@ export default {
   font-size: 14px;
   line-height: 1.5;
   margin-bottom: 10px;
-  padding: 6px 0;
+  padding: 6px 8px;
   border-bottom: 1px solid #e9ecef;
+  word-break: break-word;
+  white-space: normal;
+}
+
+.panel-item.selectable {
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.panel-item.selectable:hover {
+  background-color: #eef5ff;
+}
+
+.panel-item.selected {
+  background-color: #e6f2ff; /* 浅蓝色 */
+  color: #2b6cb0;
+}
+
+.panel-item.disabled {
+  color: #c0c4cc;
 }
 
 .panel-item:last-child {
