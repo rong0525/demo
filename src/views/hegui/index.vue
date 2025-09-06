@@ -155,12 +155,11 @@
           下载
         </el-button>
       </template>
-
       <div class="dialog-content">
         <el-scrollbar style="max-height: 70vh;">
           <el-image
             v-if="fileType === 'image'"
-            :src="`data:image/svg+xml;base64,${fileContent}`"
+            :src="getImageSrc(fileContent)"
             fit="contain"
             style="width:100%;max-width:100%;height:auto;max-height:60vh;display:block;margin:auto;"
           />
@@ -176,16 +175,38 @@
           <div v-else>无法识别的文件类型</div>
         </el-scrollbar>
       </div>
-
       <template #footer>
         <el-button @click="dialogVisible = false">关闭</el-button>
+      </template>
+    </el-dialog>
+
+    <!-- 原始流量文件弹窗 -->
+    <el-dialog
+      :visible.sync="trafficDialogVisible"
+      title="原始流量文件"
+      width="40vw"
+      :close-on-click-modal="false"
+      class="violation-content-dialog"
+    >
+      <div class="dialog-content" style="text-align:center;display:flex;flex-direction:column;align-items:center;">
+        <p style="margin-bottom: 18px;">点击下方按钮下载原始流量 pcap 包。</p>
+        <el-button
+          type="primary"
+          size="medium"
+          @click="handleDownloadTrafficFile"
+        >
+          下载 pcap 包
+        </el-button>
+      </div>
+      <template #footer>
+        <el-button @click="trafficDialogVisible = false">关闭</el-button>
       </template>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { fetchHeguiList, downloadViolationContent, getFile, fetchOriginalTraffic } from '@/api/hegui'
+import { fetchHeguiList, downloadViolationContent, getFile } from '@/api/hegui'
 
 export default {
   name: 'FilterableTablePage',
@@ -200,7 +221,10 @@ export default {
       fileContent: '', // 文件内容
       fileType: '', // 文件类型
       dialogFileName: '', // 文件名
-      dialogFileUrl: '' // 文件下载链接
+      dialogFileUrl: '', // 文件下载链接
+      trafficDialogVisible: false,
+      trafficFileName: '',
+      trafficFileUrl: ''
     }
   },
   computed: {
@@ -240,46 +264,61 @@ export default {
     },
     handleViewViolationContent(row) {
       const fileUrl = row.violationContent
-      console.log('Downloading and saving file from:', fileUrl)
-
       if (!fileUrl || !fileUrl.startsWith('http')) {
         this.$message.error('无效的违规内容链接')
         return
       }
-
-      // Step 1: 调用 downloadAndSave 接口
+      // 检查 fileUrl 是否为 base64 或 data url
+      if (fileUrl.startsWith('data:') || /^[A-Za-z0-9+/=]+$/.test(fileUrl.substr(0, 100))) {
+        // 错误用法：直接把 base64 当成图片 url 赋值给 <el-image> 的 src，会导致浏览器直接请求 http://localhost:9527/{base64内容}，从而出现你看到的奇怪请求
+        this.$message.error('违规内容链接格式异常，无法直接预览')
+        return
+      }
       downloadViolationContent(fileUrl)
-        .then(fileName => {
-          console.log('File downloaded and saved as:', fileName)
-
-          // Step 2: 调用 getFile 接口获取文件内容和类型
-          // 后端已修改为“加后缀”而不是“改后缀”，前端无需处理文件名，只需用后端返回的 fileName
-          return getFile(fileName)
-        })
+        .then(fileName => getFile(fileName))
         .then(response => {
           const { content, fileType, fileName } = response.data
-          console.log('File content fetched:', response)
-
           this.fileContent = content
           this.fileType = fileType
           this.dialogFileName = fileName
           this.dialogVisible = true
         })
         .catch(error => {
-          console.error('Error in handleViewViolationContent:', error)
+          console.error('原始流量文件获取失败', error)
           this.$message.error('操作失败，请稍后重试')
         })
     },
     handleDownloadFile() {
-      // 直接用后端返回的 fileName 拼接下载链接
       const downloadUrl = `${process.env.VUE_APP_BASE_API}/file/downloadFile?fileName=${encodeURIComponent(this.dialogFileName)}`
       window.open(downloadUrl, '_blank')
     },
     handleViewOriginalTraffic(row) {
-      fetchOriginalTraffic(row.violationId).then(res => {
-        const { value } = res.data
-        window.open(value, '_blank')
-      })
+      // 新增：支持pcap包下载弹窗
+      const fileUrl = row.originalTraffic
+      if (!fileUrl || !fileUrl.startsWith('http')) {
+        this.$message.error('无效的原始流量文件链接')
+        return
+      }
+      // 通知后端下载并返回 fileName
+      downloadViolationContent(fileUrl)
+        .then(fileName => {
+          this.trafficFileName = fileName
+          this.trafficDialogVisible = true
+        })
+        .catch(error => {
+          // 修复：处理 error，打印并提示
+          console.error('原始流量文件获取失败', error)
+          this.$message.error('原始流量文件获取失败')
+        })
+    },
+    handleDownloadTrafficFile() {
+      // 直接用后端返回的 fileName 拼接下载链接
+      const downloadUrl = `${process.env.VUE_APP_BASE_API}/file/downloadFile?fileName=${encodeURIComponent(this.trafficFileName)}`
+      window.open(downloadUrl, '_blank')
+    },
+    getImageSrc(content) {
+      // 默认按 jpg 处理，如有其它类型可扩展
+      return `data:image/jpeg;base64,${content}`
     }
   }
 }
