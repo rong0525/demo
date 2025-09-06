@@ -14,10 +14,7 @@
               <span class="sub-label">最近活跃时间</span>
               <span class="sub-value">{{ props.row.last_active }}</span>
             </div>
-            <div class="kv-row">
-              <span class="sub-label">风险描述摘要</span>
-              <span class="sub-value">{{ props.row.risk_summary }}</span>
-            </div>
+
           </div>
         </template>
       </el-table-column>
@@ -113,7 +110,7 @@ export default {
           url: 'http://10.21.147.42:8080/api/v2/tables/mfemcbrwc4tik3r/records',
           params: {
             offset: '0',
-            limit: '25',
+            limit: '100',
             where: '',
             viewId: 'vw7x8jom2tfll2tm'
           },
@@ -123,6 +120,7 @@ export default {
         }
         const res = await axios.request(options)
         this.tableData = res.data.list || []
+        console.log('Fetched table data:', this.tableData)
       } catch (e) {
         this.tableData = []
         console.error(e)
