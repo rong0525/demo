@@ -175,7 +175,8 @@ export default {
   methods: {
     async fetchData() {
       try {
-        const response = await axios.get('http://10.122.216.193:8081/api/audits')
+        // 10.21.147.42
+        const response = await axios.get('http://10.21.147.42:8081/api/audits')
         this.originalTableData = response.data
         this.calculateTableHeight() // 数据更新后重新计算高度
       } catch (error) {
@@ -242,7 +243,7 @@ export default {
       formData.append('file', selectedFileObj.raw)
       this.currentStep = 1
       try {
-        const response = await axios.post('http://10.122.216.193:8081/api/upload', formData, {
+        const response = await axios.post('http://10.21.147.42:8081/api/upload', formData, {
           headers: { 'Content-Type': 'multipart/form-data' }
         })
         this.$message({
@@ -287,7 +288,7 @@ export default {
     },
     async generateReport() {
       try {
-        const response = await axios.get('http://10.122.216.193:8081/api/generate-report', {
+        const response = await axios.get('http://10.21.147.42:8081/api/generate-report', {
           responseType: 'blob' // 确保接收二进制数据
         })
         const blob = new Blob([response.data], { type: 'application/pdf' }) // 明确指定 PDF 类型
