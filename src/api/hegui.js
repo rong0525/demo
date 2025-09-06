@@ -1,4 +1,5 @@
 import axios from 'axios'
+import request from '@/utils/request'
 
 // NocoDB 配置
 const NOCODB_CONFIG = {
@@ -76,20 +77,6 @@ export function fetchHeguiList(query) {
       code: 50000,
       message: error.response?.data?.message || error.message || '获取数据失败',
       data: { items: [], total: 0 }
-    }
-  })
-}
-
-/**
- * 获取违规内容详情
- * @param {string} violationId
- */
-export function fetchViolationContent(violationId) {
-  return Promise.resolve({
-    code: 20000,
-    data: {
-      type: 'text',
-      value: `违规内容详情 - ${violationId}\n\n这里是违规行为的详细描述和分析。`
     }
   })
 }
@@ -203,3 +190,38 @@ export function deleteHeguiRecord(id) {
     }
   })
 }
+
+/**
+ * 下载违规内容
+ * @param {string} fileUrl - 违规内容的文件链接
+ */
+export function downloadViolationContent(fileUrl) {
+  return request({
+    url: '/file/downloadAndSave',
+    method: 'post',
+    params: { fileUrl }
+  }).then(response => {
+    console.log('Download response:', response) // 添加日志
+    if (response && response.code === 20000 && response.data?.fileName) {
+      return response.data.fileName // 返回后端返回的 fileName
+    } else {
+      throw new Error(response?.message || 'Invalid response format')
+    }
+  }).catch(error => {
+    console.error('Error in downloadViolationContent:', error) // 添加日志
+    throw error // 抛出错误以便前端捕获
+  })
+}
+
+/**
+ * 获取违规内容
+ * @param {string} fileUrl - 文件 URL
+ */
+export function getFile(fileName) {
+  return request({
+    url: '/file/getFile',
+    method: 'get',
+    params: { fileName }
+  })
+}
+

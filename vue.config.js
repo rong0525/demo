@@ -36,7 +36,16 @@ module.exports = {
       warnings: false,
       errors: true
     },
-    before: require('./mock/mock-server.js')
+    // 关闭内置 mock 中间件，改为使用代理联调后端
+    // before: require('./mock/mock-server.js'),
+    proxy: {
+      '/api': {
+        target: 'http://10.21.147.42:8080',
+        changeOrigin: true,
+        secure: false,
+        pathRewrite: { '^/api': '' }
+      }
+    }
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
