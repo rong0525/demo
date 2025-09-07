@@ -63,9 +63,9 @@ export default {
           </el-col>
         </el-row>
         <el-row>
-          <el-col class="top-status-description" :span="22">
-            截止到今日00:00时的数据流入总量
-          </el-col>
+          <!--          <el-col class="top-status-description" :span="22">-->
+          <!--            截止到今日00:00时的数据流入总量-->
+          <!--          </el-col>-->
         </el-row>
       </el-col>
       <!--第二块-->
@@ -80,9 +80,9 @@ export default {
           </el-col>
         </el-row>
         <el-row>
-          <el-col class="top-status-description" :span="22">
-            截止到今日00:00时的数据流出总量
-          </el-col>
+          <!--          <el-col class="top-status-description" :span="22">-->
+          <!--            截止到今日00:00时的数据流出总量-->
+          <!--          </el-col>-->
         </el-row>
       </el-col>
       <!--第三块-->
@@ -97,9 +97,9 @@ export default {
           </el-col>
         </el-row>
         <el-row>
-          <el-col class="top-status-description" :span="22">
-            已关联车企域名总数
-          </el-col>
+          <!--          <el-col class="top-status-description" :span="22">-->
+          <!--            已关联车企域名总数-->
+          <!--          </el-col>-->
         </el-row>
       </el-col>
       <!--第四块-->
@@ -114,9 +114,9 @@ export default {
           </el-col>
         </el-row>
         <el-row>
-          <el-col class="top-status-description" :span="22">
-            存在高风险流转行为的域名
-          </el-col>
+          <!--          <el-col class="top-status-description" :span="22">-->
+          <!--            存在高风险流转行为的域名-->
+          <!--          </el-col>-->
         </el-row>
       </el-col>
       <!--第五块-->
@@ -131,9 +131,9 @@ export default {
           </el-col>
         </el-row>
         <el-row>
-          <el-col class="top-status-description" :span="22">
-            总流量中跨境部分占比
-          </el-col>
+          <!--          <el-col class="top-status-description" :span="22">-->
+          <!--            总流量中跨境部分占比-->
+          <!--          </el-col>-->
         </el-row>
       </el-col>
       <el-col style="text-align: center" :span="2">
