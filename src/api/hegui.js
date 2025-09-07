@@ -39,6 +39,7 @@ export function fetchHeguiList(query) {
       dataAsset: item.rule_category,
       violatingEntity: item.violating_entity,
       time: item.ts,
+      updatedAt: item.updated_at, // 从NocoDB的UpdatedAt字段获取
       sourceIp: item.id_orig_h,
       destIp: item.id_resp_h,
       violationContent: item.violation_content || '[查看详情]',
