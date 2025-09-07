@@ -95,13 +95,35 @@ export default {
   data() {
     return {
       tableData: [],
-      loading: true
+      loading: true,
+      refreshTimer: null
     }
   },
   created() {
     this.fetchTableData()
+    this.startRefreshTimer()
+  },
+  beforeDestroy() {
+    // 组件销毁前清除定时器，防止内存泄漏
+    this.clearRefreshTimer()
   },
   methods: {
+    startRefreshTimer() {
+      // 清除可能存在的旧定时器
+      this.clearRefreshTimer()
+      // 设置每分钟(60000毫秒)刷新一次
+      this.refreshTimer = setInterval(() => {
+        this.fetchTableData()
+      }, 30000)
+    },
+
+    // 清除定时器
+    clearRefreshTimer() {
+      if (this.refreshTimer) {
+        clearInterval(this.refreshTimer)
+        this.refreshTimer = null
+      }
+    },
     async fetchTableData() {
       this.loading = true
       try {
