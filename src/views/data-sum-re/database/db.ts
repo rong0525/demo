@@ -16,7 +16,7 @@ const defaultToken = {
 // }
 
 export function testApi() {
-  axios.get(url + '/mz7yry0iw0152yh/records', {
+  axios.get(url + '/mz7yry0iw0152yh/records?limit=1000', {
     headers: defaultToken
   }).then(response => {
     // console.log(response.data);
@@ -26,7 +26,7 @@ export function testApi() {
 // 获取 Category
 async function getRawData() {
   let rawData
-  await axios.get(url + '/m5qfjeg4e3d3ryw/records', {
+  await axios.get(url + '/m5qfjeg4e3d3ryw/records?limit=1000', {
     headers: defaultToken
   }).then(async response => {
     rawData = response.data.list
@@ -72,7 +72,7 @@ export async function getTableData() {
 export async function fetchDomainUniqueCount() {
   let result = []
   let count = 0
-  await axios.get(url + '/mgorzh4l352voxy/records', {
+  await axios.get(url + '/mgorzh4l352voxy/records?limit=1000', {
     headers: defaultToken
   }).then(async response => {
     response.data.list.forEach((item) => {
@@ -90,11 +90,13 @@ export async function fetchDomainUniqueCount() {
 export async function fetchCrossBorderDomainCount() {
   let result = []
   let count = 0
-  await axios.get(url + '/mfemcbrwc4tik3r/records', {
+  await axios.get(url + '/mfemcbrwc4tik3r/records?limit=1000', {
     headers: defaultToken
   }).then(async response => {
     response.data.list.forEach((item) => {
-      result.push(item.domain)
+      if (item.countries !== '中国') {
+        result.push(item.domain)
+      }
     })
     result = Array.from(new Set(result))
     console.log(result)
@@ -108,7 +110,7 @@ export async function fetchCrossBorderDomainCount() {
 export async function fetchFlowCount() {
   let inflowCount = 0
   let outflowCount = 0
-  await axios.get(url + '/mfemcbrwc4tik3r/records', {
+  await axios.get(url + '/mfemcbrwc4tik3r/records?limit=1000', {
     headers: defaultToken
   }).then(async response => {
     response.data.list.forEach((item) => {

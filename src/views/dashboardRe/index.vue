@@ -477,7 +477,7 @@ function pad(timeEl, total = 2, str = '0') {
 //   }
 // }
 const thirtyDaysComplianceDataLineChartData = {
-  actualData: new Array(31).fill(0)
+  actualData: []
 }
 const unComplianceTop10Data = [
   {
@@ -572,7 +572,6 @@ const ruleEngineInfo = {
     activatedCount: 65
   }
 }
-// 定时器
 
 export default {
   components: {
@@ -583,9 +582,9 @@ export default {
   },
   data() {
     return {
-      todayTotalFlow: 1.5,
-      oneDayBoost: '↑ 15%',
-      complianceRate: '73.1%',
+      // todayTotalFlow: 1.5,
+      // oneDayBoost: '↑ 15%',
+      // complianceRate: '73.1%',
       // lineChartData: lineChartData.newVisitis,
       thirtyDaysComplianceDataLineChartData: thirtyDaysComplianceDataLineChartData,
       unComplianceTop10Data: unComplianceTop10Data,
@@ -593,7 +592,8 @@ export default {
       ruleInfo: ruleInfo,
       ruleEngineInfo: ruleEngineInfo,
       timer: null,
-      currentMonth: 0
+      currentMonth: 0,
+      isGetThirtyDaysComplianceDataLineChartData: false
     }
   },
   computed: {
@@ -616,14 +616,16 @@ export default {
       ruleInfo.activatedCounts = res.activatedRuleCount
     })
     fetchUncomplianceData().then(res => {
+      thirtyDaysComplianceDataLineChartData.actualData = []
       this.currentMonth = new Date().getMonth() + 1
       var currentDay = new Date().getDate()
+      // 先遍历每一天
       for (var i = 1; i <= currentDay; i++) {
-        this.thirtyDaysComplianceDataLineChartData.actualData[i - 1] = res.filter(item => {
+        thirtyDaysComplianceDataLineChartData.actualData.push(res.filter(item => {
           return (new Date(item.ts).getDate()) === i
-        }).length
+        }).length)
       }
-      console.log(this.thirtyDaysComplianceDataLineChartData.actualData)
+      this.isGetThirtyDaysComplianceDataLineChartData = true
     })
     fetchRuleDocumentCount().then(res => {
       ruleInfo.standardCounts = res

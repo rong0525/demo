@@ -206,12 +206,12 @@ function handleSelector(data) {
     <!--右边的表格-->
     <el-col :lg="17">
       <!--      第一行的表格按钮-->
-      <div style="margin-top: 1vh">
-        <i class="el-icon-s-fold table-icon" />
-        <i class="el-icon-s-operation table-icon" style="float: right;" />
-        <i class="el-icon-share table-icon" style="float: right;" />
-        <i class="el-icon-printer table-icon" style="float: right;" />
-      </div>
+      <!--      <div style="margin-top: 1vh">-->
+      <!--        <i class="el-icon-s-fold table-icon" />-->
+      <!--        <i class="el-icon-s-operation table-icon" style="float: right;" />-->
+      <!--        <i class="el-icon-share table-icon" style="float: right;" />-->
+      <!--        <i class="el-icon-printer table-icon" style="float: right;" />-->
+      <!--      </div>-->
       <el-table border style="margin-top: 1vh" :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)" :cell-style="{color: '#8A8A8A'}">
         <el-table-column label="数据大类" prop="data_category" sortable />
         <el-table-column label="子类别" prop="data_son_category" sortable />

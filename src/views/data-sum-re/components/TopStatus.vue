@@ -8,22 +8,42 @@ export default {
       crossBorderDomainCount: 0,
       crossBorderDomainPercent: 0,
       inFlowCount: 0,
-      outFlowCount: 0
+      outFlowCount: 0,
+      timer: null
+    }
+  },
+  created() {
+    if (this.timer) {
+      clearInterval(this.timer)
+      this.timer = null
+    } else {
+      this.timer = setInterval(() => {
+        this.updateData()
+        console.log(this.lineChartData.actualData)
+      }, 3000)
     }
   },
   mounted() {
-    fetchDomainUniqueCount().then(res => {
-      this.allDomainCount = res
-      // 通过嵌套保证串行
-      fetchCrossBorderDomainCount().then(res => {
-        this.crossBorderDomainCount = res
-        this.crossBorderDomainPercent = ((this.crossBorderDomainCount / this.allDomainCount) * 100.00).toFixed(2)
+    this.updateData()
+  },
+  destroyed() {
+    clearInterval(this.timer)
+  },
+  methods: {
+    updateData() {
+      fetchDomainUniqueCount().then(res => {
+        this.allDomainCount = res
+        // 通过嵌套保证串行
+        fetchCrossBorderDomainCount().then(res => {
+          this.crossBorderDomainCount = res
+          this.crossBorderDomainPercent = ((this.crossBorderDomainCount / this.allDomainCount) * 100.00).toFixed(2)
+        })
       })
-    })
-    fetchFlowCount().then(res => {
-      this.inFlowCount = res.inflowCount
-      this.outFlowCount = res.outflowCount
-    })
+      fetchFlowCount().then(res => {
+        this.inFlowCount = res.inflowCount
+        this.outFlowCount = res.outflowCount
+      })
+    }
   }
 }
 </script>

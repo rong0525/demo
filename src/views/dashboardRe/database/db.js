@@ -8,7 +8,7 @@ const defaultToken = {
 // 获取所有不合规项
 export async function fetchUncomplianceData() {
   let rawData = []
-  await axios.get(url + '/mbu7yfobioius58/records', {
+  await axios.get(url + '/mbu7yfobioius58/records?limit=1000', {
     headers: defaultToken
   }).then(async response => {
     rawData = response.data.list
