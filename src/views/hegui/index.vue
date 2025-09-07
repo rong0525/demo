@@ -66,6 +66,7 @@
               :data="filteredTableData"
               style="width: 100%"
               height="100%"
+              :default-sort="{prop: 'updatedAt', order: 'descending'}"
             >
               <el-table-column type="expand">
                 <template slot-scope="props">
@@ -74,7 +75,7 @@
                     <el-row :gutter="20">
                       <el-col :span="12">
                         <el-form-item label="时间">
-                          <span>{{ props.row.time }}</span>
+                          <span>{{ formatTime(props.row.updatedAt) }}</span>
                         </el-form-item>
                       </el-col>
                       <el-col :span="12">
@@ -241,6 +242,15 @@ export default {
     this.fetchTableData()
   },
   methods: {
+    formatTime(utcTime) {
+      if (!utcTime) return ''
+      // 将UTC时间字符串转换为Date对象
+      const date = new Date(utcTime)
+      // 转换为北京时间 (UTC+8)
+      const beijingTime = new Date(date.getTime() + 8 * 60 * 60 * 1000)
+      // 格式化为 YYYY-MM-DD HH:mm:ss
+      return beijingTime.toISOString().replace('T', ' ').substring(0, 19)
+    },
     fetchTableData() {
       const params = {
         page: this.currentPage,
