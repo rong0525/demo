@@ -66,6 +66,7 @@
               :data="filteredTableData"
               style="width: 100%"
               height="100%"
+              :default-sort="{prop: 'updatedAt', order: 'descending'}"
             >
               <el-table-column type="expand">
                 <template slot-scope="props">
