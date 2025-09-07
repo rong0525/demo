@@ -172,7 +172,9 @@
             class="dialog-textarea"
             style="width:50%;min-width:400px;"
           />
-          <div v-else>无法识别的文件类型</div>
+          <div v-else>
+            <p>请点击右上角的“下载”按钮获取视频文件。</p>
+          </div>
         </el-scrollbar>
       </div>
       <template #footer>
@@ -183,19 +185,19 @@
     <!-- 原始流量文件弹窗 -->
     <el-dialog
       :visible.sync="trafficDialogVisible"
-      title="原始流量文件"
+      title="文件下载"
       width="40vw"
       :close-on-click-modal="false"
       class="violation-content-dialog"
     >
       <div class="dialog-content" style="text-align:center;display:flex;flex-direction:column;align-items:center;">
-        <p style="margin-bottom: 18px;">点击下方按钮下载原始流量 pcap 包。</p>
+        <p style="margin-bottom: 18px;">点击下方按钮下载文件。</p>
         <el-button
           type="primary"
           size="medium"
           @click="handleDownloadTrafficFile"
         >
-          下载 pcap 包
+          下载文件
         </el-button>
       </div>
       <template #footer>
@@ -270,10 +272,10 @@ export default {
       }
       // 检查 fileUrl 是否为 base64 或 data url
       if (fileUrl.startsWith('data:') || /^[A-Za-z0-9+/=]+$/.test(fileUrl.substr(0, 100))) {
-        // 错误用法：直接把 base64 当成图片 url 赋值给 <el-image> 的 src，会导致浏览器直接请求 http://localhost:9527/{base64内容}，从而出现你看到的奇怪请求
         this.$message.error('违规内容链接格式异常，无法直接预览')
         return
       }
+
       downloadViolationContent(fileUrl)
         .then(fileName => getFile(fileName))
         .then(response => {
@@ -281,10 +283,18 @@ export default {
           this.fileContent = content
           this.fileType = fileType
           this.dialogFileName = fileName
-          this.dialogVisible = true
+
+          // 如果是视频文件，显示下载弹窗而不是预览弹窗
+          if (fileType === 'video') {
+            this.trafficFileName = fileName
+            this.trafficDialogVisible = true
+          } else {
+            // 对于其他类型的文件，继续使用原有的预览弹窗
+            this.dialogVisible = true
+          }
         })
         .catch(error => {
-          console.error('原始流量文件获取失败', error)
+          console.error('文件获取失败', error)
           this.$message.error('操作失败，请稍后重试')
         })
     },
@@ -460,9 +470,11 @@ export default {
   background-color: #f5f7fa;
   border-radius: 4px;
 }
+
 .demo-table-expand label {
   background-color: #4560F7;
   border-bottom: 1px solid #eee;
+  color: #fff;
 }
 
 /* 弹窗样式 */
@@ -471,35 +483,42 @@ export default {
   color: #fff;
   border-bottom: none;
 }
+
 .violation-content-dialog .el-dialog__header .dialog-download-btn {
   position: absolute;
   top: 15px;
   right: 20px;
 }
+
 .violation-content-dialog .el-dialog__body {
   padding: 0;
 }
+
 .violation-content-dialog .el-dialog__footer {
   display: flex;
   justify-content: flex-end;
   padding: 10px 20px;
 }
+
 .violation-content-dialog .el-dialog {
   max-width: 90vw !important;
   width: 60vw !important;
   max-height: 80vh !important;
 }
+
 .violation-content-dialog .el-dialog__body {
   overflow-y: auto;
   max-height: 70vh;
   padding: 0;
 }
+
 .dialog-content {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 200px;
 }
+
 .violation-content-dialog .el-image {
   background: #fff;
 }
@@ -511,9 +530,11 @@ export default {
   cursor: pointer;
   transition: color 0.3s;
 }
+
 .view-link:hover {
   color: #1d78f7;
 }
+
 .dialog-textarea >>> .el-textarea__inner {
   min-height: 200px;
   height: 40vh !important;
