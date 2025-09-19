@@ -176,6 +176,7 @@ export default {
     async fetchData() {
       try {
         // 10.21.147.42
+        // 10.21.147.42:8081
         const response = await axios.get('http://10.21.147.42:8081/api/audits')
         this.originalTableData = response.data
         this.calculateTableHeight() // 数据更新后重新计算高度
@@ -243,6 +244,7 @@ export default {
       formData.append('file', selectedFileObj.raw)
       this.currentStep = 1
       try {
+      // http://10.21.147.42:8081/api/upload
         const response = await axios.post('http://10.21.147.42:8081/api/upload', formData, {
           headers: { 'Content-Type': 'multipart/form-data' }
         })
@@ -252,15 +254,20 @@ export default {
           offset: 100
         })
         await this.fetchData()
-        setTimeout(() => { this.currentStep = 2 }, 1000)
         setTimeout(() => {
-          this.currentStep = 3
-          this.$message({
-            message: '分析完成',
-            type: 'success',
-            offset: 100
-          })
-        }, 2000)
+          this.currentStep = 2
+          // 第二步休眠5秒
+          setTimeout(async() => {
+            this.currentStep = 3
+            this.$message({
+              message: '分析完成',
+              type: 'success',
+              offset: 100
+            })
+            // 分析完成后重新从后端抓取数据
+            await this.fetchData()
+          }, 7000) // 休眠5秒
+        }, 1000)
       } catch (error) {
         console.error('上传错误:', error)
         let errorMessage = '文件上传失败'
@@ -288,6 +295,7 @@ export default {
     },
     async generateReport() {
       try {
+        // 10.21.147.42:8081
         const response = await axios.get('http://10.21.147.42:8081/api/generate-report', {
           responseType: 'blob' // 确保接收二进制数据
         })
