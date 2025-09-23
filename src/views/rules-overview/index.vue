@@ -23,14 +23,15 @@
                 >
                   网信办等-《汽车数据安全管理若干规定》
                 </div>
-                <div class="panel-item disabled">自然资源部-《智能网联汽车时空数据安全处理基本要求》</div>
-                <div class="panel-item disabled">自然资源部-《智能网联汽车时空数据传感系统安全基本要求》</div>
+
                 <div class="panel-item disabled">《中华人民共和国个人信息保护法》</div>
               </div>
             </div>
             <div class="panel-section">
               <div class="panel-header">标准规范</div>
               <div class="panel-content">
+                <div class="panel-item disabled">自然资源部-《智能网联汽车时空数据安全处理基本要求》</div>
+                <div class="panel-item disabled">自然资源部-《智能网联汽车时空数据传感系统安全基本要求》</div>
                 <div class="panel-item disabled">《汽车数据通用要求》</div>
                 <div class="panel-item disabled">《汽车整车信息安全技术要求》</div>
               </div>

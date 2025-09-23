@@ -167,6 +167,7 @@ export const constantRoutes = [
       }
     ]
   },
+
   {
     path: '/hegui',
     component: Layout,
@@ -200,6 +201,18 @@ export const constantRoutes = [
         component: () => import('@/views/audit-log/index'),
         name: 'AuditLog',
         meta: { title: '审计报告', icon: 'news.png', affix: true, top: '审计报告' }
+      }
+    ]
+  },
+  {
+    path: '/auto-drive',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/auto-drive/index'),
+        name: 'AutoDriveSecurity',
+        meta: { title: '自动驾驶安全', icon: 'el-icon-s-operation', affix: false, top: '自动驾驶安全' }
       }
     ]
   }
