@@ -158,7 +158,20 @@ export default {
       tableData: [],
       allTableData: [],
       currentPage: 1,
-      pageSize: 10
+      pageSize: 10,
+      // 自定义二级下拉：开关与尺寸、定位
+      useCustomCascader: true,
+      activeLeftIndex: -1,
+      submenuOptions: [],
+      submenuTop: 0,
+      leftWidth: 0,
+      panelMaxHeight: 300,
+      containerWidth: 0,
+      // 可配置：每列固定宽度（>0 时优先生效），用于缩小下拉框宽度
+      fixedLeftWidth: 180,
+      // 顶部触发器开关
+      isOpen: false,
+      selectedLabel: ''
     }
   },
   mounted() {
@@ -166,10 +179,70 @@ export default {
       this.allTableData = res.concat()
       this.tableData = res.concat()
     })
+    this.$nextTick(() => {
+      this.updateCascaderLayout()
+      window.addEventListener('resize', this.updateCascaderLayout)
+      document.addEventListener('click', this.onDocumentClick)
+    })
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.updateCascaderLayout)
+    document.removeEventListener('click', this.onDocumentClick)
   },
   methods: {
     // 定义选中的功能
     handleSelector,
+    toggleOpen(e) {
+      e && e.stopPropagation()
+      this.isOpen = !this.isOpen
+    },
+    onDocumentClick() {
+      // 点击空白关闭，仅保留上方触发框
+      if (this.isOpen) {
+        this.isOpen = false
+        this.activeLeftIndex = -1
+      }
+    },
+    onLeftClick(idx, item) {
+      this.activeLeftIndex = idx
+      this.submenuOptions = Array.isArray(item.children) ? item.children : []
+      this.$nextTick(() => {
+        const menus = this.$refs.menus
+        const left = this.$refs.leftList
+        const items = this.$refs.leftItem
+        if (!menus || !left || !items) return
+        const itemEl = Array.isArray(items) ? items[idx] : items
+        if (!itemEl) return
+        const menusRect = menus.getBoundingClientRect()
+        const itemRect = itemEl.getBoundingClientRect()
+        const scrollTop = left.scrollTop || 0
+        // 顶部与被选一级项对齐；允许下面溢出
+        const top = (itemRect.top - menusRect.top) - scrollTop
+        this.submenuTop = Math.max(top, 0)
+      })
+    },
+    onRightClick(parent, child) {
+      const valuePath = [parent && parent.value, child && child.value].filter(Boolean)
+      if (valuePath.length) {
+        this.selectedLabel = [parent && parent.label, child && child.label].filter(Boolean).join(' / ')
+        this.isOpen = false
+        this.activeLeftIndex = -1
+        handleSelector.call(this, valuePath)
+      }
+    },
+    updateCascaderLayout() {
+      const box = this.$refs.cascaderBox
+      if (!box) return
+      const width = box.clientWidth || 0
+      this.containerWidth = width
+      // 优先固定列宽
+      if (this.fixedLeftWidth && this.fixedLeftWidth > 0) {
+        this.leftWidth = this.fixedLeftWidth
+      } else {
+        const half = Math.floor(width / 2)
+        this.leftWidth = Math.max(120, half)
+      }
+    },
     // 每页条数改变时触发 选择一页显示多少行
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`)
@@ -180,6 +253,13 @@ export default {
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`)
       this.currentPage = val
+    },
+    clearSelection() {
+      this.selectedLabel = ''
+      this.isOpen = false
+      this.activeLeftIndex = -1
+      // 重置表格为全部数据
+      handleSelector.call(this, [])
     }
   }
 }
@@ -199,9 +279,9 @@ function handleSelector(data) {
 </script>
 
 <template>
-  <el-row style="display: flex">
+  <el-row class="dataasset-row" style="display: flex">
     <!--左边的选择框-->
-    <el-col :lg="6" style="text-align: center;">
+    <!-- <el-col :lg="6" style="text-align: center;">
       <div class="data_assets_title">汽车分类分级</div>
       <el-cascader
         :options="options"
@@ -209,7 +289,54 @@ function handleSelector(data) {
         :props="props"
         style="padding-top: 3vh"
         @change="handleSelector"
-      />
+      /> -->
+    <el-col :lg="6">
+      <div class="data_assets_title">汽车分类分级</div>
+      <!-- 顶部触发器 -->
+      <div class="el-select custom-select" @click.stop="toggleOpen">
+        <div class="el-input el-input--suffix">
+          <input class="el-input__inner" readonly :placeholder="'Select'" :value="selectedLabel">
+          <span class="el-input__suffix">
+            <span class="el-input__suffix-inner">
+              <i v-if="selectedLabel" class="el-input__icon el-icon-circle-close clear-icon" @click.stop="clearSelection" />
+              <i class="el-select__caret el-input__icon el-icon-arrow-up" :class="{ 'is-reverse': isOpen }" />
+            </span>
+          </span>
+        </div>
+      </div>
+      <!-- 自定义二级下拉 -->
+      <div v-if="useCustomCascader" ref="cascaderBox" class="custom-cascader" :style="{ paddingLeft: '1vh', paddingTop: '1vh' }">
+        <div v-show="isOpen" ref="menus" class="el-cascader-menus" :style="{ width: (leftWidth*2) + 'px' }">
+          <div ref="leftList" class="el-cascader-menu" :style="{ width: leftWidth + 'px', maxHeight: panelMaxHeight + 'px' }">
+            <div
+              v-for="(item, idx) in options"
+              :key="item.value"
+              ref="leftItem"
+              class="el-cascader-node"
+              :class="{ 'is-active': idx===activeLeftIndex }"
+              @click.stop="onLeftClick(idx, item)"
+            >
+              <span class="el-cascader-node__label">{{ item.label }}</span>
+              <i class="el-icon-arrow-right el-cascader-node__postfix" />
+            </div>
+          </div>
+          <div
+            v-show="isOpen && activeLeftIndex>-1"
+            class="el-cascader-menu right"
+            :style="{ top: submenuTop + 'px', left: leftWidth + 'px', width: leftWidth + 'px', maxHeight: panelMaxHeight + 'px' }"
+          >
+            <div
+              v-for="child in submenuOptions"
+              :key="child.value"
+              class="el-cascader-node"
+              @click.stop="onRightClick(options[activeLeftIndex], child)"
+            >
+              <span class="el-cascader-node__label">{{ child.label }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <el-cascader v-else :options="options" clearable style="padding-left: 1vh;padding-top: 2vh" @change="handleSelector" />
     </el-col>
     <el-col :lg="1" class="divider-container"><el-divider class="el-divider--vertical" direction="vertical" /></el-col>
     <!--右边的表格-->
@@ -263,9 +390,10 @@ function handleSelector(data) {
 .data_assets_title {
   text-align: center;
   margin-top: 1.5vh;
-  color: #2c3e50;
-  letter-spacing: 0.1vh;
+  color: #4560F7;
+  letter-spacing: 0.05vh;
   font-size: 2.2vh;
+  font-weight: 550;
 }
 .table-icon {
   font-size: 3.2vh;
@@ -291,4 +419,31 @@ function handleSelector(data) {
 .my_cascader .el-cascader-menu{
   //padding-top: 2vh;
 }
+.custom-cascader { position: relative; overflow: visible; }
+.el-cascader-menus { position: relative; }
+.el-cascader-menu { position: relative; display: inline-block; vertical-align: top; border: 1px solid #e4e7ed; border-radius: 4px; background: #fff; overflow: auto; max-height: 300px; }
+.el-cascader-menu + .el-cascader-menu { margin-left: 0; }
+.el-cascader-menu.right { position: absolute; box-shadow: 0 2px 12px rgba(0,0,0,.1); }
+.el-cascader-node { display: flex; align-items: center; justify-content: space-between; line-height: 34px; height: 34px; padding: 0 10px; color: #606266; cursor: pointer; }
+.el-cascader-node:hover { background: #f5f7fa; }
+.el-cascader-node.is-active { color: #409EFF; background: #ecf5ff; }
+.el-cascader-node__label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.el-cascader-node__postfix { color: #c0c4cc; }
+.table-icon { font-size: 3.2vh; color: #606266; padding-right: 1.3vh; }
+.table-icon:hover { color: #5b98ef; }
+.divider-container { display: flex; justify-content: center }
+.el-divider--vertical{ display: flex; width: 2px; height: 100%; vertical-align:middle; position:relative; }
+.custom-cascader, .el-cascader-menus { z-index: 3000; }
+.el-cascader-menu.right { z-index: 3001; }
+.el-cascader-node { font-size: 14px; height: 34px; line-height: 34px; }
+.el-cascader-node__label { font-size: 14px; }
+.custom-cascader .el-cascader-menu { min-width: auto !important; }
+.dataasset-row { min-height: 420px; }
+.select-trigger { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; user-select: none; padding: 4px 10px; border: 1px solid #dcdfe6; border-radius: 4px; background: #fff; color: #606266; }
+.select-trigger:hover { border-color: #c0c4cc; }
+.select-trigger .el-icon-arrow-down { transition: transform .2s; }
+.select-trigger .el-icon-arrow-down.is-open { transform: rotate(180deg); }
+.custom-select { width: 100%; max-width: 450px; margin: 1.5vh 1vh 1vh 1vh; }
+.custom-select .el-input__inner { cursor: pointer; }
+.el-select__caret.is-reverse { transform: rotate(180deg); transition: transform .2s; }
 </style>
