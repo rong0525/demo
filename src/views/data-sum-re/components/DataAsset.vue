@@ -3,6 +3,9 @@ import { getTableData } from '@/views/data-sum-re/database/db.ts'
 export default {
   data() {
     return {
+      props: {
+        expandTrigger: 'click'
+      },
       // todo 这里先写死吧，后面有接口了再说
       options: [{
         value: '地理测绘数据',
@@ -183,10 +186,9 @@ export default {
 // data 返回的数据是 array
 function handleSelector(data) {
   let filteredTableData = []
-  console.log(data.length)
   if (data.length > 0) {
     filteredTableData = this.allTableData.filter(item => {
-      return item.data_category === data[0] && item.data_son_category[1]
+      return item.data_category === data[0] && item.data_son_category === data[1]
     })
     this.tableData = filteredTableData
   } else {
@@ -199,8 +201,15 @@ function handleSelector(data) {
 <template>
   <el-row style="display: flex">
     <!--左边的选择框-->
-    <el-col :lg="6">
-      <el-cascader :options="options" clearable style="padding-left: 5vh;padding-top: 4vh" @change="handleSelector" />
+    <el-col :lg="6" style="text-align: center;">
+      <div class="data_assets_title">汽车分类分级</div>
+      <el-cascader
+        :options="options"
+        clearable
+        :props="props"
+        style="padding-top: 3vh"
+        @change="handleSelector"
+      />
     </el-col>
     <el-col :lg="1" class="divider-container"><el-divider class="el-divider--vertical" direction="vertical" /></el-col>
     <!--右边的表格-->
@@ -212,7 +221,8 @@ function handleSelector(data) {
       <!--        <i class="el-icon-share table-icon" style="float: right;" />-->
       <!--        <i class="el-icon-printer table-icon" style="float: right;" />-->
       <!--      </div>-->
-      <el-table border style="margin-top: 1vh" :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)" :cell-style="{color: '#8A8A8A'}">
+      <div class="data_assets_title">汽车重要数据识别结果</div>
+      <el-table border style="margin-top: 1.5vh" :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)" :cell-style="{color: '#8A8A8A'}">
         <el-table-column label="数据大类" prop="data_category" sortable />
         <el-table-column label="子类别" prop="data_son_category" sortable />
         <el-table-column label="数据资产名称" prop="data_assets" sortable />
@@ -230,7 +240,7 @@ function handleSelector(data) {
             <el-tag color="#C4CDF9" style="color: #284DBC" disable-transitions>一般数据</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="数据量（万条）" prop="volume" sortable />
+        <el-table-column label="数据量（条）" prop="volume" sortable />
         <el-table-column label="关联域名/IP" prop="associated_domain_ip" sortable />
       </el-table>
       <el-pagination
@@ -250,6 +260,13 @@ function handleSelector(data) {
 </template>
 
 <style scoped>
+.data_assets_title {
+  text-align: center;
+  margin-top: 1.5vh;
+  color: #2c3e50;
+  letter-spacing: 0.1vh;
+  font-size: 2.2vh;
+}
 .table-icon {
   font-size: 3.2vh;
   color: #606266;
@@ -268,5 +285,10 @@ function handleSelector(data) {
   height: 100%;
   vertical-align:middle;
   position:relative;
+}
+</style>
+<style lang="scss">
+.my_cascader .el-cascader-menu{
+  //padding-top: 2vh;
 }
 </style>

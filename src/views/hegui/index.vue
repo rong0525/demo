@@ -174,7 +174,7 @@
             style="width:50%;min-width:400px;"
           />
           <div v-else>
-            <p>请点击右上角的“下载”按钮获取视频文件。</p>
+            <p>请点击右上角的“下载”按钮获取文件。</p>
           </div>
         </el-scrollbar>
       </div>
