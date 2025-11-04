@@ -24,12 +24,7 @@
                 <el-menu-item index="《汽车数据安全管理若干规定》" class="menu-item-style">
                   <span slot="title">网信办等-《汽车数据安全管理若干规定》</span>
                 </el-menu-item>
-                <el-menu-item index="《智能网联汽车时空数据安全处理基本要求》" class="menu-item-style">
-                  <span slot="title">自然资源部-《智能网联汽车时空数据安全处理基本要求》</span>
-                </el-menu-item>
-                <el-menu-item index="《智能网联汽车时空数据传感器安全基本要求》" class="menu-item-style">
-                  <span slot="title">自然资源部-《智能网联汽车时空数据传感器安全基本要求》</span>
-                </el-menu-item>
+
                 <el-menu-item index="《个人信息保护法》" class="menu-item-style">
                   <span slot="title">《中华人民共和国个人信息保护法》</span>
                 </el-menu-item>
@@ -44,6 +39,12 @@
                 </el-menu-item>
                 <el-menu-item index="《汽车整车信息安全技术要求》" class="menu-item-style">
                   <span slot="title">《汽车整车信息安全技术要求》</span>
+                </el-menu-item>
+                <el-menu-item index="《智能网联汽车时空数据安全处理基本要求》" class="menu-item-style">
+                  <span slot="title">自然资源部-《智能网联汽车时空数据安全处理基本要求》</span>
+                </el-menu-item>
+                <el-menu-item index="《智能网联汽车时空数据传感器安全基本要求》" class="menu-item-style">
+                  <span slot="title">自然资源部-《智能网联汽车时空数据传感器安全基本要求》</span>
                 </el-menu-item>
               </el-menu-item-group>
 
