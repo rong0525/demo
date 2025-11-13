@@ -1,10 +1,10 @@
 import request from '@/utils/request'
 
-// 后端真实接口：GET http://10.21.147.42:8080/api/v2/table/m2pw08ctw3f2ww9/records
+// 后端真实接口：GET ${process.env.NOCODB_API_URI}/api/v2/table/m2pw08ctw3f2ww9/records
 // 备注：分页和筛选参数在前端处理或按后端协议透传
 export function fetchRuleList(query) {
   return request({
-    url: 'http://10.21.147.42:8080/api/v2/tables/m2pw08ctw3f2ww9/records',
+    url: `${process.env.NOCODB_API_URI}/api/v2/tables/m2pw08ctw3f2ww9/records`,
     method: 'get',
     params: {
       limit: '100',

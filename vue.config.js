@@ -42,7 +42,7 @@ module.exports = {
     // before: require('./mock/mock-server.js'),
     proxy: {
       '/api': {
-        target: 'http://10.21.147.42:8080',
+        target: `${process.env.NOCODB_API_URI}`,
         changeOrigin: true,
         secure: false,
         pathRewrite: { '^/api': '' }

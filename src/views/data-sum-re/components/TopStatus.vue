@@ -136,9 +136,9 @@ export default {
           <!--          </el-col>-->
         </el-row>
       </el-col>
-      <el-col style="text-align: center" :span="2">
-        <img style="width: 6.7vh;height: 6.7vh;" src="./image/decorator.png" alt="">
-      </el-col>
+      <!--      <el-col style="text-align: center" :span="2">-->
+      <!--        <img style="width: 6.7vh;height: 6.7vh;" src="./image/decorator.png" alt="">-->
+      <!--      </el-col>-->
     </el-row>
   </el-card>
 

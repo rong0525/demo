@@ -3,7 +3,7 @@ import request from '@/utils/request'
 
 // NocoDB 配置
 const NOCODB_CONFIG = {
-  BASE_URL: 'http://10.21.147.42:8080/api/v2',
+  BASE_URL: `${process.env.NOCODB_API_URI}/api/v2`,
   TABLE_ID: 'mbu7yfobioius58',
   API_TOKEN: 'WnJQ2xH9_TFUsjaeUI-sVHWKkDatX7ObFEp8hSVw'
 }

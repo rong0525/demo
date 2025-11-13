@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const url = 'http://10.21.147.42:8080/api/v2/tables'
+const url = `${process.env.NOCODB_API_URI}/api/v2/tables`
 const defaultToken = {
   'xc-token': 'WnJQ2xH9_TFUsjaeUI-sVHWKkDatX7ObFEp8hSVw'
 }
